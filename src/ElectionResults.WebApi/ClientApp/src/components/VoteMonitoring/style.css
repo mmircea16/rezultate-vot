@@ -1,0 +1,51 @@
+.vote-monitoring-container {
+  height: 500px;
+  background-color: #e5e5e5;
+}
+.vote-monitoring-title {
+  padding: 40px 0;
+  font-size: 1.75em;
+  text-decoration: underline;
+}
+.vote-monitoring-area {
+  background-color: #443f46;
+  width: 20%;
+  height: 123px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+.vote-monitoring-numbers {
+  display: flex;
+  justify-content: space-around;
+}
+
+.area-number {
+  font-size: 2.5em;
+}
+
+.area-text {
+  font-size: 1em;
+}
+.vote-monitoring-info {
+  padding: 40px 0;
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  justify-content: space-around;
+  margin: 0 auto;
+}
+
+.info-legend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 30px;
+}
+.info-legend.bars {
+  flex-direction: column;
+  position: relative;
+}

@@ -82,6 +82,7 @@ export const ChartContainer = () => {
     //     setCandidates(data.candidates);
     //   });
   });
+  let changeSelection = value => console.log(value);
   return (
     <div>
       {candidates ? (
@@ -103,7 +104,7 @@ export const ChartContainer = () => {
           </div>
           <FormGroup row>
             <Col sm={3}>
-              <CountiesSelect />
+              <CountiesSelect onSelection={changeSelection} />
             </Col>
           </FormGroup>
           {(showAll ? candidates : candidates.slice(0, 5)).map(candidate => (
