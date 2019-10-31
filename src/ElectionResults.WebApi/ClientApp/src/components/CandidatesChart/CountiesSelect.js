@@ -35,7 +35,6 @@ const selectStyles = {
   control: (provided, state) => ({
     ...provided,
     minWidth: 240,
-    margin: 8,
     backgroundColor: "#cfcfcf",
     borderRadius: 0,
     border: "1px solid #DEDEDE",
@@ -54,7 +53,6 @@ const selectStyles = {
   }),
   option: (provided, state) => ({
     ...provided,
-    color: state.isSelected ? "orange" : "grey",
     backgroundColor: state.isSelected ? "#fff" : "#fff",
     color: state.isFocused ? "orange" : "grey",
     fontSize: 16,
@@ -118,13 +116,11 @@ export default class CountiesSelect extends Component {
 // styled components
 
 const Menu = props => {
-  const shadow = "hsla(218, 50%, 10%, 0.1)";
   return (
     <div
       css={{
         backgroundColor: "white",
         borderRadius: 4,
-        boxShadow: `0 0 0 1px ${shadow}, 0 4px 11px ${shadow}`,
         marginTop: 8,
         position: "absolute",
         zIndex: 2,

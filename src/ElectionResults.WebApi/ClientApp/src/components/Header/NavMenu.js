@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink, Media } from 'reactstrap';
+import { Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import votLogo from '../../images/rezultateVot.png';
 import './NavMenu.css';
