@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-import * as signalR from "@aspnet/signalr";
 export class Home extends Component {
   static displayName = Home.name;
   constructor(props) {
@@ -13,22 +12,6 @@ export class Home extends Component {
           connection: null,
       };
   }
-  componentDidMount = () => {
-      const connection = new signalR.HubConnectionBuilder()
-          .withUrl("/live-results")
-          .build();
-
-      this.setState({ connection }, () => {
-          this.state.connection
-              .start()
-              .then(() => console.log('Connection started!'))
-              .catch(err => console.log('Error while establishing connection :('));
-
-          this.state.connection.on('results-updated', (user, results) => {
-              console.log('got results');
-          });
-      });
-    }
 
   render () {
     return (

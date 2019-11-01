@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ElectionResults.Core.Infrastructure.CsvModels;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Services.CsvProcessing;
 using ElectionResults.Core.Storage;
@@ -16,7 +17,7 @@ namespace ElectionResults.Tests.CandidatesResultsParserTests
         public async Task not_return_null_list_of_candidates()
         {
             var candidatesResultsParser = new TestableCandidatesResultsParser(null);
-            candidatesResultsParser.ParsedCandidates = new List<CandidateStatistics>();
+            candidatesResultsParser.ParsedCandidates = new List<CandidateConfig>();
 
             var result = await candidatesResultsParser.Parse(null, "");
 
@@ -37,28 +38,28 @@ namespace ElectionResults.Tests.CandidatesResultsParserTests
             };
             var electionResultsData = new ElectionResultsData {Candidates = CreateListOfCandidatesWithVotes(c1Votes, c2Votes, c3Votes) };
             var sumOfVotes = candidatesResultsParser.ParsedCandidates.Sum(c => c.Votes);
-            StatisticsAggregator.CalculatePercentagesForCandidates(electionResultsData, sumOfVotes);
+            electionResultsData.Candidates = StatisticsAggregator.CalculatePercentagesForCandidates(electionResultsData.Candidates, sumOfVotes);
 
             electionResultsData.Candidates[0].Percentage.Should().Be(c1Percentage);
             electionResultsData.Candidates[1].Percentage.Should().Be(c2Percentage);
             electionResultsData.Candidates[2].Percentage.Should().Be(c3Percentage);
         }
 
-        private static List<CandidateStatistics> CreateListOfCandidatesWithVotes(int c1Votes, int c2Votes, int c3Votes)
+        private static List<CandidateConfig> CreateListOfCandidatesWithVotes(int c1Votes, int c2Votes, int c3Votes)
         {
-            return new List<CandidateStatistics>
+            return new List<CandidateConfig>
             {
-                new CandidateStatistics
+                new CandidateConfig
                 {
                     Name = "Candidate1",
                     Votes = c1Votes
                 },
-                new CandidateStatistics
+                new CandidateConfig
                 {
                     Name = "Candidate2",
                     Votes = c2Votes
                 },
-                new CandidateStatistics
+                new CandidateConfig
                 {
                     Name = "Candidate3",
                     Votes = c3Votes
