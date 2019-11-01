@@ -1,3 +1,6 @@
+#root {
+  overflow-x: hidden;
+}
 .vote-monitoring-container {
   height: 500px;
   background-color: #e5e5e5;
@@ -6,6 +9,7 @@
   padding: 40px 0;
   font-size: 1.75em;
   text-decoration: underline;
+  padding-left: 10px;
 }
 .vote-monitoring-area {
   background-color: #443f46;
@@ -48,4 +52,13 @@
 .info-legend.bars {
   flex-direction: column;
   position: relative;
+}
+.full-width-container {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  background-color: #e5e5e5;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
 }
