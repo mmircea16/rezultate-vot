@@ -8,7 +8,7 @@ export const ChartBar = ({ percent, imgUrl, candidateName, votesNumber }) => {
         <p className={"bar-candidate-name"}>{candidateName}</p>
       </div>
       <div className={"bar-icon"}>
-        <img src={imgUrl} />
+        <img src={imgUrl} alt="" />
       </div>
 
       <div className={"bar-results"}>
