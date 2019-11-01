@@ -43,112 +43,96 @@ namespace ElectionResults.WebApi.Controllers
                 new CandidateConfig
                 {
                     Name = "Candidate A",
-                    Id = "1",
                     CsvId = "g1",
                     ImageUrl = "https://code4-presidential-2019.s3.eu-central-1.amazonaws.com/c1.png"
                 },
                 new CandidateConfig
                 {
                     Name = "Candidate B",
-                    Id = "2",
                     CsvId = "g2",
                     ImageUrl = "https://code4-presidential-2019.s3.eu-central-1.amazonaws.com/c2.png"
                 },
                 new CandidateConfig
                 {
                     Name = "Candidate C",
-                    Id = "3",
                     CsvId = "g3",
                     ImageUrl = "https://code4-presidential-2019.s3.eu-central-1.amazonaws.com/c1.png"
                 },
                 new CandidateConfig
                 {
                     Name = "Candidate D",
-                    Id = "4",
                     CsvId = "g4",
                     ImageUrl = "https://code4-presidential-2019.s3.eu-central-1.amazonaws.com/c2.png"
                 },
                 new CandidateConfig
                 {
                     Name = "Candidate E",
-                    Id = "5",
                     CsvId = "g5",
                     ImageUrl = "https://code4-presidential-2019.s3.eu-central-1.amazonaws.com/c1.png"
                 },
                 new CandidateConfig
                 {
                     Name = "Candidate F",
-                    Id = "6",
                     CsvId = "g6",
                     ImageUrl = "https://code4-presidential-2019.s3.eu-central-1.amazonaws.com/c2.png"
                 },
                 new CandidateConfig
                 {
                     Name = "Candidate G",
-                    Id = "7",
                     CsvId = "g7",
                     ImageUrl = "https://code4-presidential-2019.s3.eu-central-1.amazonaws.com/c1.png"
                 },
                 new CandidateConfig
                 {
                     Name = "Candidate H",
-                    Id = "8",
                     CsvId = "g8",
                     ImageUrl = "https://code4-presidential-2019.s3.eu-central-1.amazonaws.com/c2.png"
                 },
                 new CandidateConfig
                 {
                     Name = "Candidate I",
-                    Id = "9",
                     CsvId = "g9",
                     ImageUrl = "https://code4-presidential-2019.s3.eu-central-1.amazonaws.com/c1.png"
                 },
                 new CandidateConfig
                 {
                     Name = "Candidate J",
-                    Id = "10",
                     CsvId = "g10",
                     ImageUrl = "https://code4-presidential-2019.s3.eu-central-1.amazonaws.com/c2.png"
                 },
                 new CandidateConfig
                 {
                     Name = "Candidate K",
-                    Id = "11",
                     CsvId = "g11",
                     ImageUrl = "https://code4-presidential-2019.s3.eu-central-1.amazonaws.com/c1.png"
                 },
                 new CandidateConfig
                 {
                     Name = "Candidate L",
-                    Id = "12",
                     CsvId = "g12",
                     ImageUrl = "https://code4-presidential-2019.s3.eu-central-1.amazonaws.com/c2.png"
                 },
                 new CandidateConfig
                 {
                     Name = "Candidate M",
-                    Id = "13",
                     CsvId = "g13",
                     ImageUrl = "https://code4-presidential-2019.s3.eu-central-1.amazonaws.com/c1.png"
                 },
                 new CandidateConfig
                 {
                     Name = "Candidate N",
-                    Id = "14",
                     CsvId = "g14",
                     ImageUrl = "https://code4-presidential-2019.s3.eu-central-1.amazonaws.com/c2.png"
                 },
                 new CandidateConfig
                 {
                     Name = "Candidate O",
-                    Id = "15",
                     CsvId = "g15",
                     ImageUrl = "https://code4-presidential-2019.s3.eu-central-1.amazonaws.com/c1.png"
                 },
                 new CandidateConfig
                 {
                     Name = "Candidate P",
-                    Id = "16",
                     CsvId = "g16",
                     ImageUrl = "https://code4-presidential-2019.s3.eu-central-1.amazonaws.com/c2.png"
                 }

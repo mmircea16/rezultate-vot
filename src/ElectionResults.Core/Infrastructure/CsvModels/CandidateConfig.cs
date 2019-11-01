@@ -1,13 +1,12 @@
-﻿namespace ElectionResults.Core.Infrastructure.CsvModels
+﻿using System.Collections.Generic;
+using ElectionResults.Core.Models;
+
+namespace ElectionResults.Core.Infrastructure.CsvModels
 {
-    public class CandidateConfig
+    public class CandidateConfig: CandidateModel
     {
-        public string Id { get; set; }
-
-        public string Name { get; set; }
-
-        public string ImageUrl { get; set; }
-
         public string CsvId { get; set; }
+
+        public Dictionary<string, int> Counties { get; set; } = new Dictionary<string, int>();
     }
 }

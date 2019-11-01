@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using CsvHelper;
+using ElectionResults.Core.Infrastructure.CsvModels;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Storage;
 using Microsoft.Extensions.Options;
@@ -20,13 +21,14 @@ namespace ElectionResults.Core.Services.CsvProcessing
         {
             _config = config;
         }
+
         public async Task<Result<ElectionResultsData>> Parse(ElectionResultsData electionResultsData, string csvContent)
         {
             if (electionResultsData == null)
                 electionResultsData = new ElectionResultsData();
             var electionsConfig = DeserializeElectionsConfig();
 
-            electionResultsData.Candidates = electionsConfig.Candidates.Select(c => new CandidateStatistics
+            electionResultsData.Candidates = electionsConfig.Candidates.Select(c => new CandidateConfig
             {
                 Id = c.CsvId,
                 ImageUrl = c.ImageUrl,
@@ -34,7 +36,7 @@ namespace ElectionResults.Core.Services.CsvProcessing
             }).ToList();
             await PopulateCandidatesListWithVotes(csvContent, electionResultsData.Candidates);
             var sumOfVotes = electionResultsData.Candidates.Sum(c => c.Votes);
-            StatisticsAggregator.CalculatePercentagesForCandidates(electionResultsData, sumOfVotes);
+            electionResultsData.Candidates = StatisticsAggregator.CalculatePercentagesForCandidates(electionResultsData.Candidates, sumOfVotes);
 
             return Result.Ok(electionResultsData);
         }
@@ -52,7 +54,7 @@ namespace ElectionResults.Core.Services.CsvProcessing
         }
 
         protected virtual async Task PopulateCandidatesListWithVotes(string csvContent,
-            List<CandidateStatistics> candidates)
+            List<CandidateConfig> candidates)
         {
             var csvParser = new CsvParser(new StringReader(csvContent));
             var headers = (await csvParser.ReadAsync()).ToList();

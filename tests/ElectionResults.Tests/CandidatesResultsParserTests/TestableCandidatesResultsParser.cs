@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ElectionResults.Core.Infrastructure.CsvModels;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Services.CsvProcessing;
 using ElectionResults.Core.Storage;
@@ -15,11 +16,11 @@ namespace ElectionResults.Tests.CandidatesResultsParserTests
 
         }
 
-        protected override Task PopulateCandidatesListWithVotes(string csvContent, List<CandidateStatistics> candidates)
+        protected override Task PopulateCandidatesListWithVotes(string csvContent, List<CandidateConfig> candidates)
         {
             return Task.CompletedTask;
         }
 
-        public List<CandidateStatistics> ParsedCandidates { get; set; }
+        public List<CandidateConfig> ParsedCandidates { get; set; }
     }
 }

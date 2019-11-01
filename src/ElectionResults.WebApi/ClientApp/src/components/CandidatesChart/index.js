@@ -7,27 +7,44 @@ import * as signalR from "@aspnet/signalr";
 export const ChartContainer = () => {
   const [showAll, toggleShowAll] = React.useState(false);
   const [candidates, setCandidates] = React.useState(null);
+    const [counties, setCounties] = React.useState(null);
+   
   React.useEffect(() => {
      fetch(
        "/api/results"
      )
        .then(data => data.json())
        .then(data => {
-         setCandidates(data.candidates);
+           setCandidates(data.candidates);
+           var total = { label: "Total", id: "TOTAL" };
+           var national = { label: "National", id: "RO" };
+           var diaspora = { label: "Diaspora", id: "DSPR" };
+           data.counties.unshift(total, diaspora, national);
+           setCounties(data.counties);
        });
+     const connection = new signalR.HubConnectionBuilder()
+         .withUrl("/live-results")
+         .build();
+
+     connection
+         .start()
+         .then(() => console.log('Connection started!'))
+         .catch(err => console.log('Error while establishing connection :('));
+
+     connection.on('results-updated', (data) => {
+         setCandidates(data.candidates);
+     });
   }, []);
-  const connection = new signalR.HubConnectionBuilder()
-      .withUrl("/live-results")
-      .build();
-
-      connection
-          .start()
-          .then(() => console.log('Connection started!'))
-          .catch(err => console.log('Error while establishing connection :('));
-
-      connection.on('results-updated', (data) => {
-          setCandidates(data.candidates);
-      });
+  
+    const selectionChanged = (value) => {
+        fetch(
+                `/api/results?location=${value.id}`
+            )
+            .then(data => data.json())
+            .then(data => {
+                setCandidates(data.candidates);
+            });
+    }
   return (
     <div>
       {candidates ? (
@@ -49,7 +66,7 @@ export const ChartContainer = () => {
           </div>
           <FormGroup row>
             <Col sm={3}>
-              <CountiesSelect />
+                          <CountiesSelect counties={counties} onSelect={selectionChanged}/>
             </Col>
           </FormGroup>
           {(showAll ? candidates : candidates.slice(0, 5)).map(candidate => (

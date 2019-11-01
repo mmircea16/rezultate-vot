@@ -19,7 +19,7 @@ namespace ElectionResults.Core.Services
             _resultsRepository = resultsRepository;
         }
 
-        public async Task<ElectionResultsData> GetResults(ResultsType type)
+        public async Task<ElectionResultsData> GetResults(ResultsType type, string location = null)
         {
             string resultsType = type.ConvertEnumToString();
 
@@ -28,6 +28,23 @@ namespace ElectionResults.Core.Services
             var localResultsData = JsonConvert.DeserializeObject<ElectionResultsData>(localResults.StatisticsJson);
             var diasporaResultsData = JsonConvert.DeserializeObject<ElectionResultsData>(diasporaResults.StatisticsJson);
             var electionResultsData = StatisticsAggregator.CombineResults(localResultsData, diasporaResultsData);
+            if (string.IsNullOrWhiteSpace(location) == false)
+            {
+                if (location == "TOTAL")
+                    return electionResultsData;
+                if (location == "DSPR")
+                {
+                    return diasporaResultsData;
+                }
+                if (location == "RO")
+                {
+                    return localResultsData;
+                }
+                foreach (var candidate in electionResultsData.Candidates)
+                {
+                    candidate.Votes = candidate.Counties[location];
+                }
+            }
             return electionResultsData;
         }
     }
