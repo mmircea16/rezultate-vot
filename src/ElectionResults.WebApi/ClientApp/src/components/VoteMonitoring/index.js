@@ -8,16 +8,15 @@ const NumberArea = ({ bigNumber, text }) => (
   </div>
 );
 export const VoteMonitoring = ({ voteMonitoringData }) => {
-  console.log(percent);
-  let numberFull;
-  let numberSmall;
+  let messagesNumber;
+  let messagesWithProblems;
   let percent;
   if (!voteMonitoringData) {
     return null;
   } else {
-    const numberFull = voteMonitoringData[0].value;
-    const numberSmall = voteMonitoringData[5].value;
-    const percent = (numberSmall / numberFull) * 100;
+    const messagesNumber = voteMonitoringData[0].value;
+    const messagesWithProblems = voteMonitoringData[5].value;
+    const percent = (messagesWithProblems / messagesNumber) * 100;
     return (
       <div className={"full-width-container"}>
         <div className={"vote-monitoring-container"}>
@@ -40,67 +39,26 @@ export const VoteMonitoring = ({ voteMonitoringData }) => {
           </div>
           <div className={"vote-monitoring-info"}>
             <div className={"info-legend"}>
-              <div
-                style={{
-                  display: "flex",
-                  marginRight: "56px",
-                  alignItems: "center"
-                }}
-              >
-                <div
-                  style={{
-                    height: "20px",
-                    width: "20px",
-                    backgroundColor: "#110D64",
-                    fontSize: "20px",
-                    marginRight: "10px"
-                  }}
-                ></div>
+              <div className={"legend-container space"}>
+                <div className={"square left"}></div>
                 <p>Mesaje trimise de către observatori</p>
               </div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <div
-                  style={{
-                    height: "20px",
-                    width: "20px",
-                    backgroundColor: "#EA8C42",
-                    fontSize: "20px",
-                    marginRight: "10px"
-                  }}
-                ></div>
+              <div className={"legend-container"}>
+                <div className={"square right"}></div>
                 <p>Probleme sesizate</p>
               </div>
             </div>
             <div className={"info-legend bars"}>
-              <div
-                style={{
-                  width: "100%",
-                  height: "56px",
-                  backgroundColor: "#110D64",
-                  color: "#fff",
-                  display: "flex",
-                  alignItems: "center",
-                  fontSize: "1.5em"
-                }}
-              >
+              <div className={"parent-bar"}>
                 <p style={{ marginLeft: `${percent + 3}%` }}>
                   {voteMonitoringData[0].value}
                 </p>
               </div>
               <div
                 style={{
-                  width: `${percent}%`,
-                  backgroundColor: "#EA8C42",
-                  height: "56px",
-                  position: "absolute",
-                  top: "29px",
-                  left: "0",
-                  color: "#fff",
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "5px",
-                  fontSize: "1.5em"
+                  width: `${percent}%`
                 }}
+                className={"child-bar"}
               >
                 <p>{voteMonitoringData[5].value}</p>
               </div>
