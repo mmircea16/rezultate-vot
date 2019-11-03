@@ -1,8 +1,5 @@
-﻿/** @jsx jsx */
-import { Component } from "react";
-import { jsx } from "@emotion/core";
+﻿import React, { Component } from "react";
 import Button from "@atlaskit/button";
-
 import Select, { components } from "react-select";
 import { defaultTheme } from "react-select";
 
@@ -162,9 +159,9 @@ const Option = props => {
     } else if (props.data.label === "Diaspora") {
         return (
             <div className={"first-option"}>
-            <components.Option {...props}>{props.children}</components.Option>
+                <components.Option {...props}>{props.children}</components.Option>
             </div>
-    );
+        );
     } else if (props.data.label === "National") {
         return (
             <div className={"last-option"}>
