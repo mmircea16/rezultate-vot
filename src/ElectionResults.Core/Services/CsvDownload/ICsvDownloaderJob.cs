@@ -4,6 +4,6 @@ namespace ElectionResults.Core.Services.CsvDownload
 {
     public interface ICsvDownloaderJob
     {
-        Task DownloadFilesToBlobStorage();
+        Task DownloadFiles();
     }
 }

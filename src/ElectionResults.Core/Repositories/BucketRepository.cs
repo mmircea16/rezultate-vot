@@ -15,7 +15,7 @@ namespace ElectionResults.Core.Repositories
             _s3Client = s3Client;
         }
 
-        public async Task<bool> DoesS3BucketExist(string bucketName)
+        public virtual async Task<bool> DoesS3BucketExist(string bucketName)
         {
             return await _s3Client.DoesS3BucketExistAsync(bucketName);
         }

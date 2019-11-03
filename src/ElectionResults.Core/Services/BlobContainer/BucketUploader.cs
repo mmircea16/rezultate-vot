@@ -12,15 +12,13 @@ namespace ElectionResults.Core.Services.BlobContainer
 {
     public class BucketUploader : IBucketUploader
     {
-        private readonly IBucketRepository _bucketRepository;
         private readonly IFileRepository _fileRepository;
         private readonly IFileProcessor _fileProcessor;
         private static HttpClient _httpClient;
-        private AppConfig _config;
+        private readonly AppConfig _config;
 
-        public BucketUploader(IBucketRepository bucketRepository, IOptions<AppConfig> config, IFileRepository fileRepository, IFileProcessor fileProcessor)
+        public BucketUploader(IOptions<AppConfig> config, IFileRepository fileRepository, IFileProcessor fileProcessor)
         {
-            _bucketRepository = bucketRepository;
             _fileRepository = fileRepository;
             _fileProcessor = fileProcessor;
             _httpClient = new HttpClient();
@@ -41,22 +39,9 @@ namespace ElectionResults.Core.Services.BlobContainer
 
         private async Task UploadFileToStorage(Stream fileStream, string fileName)
         {
-            var bucketName = _config.BucketName;
-            var bucketExists = await _bucketRepository.DoesS3BucketExist(bucketName);
-            if (bucketExists == false)
-            {
-                var response = await _bucketRepository.CreateBucket(bucketName);
-                if (response.IsFailure)
-                {
-                    Console.WriteLine(response.Error);
-                    return;
-                }
-            }
-
-            var fileData = new FileData{FileName = fileName};
-            fileData.Stream = new MemoryStream();
+            var fileData = new FileData { FileName = fileName, Stream = new MemoryStream() };
             fileStream.CopyTo(fileData.Stream);
-            var uploadResponse = await _fileRepository.UploadFiles(bucketName, fileData);
+            var uploadResponse = await _fileRepository.UploadFiles(_config.BucketName, fileData);
             if (uploadResponse.IsSuccess)
             {
                 fileStream.Seek(0, SeekOrigin.Begin);

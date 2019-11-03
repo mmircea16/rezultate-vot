@@ -32,7 +32,7 @@ namespace ElectionResults.WebApi.Scheduler
         public override async Task ProcessInScope(IServiceProvider serviceProvider)
         {
             Console.WriteLine($"Processing starts here at {DateTime.UtcNow:F}");    
-            await _csvDownloaderJob.DownloadFilesToBlobStorage();
+            await _csvDownloaderJob.DownloadFiles();
             var provisionalResults = await _resultsAggregator.GetResults(ResultsType.Provisional);
             var partialResults = await _resultsAggregator.GetResults(ResultsType.Partial);
             var finalResults = await _resultsAggregator.GetResults(ResultsType.Final);

@@ -14,7 +14,7 @@ namespace ElectionResults.Core.Storage
     {
         private readonly IAmazonDynamoDB _dynamoDb;
         private readonly ILogger<ResultsRepository> _logger;
-        private AppConfig _config;
+        private readonly AppConfig _config;
 
         public ResultsRepository(IOptions<AppConfig> config, IAmazonDynamoDB dynamoDb, ILogger<ResultsRepository> logger)
         {
@@ -28,9 +28,7 @@ namespace ElectionResults.Core.Storage
             try
             {
                 _logger.LogInformation($"Inserting results");
-                var tableExists = await TableIsReady();
-                if (!tableExists)
-                    await CreateTable();
+                
 
                 Dictionary<string, AttributeValue> item = new Dictionary<string, AttributeValue>();
                 item["id"] = new AttributeValue { S = electionStatistics.Id };
@@ -54,23 +52,6 @@ namespace ElectionResults.Core.Storage
             }
         }
 
-        private async Task<bool> TableIsReady()
-        {
-            try
-            {
-                var res = await _dynamoDb.DescribeTableAsync(new DescribeTableRequest
-                {
-                    TableName = _config.TableName
-                });
-                return res.Table.TableStatus == "ACTIVE";
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, $"Table {_config.TableName} isn't ready'");
-                return false;
-            }
-        }
-
         public async Task<ElectionStatistics> GetLatestResults(string location, string type)
         {
             var queryRequest = new QueryRequest(_config.TableName);
@@ -87,6 +68,54 @@ namespace ElectionResults.Core.Storage
             var latest = results.OrderByDescending(r => r.FileTimestamp).FirstOrDefault();
             _logger.LogInformation($"Latest for {type} and {location} is {latest.FileTimestamp}");
             return latest;
+        }
+
+        public virtual async Task InitializeDb()
+        {
+            var tableExists = await TableExists();
+            if (!tableExists)
+                await CreateTable();
+        }
+
+        private async Task WaitUntilTableReady(string tableName)
+        {
+            string status = null;
+
+            do
+            {
+                await Task.Delay(2000);
+                try
+                {
+                    var res = _dynamoDb.DescribeTableAsync(new DescribeTableRequest
+                    {
+                        TableName = tableName
+                    });
+
+                    status = res.Result.Table.TableStatus;
+                }
+                catch (ResourceNotFoundException)
+                {
+
+                }
+
+            } while (status != "ACTIVE");
+        }
+
+        private async Task<bool> TableExists()
+        {
+            try
+            {
+                var res = await _dynamoDb.DescribeTableAsync(new DescribeTableRequest
+                {
+                    TableName = _config.TableName
+                });
+                return res.Table.TableStatus == "ACTIVE";
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, $"Table {_config.TableName} isn't ready'");
+                return false;
+            }
         }
 
         private List<ElectionStatistics> GetResults(List<Dictionary<string, AttributeValue>> foundItems)
@@ -170,30 +199,6 @@ namespace ElectionResults.Core.Storage
             {
                 Console.WriteLine(e);
             }
-        }
-
-        public async Task WaitUntilTableReady(string tableName)
-        {
-            string status = null;
-
-            do
-            {
-                await Task.Delay(2000);
-                try
-                {
-                    var res = _dynamoDb.DescribeTableAsync(new DescribeTableRequest
-                    {
-                        TableName = tableName
-                    });
-
-                    status = res.Result.Table.TableStatus;
-                }
-                catch (ResourceNotFoundException)
-                {
-
-                }
-
-            } while (status != "ACTIVE");
         }
     }
 }

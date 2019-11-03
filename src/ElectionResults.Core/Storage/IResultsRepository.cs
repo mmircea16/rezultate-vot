@@ -8,5 +8,6 @@ namespace ElectionResults.Core.Storage
         Task InsertResults(ElectionStatistics electionStatistics);
 
         Task<ElectionStatistics> GetLatestResults(string location, string type);
+        Task InitializeDb();
     }
 }
