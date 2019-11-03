@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Row, Col, Label, Input, Media } from 'reactstrap';
-import code4Ro from '../images/code4RoGrey.svg';
+import code4Ro from '../../images/code4RoGrey.svg';
 import './Footer.css';
 
 export function Footer() {
