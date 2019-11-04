@@ -20,26 +20,7 @@ namespace ElectionResults.WebApi.Controllers
         [HttpGet("")]
         public async Task<LiveResultsResponse> GetLatestResults([FromQuery] ResultsType type, string location)
         {
-            var electionResultsData = await _resultsAggregator.GetResults(type, location);
-            var liveResultsResponse = new LiveResultsResponse();
-
-            electionResultsData.Candidates = StatisticsAggregator.CalculatePercentagesForCandidates(electionResultsData.Candidates,
-                electionResultsData.Candidates.Sum(c => c.Votes));
-            liveResultsResponse.Candidates = electionResultsData.Candidates.Select(c => new CandidateModel
-            {
-                Id = c.Id,
-                ImageUrl = c.ImageUrl,
-                Name = c.Name,
-                Percentage = c.Percentage,
-                Votes = c.Votes
-            }).ToList();
-            liveResultsResponse.Counties =
-                electionResultsData.Candidates.FirstOrDefault()?.Counties.Select(c => new County
-                {
-                    Label = c.Key,
-                    Id = c.Key
-                }).ToList();
-            liveResultsResponse.Presence = await _resultsAggregator.GetLatestPresence();
+            var liveResultsResponse = await _resultsAggregator.GetResults(type, location);
             return liveResultsResponse;
         }
     }

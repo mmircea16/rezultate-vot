@@ -4,6 +4,6 @@
     {
         public const string LOCAL = "RO";
         public const string DIASPORA = "DSPR";
-        public const string PARAMETER_STORE_NAME = "vote-results-test";
+        public const string PARAMETER_STORE_NAME = "vote-results";
     }
 }

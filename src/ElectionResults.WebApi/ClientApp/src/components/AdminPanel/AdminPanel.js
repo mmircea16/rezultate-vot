@@ -77,6 +77,7 @@ const AdminPanel = () => {
                   <option value={1}>Partial</option>
                   <option value={2}>Final</option>
                   <option value={3}>Presence</option>
+                  <option value={4}>VoteMonitoring</option>
                 </Input>
               </div>
               <div className="form-group">

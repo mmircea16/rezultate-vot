@@ -54,6 +54,22 @@ namespace ElectionResults.Core.Services.CsvDownload
 
             await Task.WhenAll(tasks);
             Console.WriteLine($"Files downloaded");
+            await AddVotePresence(timestamp);
+            await AddVoteMonitoringStats(timestamp);
+        }
+
+        private async Task AddVoteMonitoringStats(long timestamp)
+        {
+            var result = await _electionPresenceAggregator.GetVoteMonitoringStats();
+            if (result.IsSuccess)
+            {
+                result.Value.Timestamp = timestamp;
+                await _resultsRepository.InsertVoteMonitoringStats(result.Value);
+            }
+        }
+
+        private async Task AddVotePresence(long timestamp)
+        {
             var result = await _electionPresenceAggregator.GetCurrentPresence();
             if (result.IsSuccess)
             {

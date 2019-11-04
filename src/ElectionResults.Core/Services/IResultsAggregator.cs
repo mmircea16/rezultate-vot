@@ -5,8 +5,6 @@ namespace ElectionResults.Core.Services
 {
     public interface IResultsAggregator
     {
-        Task<ElectionResultsData> GetResults(ResultsType type, string location = null);
-        
-        Task<VotesPresence> GetLatestPresence();
+        Task<LiveResultsResponse> GetResults(ResultsType type, string location = null);
     }
 }

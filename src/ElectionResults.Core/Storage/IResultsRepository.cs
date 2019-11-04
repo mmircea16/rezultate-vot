@@ -13,5 +13,7 @@ namespace ElectionResults.Core.Storage
         Task InitializeDb();
         
         Task InsertCurrentPresence(VotesPresence votesPresence);
+
+        Task InsertVoteMonitoringStats(VoteMonitoringStats voteMonitoringInfo);
     }
 }

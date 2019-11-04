@@ -10,5 +10,7 @@ namespace ElectionResults.Core.Models
         public List<County> Counties { get; set; }
 
         public VotesPresence Presence { get; set; }
+
+        public VoteMonitoringStats VoteMonitoringStats { get; set; }
     }
 }

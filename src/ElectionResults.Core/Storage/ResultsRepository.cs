@@ -80,12 +80,27 @@ namespace ElectionResults.Core.Storage
 
         public virtual async Task InsertCurrentPresence(VotesPresence votesPresence)
         {
-            var electionStatistics = new ElectionStatistics();
-            electionStatistics.Id = $"{DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks:D19}";
-            electionStatistics.Type = ResultsType.Presence.ToString();
-            electionStatistics.Location = ResultsLocation.All.ToString();
-            electionStatistics.Timestamp = votesPresence.Timestamp;
-            electionStatistics.StatisticsJson = JsonConvert.SerializeObject(votesPresence);
+            var electionStatistics = new ElectionStatistics
+            {
+                Id = $"{DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks:D19}",
+                Type = ResultsType.Presence.ConvertEnumToString(),
+                Location = ResultsLocation.All.ConvertEnumToString(),
+                Timestamp = votesPresence.Timestamp,
+                StatisticsJson = JsonConvert.SerializeObject(votesPresence)
+            };
+            await InsertResults(electionStatistics);
+        }
+
+        public async Task InsertVoteMonitoringStats(VoteMonitoringStats voteMonitoringInfo)
+        {
+            var electionStatistics = new ElectionStatistics
+            {
+                Id = $"{DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks:D19}",
+                Type = ResultsType.VoteMonitoring.ConvertEnumToString(),
+                Location = ResultsLocation.All.ConvertEnumToString(),
+                Timestamp = voteMonitoringInfo.Timestamp,
+                StatisticsJson = JsonConvert.SerializeObject(voteMonitoringInfo)
+            };
             await InsertResults(electionStatistics);
         }
 
