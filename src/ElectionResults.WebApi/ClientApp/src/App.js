@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Route } from "react-router";
 import { Layout } from "./components/Layout";
-import { ChartContainer } from "./components/CandidatesChart";
 import { AdminPanel } from "./components/AdminPanel/AdminPanel";
 import { HomePage } from "./components/HomePage";
 

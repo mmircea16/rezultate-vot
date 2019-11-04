@@ -20,26 +20,26 @@ export const ChartContainer = () => {
         data.counties.unshift(total, diaspora, national);
         setCounties(data.counties);
       });
-  let changeSelection = value => console.log(value);
+
     const connection = new signalR.HubConnectionBuilder()
       .withUrl("/live-results")
       .build();
 
     connection
       .start()
-      .then(() => console.log('Connection started!'))
-      .catch(err => console.log('Error while establishing connection :('));
+      .then(() => console.log("Connection started!"))
+      .catch(err => console.log("Error while establishing connection :("));
 
-    connection.on('results-updated', (data) => {
+    connection.on("results-updated", data => {
       setCandidates(data.candidates);
     });
   }, []);
 
-  const selectionChanged = (value) => {
+  const selectionChanged = value => {
     fetch(`/api/results?location=${value.id}`)
       .then(data => data.json())
       .then(data => setCandidates(data.candidates));
-  }
+  };
 
   return (
     <div>

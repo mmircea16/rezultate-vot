@@ -1,0 +1,8 @@
+@media (min-width: 1200px) {
+  .vote-monitoring-container {
+    max-width: 1140px;
+    margin: 0 auto;
+  }
+}
+@media (min-width: 768px) {
+}

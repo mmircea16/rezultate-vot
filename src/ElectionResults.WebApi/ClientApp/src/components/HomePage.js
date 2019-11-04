@@ -1,6 +1,7 @@
 import React from "react";
 import { ChartContainer } from "./CandidatesChart";
 import { VoteMonitoring } from "./VoteMonitoring";
+import "./style.css";
 
 export const HomePage = () => {
   const [voteMonitoringData, setVoteMonitoringData] = React.useState(null);

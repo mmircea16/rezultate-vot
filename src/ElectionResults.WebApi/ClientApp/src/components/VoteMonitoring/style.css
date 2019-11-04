@@ -1,16 +1,20 @@
 #root {
-  overflow-x: hidden;
+  overflow: hidden;
 }
 .vote-monitoring-container {
   height: 500px;
   background-color: #e5e5e5;
 }
+
 .vote-monitoring-title {
   padding: 40px 0;
   font-size: 1.75em;
   text-decoration: underline;
   padding-left: 10px;
+  position: relative;
+  left: -36px;
 }
+
 .vote-monitoring-area {
   background-color: #443f46;
   width: 20%;
@@ -33,6 +37,7 @@
 
 .area-text {
   font-size: 1em;
+  text-align: center;
 }
 .vote-monitoring-info {
   padding: 40px 0;
@@ -54,13 +59,17 @@
   position: relative;
 }
 .full-width-container {
-  width: 100vw;
   position: relative;
-  left: 50%;
-  background-color: #e5e5e5;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
+}
+.full-width-container:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -9999px;
+  right: 0;
+  border-left: 9999px solid #e5e5e5;
+  box-shadow: 9999px 0 0 #e5e5e5;
 }
 .square {
   height: 20px;
@@ -69,12 +78,15 @@
   font-size: 20px;
   margin-right: 10px;
 }
+
 .square.right {
   background-color: #ea8c42;
 }
+
 .square.left {
   background-color: #110d64;
 }
+
 .parent-bar {
   width: 100%;
   height: 56px;
@@ -84,6 +96,7 @@
   align-items: center;
   font-size: 1.5em;
 }
+
 .child-bar {
   background-color: #ea8c42;
   height: 56px;
@@ -96,10 +109,12 @@
   padding: 5px;
   font-size: 1.5em;
 }
+
 .legend-container {
   display: flex;
   align-items: center;
 }
+
 .legend-container.space {
   margin-right: 56px;
 }
