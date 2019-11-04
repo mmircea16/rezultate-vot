@@ -10,7 +10,7 @@ body {
   font-size: 1.25em;
 }
 
-.votes-container>p {
+.votes-container > p {
   margin-bottom: 30px;
 }
 
@@ -49,7 +49,7 @@ body {
 }
 
 .default-container {
-  padding-bottom: 0px;
+  margin-bottom: 30px;
 }
 
 .question {
@@ -60,6 +60,9 @@ body {
   background-color: #110d64;
   color: #fff;
   font-size: 1.75em;
+}
+.question-text {
+  text-align: center;
 }
 
 .bar-container {
@@ -153,12 +156,12 @@ body {
   margin-bottom: 8px;
 }
 
-.counties-select.dropdown-button>span {
+.counties-select.dropdown-button > span {
   width: 100%;
 }
 
-.counties-select.dropdown-button>span span {
-  color: #8F8F8F;
+.counties-select.dropdown-button > span span {
+  color: #8f8f8f;
   font-size: 22px;
   font-weight: bold;
 }
@@ -179,13 +182,13 @@ body {
 
 /* select styles */
 
-.first-option>div {
+.first-option > div {
   padding-left: 12px;
   height: 32px;
   margin-bottom: 5px;
 }
 
-.last-option>div {
+.last-option > div {
   padding-left: 12px;
   height: 32px;
   border-bottom: 1px solid #cfcfcf;
@@ -199,7 +202,6 @@ body {
 }
 
 @media (max-width: 800px) {
-
   .bar-candidate-name,
   .bar-votes-number,
   .bar-votes-percent {
@@ -218,11 +220,9 @@ body {
   .bar-votes-percent {
     width: 64px;
   }
-
 }
 
 @media (min-width: 800px) {
-
   .bar-candidate-name,
   .bar-votes-number,
   .bar-votes-percent {
@@ -244,7 +244,6 @@ body {
 }
 
 @media (min-width: 1400px) {
-
   .bar-candidate-name,
   .bar-votes-number,
   .bar-votes-percent {
