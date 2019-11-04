@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -18,25 +19,33 @@ namespace ElectionResults.Core.Services
             _resultsRepository = resultsRepository;
         }
 
-        public async Task<ElectionResultsData> GetResults(ResultsType type)
+        public async Task<ElectionResultsData> GetResults(ResultsType type, string location = null)
         {
-            string resultsType = ConvertEnumToString(type);
+            string resultsType = type.ConvertEnumToString();
 
             var localResults = await _resultsRepository.GetLatestResults(Consts.LOCAL, resultsType);
             var diasporaResults = await _resultsRepository.GetLatestResults(Consts.DIASPORA, resultsType);
             var localResultsData = JsonConvert.DeserializeObject<ElectionResultsData>(localResults.StatisticsJson);
             var diasporaResultsData = JsonConvert.DeserializeObject<ElectionResultsData>(diasporaResults.StatisticsJson);
-            return StatisticsAggregator.CombineResults(localResultsData, diasporaResultsData);
-        }
-
-        private static string ConvertEnumToString(ResultsType type)
-        {
-            return type
-                       .GetType()
-                       .GetMember(type.ToString())
-                       .FirstOrDefault()
-                       ?.GetCustomAttribute<DescriptionAttribute>()
-                       ?.Description ?? type.ToString();
+            var electionResultsData = StatisticsAggregator.CombineResults(localResultsData, diasporaResultsData);
+            if (string.IsNullOrWhiteSpace(location) == false)
+            {
+                if (location == "TOTAL")
+                    return electionResultsData;
+                if (location == "DSPR")
+                {
+                    return diasporaResultsData;
+                }
+                if (location == "RO")
+                {
+                    return localResultsData;
+                }
+                foreach (var candidate in electionResultsData.Candidates)
+                {
+                    candidate.Votes = candidate.Counties[location];
+                }
+            }
+            return electionResultsData;
         }
     }
 }

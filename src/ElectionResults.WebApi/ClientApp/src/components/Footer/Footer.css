@@ -1,0 +1,39 @@
+footer {
+  background-color: #110D64;
+}
+
+.container {
+  padding-top: 2em;
+  padding-bottom: 2em;
+}
+
+.link-title {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 27px;
+}
+
+.link-item {
+  color: inherit;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 23px;
+}
+
+.link-item:hover {
+  color: inherit;
+  text-decoration: none;
+}
+
+.input-large {
+  height: 48px;
+  font-size: 12px;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: flex-end;
+  padding-bottom: .5em;
+}
