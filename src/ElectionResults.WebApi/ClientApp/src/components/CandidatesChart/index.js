@@ -27,19 +27,19 @@ export const ChartContainer = () => {
 
     connection
       .start()
-      .then(() => console.log('Connection started!'))
-      .catch(err => console.log('Error while establishing connection :('));
+      .then(() => console.log("Connection started!"))
+      .catch(err => console.log("Error while establishing connection :("));
 
-    connection.on('results-updated', (data) => {
+    connection.on("results-updated", data => {
       setCandidates(data.candidates);
     });
   }, []);
 
-  const selectionChanged = (value) => {
+  const selectionChanged = value => {
     fetch(`/api/results?location=${value.id}`)
       .then(data => data.json())
       .then(data => setCandidates(data.candidates));
-  }
+  };
 
   return (
     <div>

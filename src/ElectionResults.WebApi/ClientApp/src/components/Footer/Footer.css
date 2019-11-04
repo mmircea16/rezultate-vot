@@ -1,8 +1,8 @@
 footer {
-  background-color: #110D64;
+  background-color: #110d64;
 }
 
-.container {
+.footer.container {
   padding-top: 2em;
   padding-bottom: 2em;
 }
@@ -35,5 +35,5 @@ footer {
 .logo-container {
   display: flex;
   justify-content: flex-end;
-  padding-bottom: .5em;
+  padding-bottom: 0.5em;
 }
