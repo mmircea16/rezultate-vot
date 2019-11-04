@@ -97,7 +97,10 @@ namespace ElectionResults.Tests.CsvDownloaderJobTests
             
             var appConfig = new AppConfig { BucketName = "test", TableName = "test" };
             var fakeConfig = new OptionsWrapper<AppConfig>(appConfig);
-            var csvDownloaderJob = new CsvDownloaderJob(_bucketUploader, _electionConfigurationSource, new FakeResultsRepository(fakeConfig), new FakeBucketRepository(), new FakeElectionPresenceAggregator(), null, fakeConfig);
+            var electionPresenceAggregator = Substitute.For<IElectionPresenceAggregator>();
+            electionPresenceAggregator.GetCurrentPresence().ReturnsForAnyArgs(Result.Failure<VotesPresence>("err"));
+            electionPresenceAggregator.GetVoteMonitoringStats().ReturnsForAnyArgs(Result.Failure<VoteMonitoringStats>("err"));
+            var csvDownloaderJob = new CsvDownloaderJob(_bucketUploader, _electionConfigurationSource, new FakeResultsRepository(fakeConfig), new FakeBucketRepository(), electionPresenceAggregator, null, fakeConfig);
             return csvDownloaderJob;
         }
 
@@ -105,23 +108,6 @@ namespace ElectionResults.Tests.CsvDownloaderJobTests
         {
             _electionConfigurationSource.GetListOfFilesWithElectionResults()
                 .ReturnsForAnyArgs(info => files.ToList());
-        }
-    }
-
-    internal class FakeElectionPresenceAggregator : ElectionPresenceAggregator
-    {
-        public FakeElectionPresenceAggregator(): base(new OptionsWrapper<AppConfig>(new AppConfig()))
-        {
-            
-        }
-
-        public FakeElectionPresenceAggregator(IOptions<AppConfig> config) : base(config)
-        {
-        }
-
-        public override Task<Result<VotesPresence>> GetCurrentPresence()
-        {
-            return Task.FromResult(Result.Ok(new VotesPresence()));
         }
     }
 

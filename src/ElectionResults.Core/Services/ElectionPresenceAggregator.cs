@@ -4,20 +4,19 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
+using ElectionResults.Core.Infrastructure;
 using ElectionResults.Core.Models;
-using ElectionResults.Core.Storage;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
 namespace ElectionResults.Core.Services
 {
     public class ElectionPresenceAggregator : IElectionPresenceAggregator
     {
-        private readonly AppConfig _config;
+        private readonly IElectionConfigurationSource _electionConfigurationSource;
 
-        public ElectionPresenceAggregator(IOptions<AppConfig> config)
+        public ElectionPresenceAggregator(IElectionConfigurationSource electionConfigurationSource)
         {
-            _config = config.Value;
+            _electionConfigurationSource = electionConfigurationSource;
         }
 
         public virtual async Task<Result<VotesPresence>> GetCurrentPresence()
@@ -25,7 +24,8 @@ namespace ElectionResults.Core.Services
             try
             {
                 var httpClient = new HttpClient();
-                var presenceJson = _config.ElectionsConfig.ParseConfig().Files.FirstOrDefault(f => f.ResultsType == ResultsType.Presence);
+                var files = _electionConfigurationSource.GetListOfFilesWithElectionResults();
+                var presenceJson = files.FirstOrDefault(f => f.ResultsType == ResultsType.Presence);
                 if (presenceJson == null)
                     return Result.Failure<VotesPresence>("File not available");
                 var json = await httpClient.GetStringAsync(presenceJson?.URL);
@@ -59,7 +59,8 @@ namespace ElectionResults.Core.Services
         public async Task<Result<VoteMonitoringStats>> GetVoteMonitoringStats()
         {
             var httpClient = new HttpClient();
-            var voteMonitoringJson = _config.ElectionsConfig.ParseConfig().Files.FirstOrDefault(f => f.ResultsType == ResultsType.VoteMonitoring);
+            var files = _electionConfigurationSource.GetListOfFilesWithElectionResults();
+            var voteMonitoringJson = files.FirstOrDefault(f => f.ResultsType == ResultsType.VoteMonitoring);
             var json = await httpClient.GetStringAsync(voteMonitoringJson.URL);
             var response = JsonConvert.DeserializeObject<List<MonitoringInfo>>(json);
             return Result.Ok(new VoteMonitoringStats
