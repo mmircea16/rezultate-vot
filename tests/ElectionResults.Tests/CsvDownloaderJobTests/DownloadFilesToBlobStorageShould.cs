@@ -3,9 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
 using Amazon.S3;
+using CSharpFunctionalExtensions;
 using ElectionResults.Core.Infrastructure;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Repositories;
+using ElectionResults.Core.Services;
 using ElectionResults.Core.Services.BlobContainer;
 using ElectionResults.Core.Services.CsvDownload;
 using ElectionResults.Core.Storage;
@@ -24,7 +26,7 @@ namespace ElectionResults.Tests.CsvDownloaderJobTests
         [Fact]
         public async Task RetrieveListOfCsvFiles()
         {
-            var csvDownloaderJob = CreatecsvDownloaderJob();
+            var csvDownloaderJob = CreateFakeJob();
             CreateResultsSourceMock(new ElectionResultsFile());
 
             await csvDownloaderJob.DownloadFiles();
@@ -35,7 +37,7 @@ namespace ElectionResults.Tests.CsvDownloaderJobTests
         [Fact]
         public async Task UploadFilesToBlobContainer()
         {
-            var csvDownloaderJob = CreatecsvDownloaderJob();
+            var csvDownloaderJob = CreateFakeJob();
             CreateResultsSourceMock(new ElectionResultsFile { Active = true });
 
             await csvDownloaderJob.DownloadFiles();
@@ -48,7 +50,7 @@ namespace ElectionResults.Tests.CsvDownloaderJobTests
         [Fact]
         public async Task UploadSameNumberOfFilesThatItReceived()
         {
-            var csvDownloaderJob = CreatecsvDownloaderJob();
+            var csvDownloaderJob = CreateFakeJob();
             CreateResultsSourceMock(new ElectionResultsFile { Active = true }, new ElectionResultsFile { Active = true });
 
             await csvDownloaderJob.DownloadFiles();
@@ -61,7 +63,7 @@ namespace ElectionResults.Tests.CsvDownloaderJobTests
         [Fact]
         public async Task UseSameTimestampForEachFile()
         {
-            var csvDownloaderJob = CreatecsvDownloaderJob();
+            var csvDownloaderJob = CreateFakeJob();
             CreateResultsSourceMock(new ElectionResultsFile { Active = true }, new ElectionResultsFile { Active = true });
             SystemTime.Now = DateTimeOffset.UtcNow;
             var timestamp = SystemTime.Now.ToUnixTimeSeconds();
@@ -76,7 +78,7 @@ namespace ElectionResults.Tests.CsvDownloaderJobTests
         [Fact]
         public async Task BuildNameOfUploadedFiles()
         {
-            var csvDownloaderJob = CreatecsvDownloaderJob();
+            var csvDownloaderJob = CreateFakeJob();
             CreateResultsSourceMock(new ElectionResultsFile { ResultsType = ResultsType.Final, ResultsLocation = ResultsLocation.Romania, Active = true });
             SystemTime.Now = DateTimeOffset.UtcNow;
             var timestamp = SystemTime.Now.ToUnixTimeSeconds();
@@ -88,13 +90,14 @@ namespace ElectionResults.Tests.CsvDownloaderJobTests
                 .UploadFromUrl(Arg.Is<ElectionResultsFile>(f => f.Name == $"FINAL_RO_{timestamp}.csv"));
         }
 
-        private CsvDownloaderJob CreatecsvDownloaderJob()
+        private CsvDownloaderJob CreateFakeJob()
         {
             _bucketUploader = Substitute.For<IBucketUploader>();
             _electionConfigurationSource = Substitute.For<IElectionConfigurationSource>();
+            
             var appConfig = new AppConfig { BucketName = "test", TableName = "test" };
             var fakeConfig = new OptionsWrapper<AppConfig>(appConfig);
-            var csvDownloaderJob = new CsvDownloaderJob(_bucketUploader, _electionConfigurationSource, new FakeResultsRepository(fakeConfig), new FakeBucketRepository(), fakeConfig);
+            var csvDownloaderJob = new CsvDownloaderJob(_bucketUploader, _electionConfigurationSource, new FakeResultsRepository(fakeConfig), new FakeBucketRepository(), new FakeElectionPresenceAggregator(), null, fakeConfig);
             return csvDownloaderJob;
         }
 
@@ -102,6 +105,23 @@ namespace ElectionResults.Tests.CsvDownloaderJobTests
         {
             _electionConfigurationSource.GetListOfFilesWithElectionResults()
                 .ReturnsForAnyArgs(info => files.ToList());
+        }
+    }
+
+    internal class FakeElectionPresenceAggregator : ElectionPresenceAggregator
+    {
+        public FakeElectionPresenceAggregator(): base(new OptionsWrapper<AppConfig>(new AppConfig()))
+        {
+            
+        }
+
+        public FakeElectionPresenceAggregator(IOptions<AppConfig> config) : base(config)
+        {
+        }
+
+        public override Task<Result<VotesPresence>> GetCurrentPresence()
+        {
+            return Task.FromResult(Result.Ok(new VotesPresence()));
         }
     }
 
@@ -134,6 +154,11 @@ namespace ElectionResults.Tests.CsvDownloaderJobTests
         }
 
         public override Task InitializeDb()
+        {
+            return Task.CompletedTask;
+        }
+
+        public override Task InsertCurrentPresence(VotesPresence votesPresence)
         {
             return Task.CompletedTask;
         }

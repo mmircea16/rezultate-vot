@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using ElectionResults.Core.Models;
+using ElectionResults.Core.Services;
 
 namespace ElectionResults.Core.Storage
 {
@@ -8,6 +9,9 @@ namespace ElectionResults.Core.Storage
         Task InsertResults(ElectionStatistics electionStatistics);
 
         Task<ElectionStatistics> GetLatestResults(string location, string type);
+        
         Task InitializeDb();
+        
+        Task InsertCurrentPresence(VotesPresence votesPresence);
     }
 }

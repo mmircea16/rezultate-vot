@@ -52,9 +52,16 @@ namespace ElectionResults.Core.Infrastructure
             return Result.Failure("Couldn't update the job timer");
         }
 
-        public string GetConfig()
+        public async Task<Result<string>> GetConfigAsync()
         {
-            return _config.ElectionsConfig;
+            var getParameterRequest = new GetParameterRequest
+            {
+                Name = $"/{Consts.PARAMETER_STORE_NAME}/settings/electionsConfig",
+            };
+            var response = await _amazonSettingsClient.GetParameterAsync(getParameterRequest);
+            if (response.HttpStatusCode == HttpStatusCode.OK)
+                return Result.Ok(response.Parameter.Value);
+            return Result.Failure<string>("Couldn't update the job timer");
         }
 
         public List<ElectionResultsFile> GetListOfFilesWithElectionResults()

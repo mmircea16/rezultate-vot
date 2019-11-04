@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using ElectionResults.Core.Models;
+using Newtonsoft.Json;
 
 namespace ElectionResults.Core.Services
 {
@@ -16,6 +17,18 @@ namespace ElectionResults.Core.Services
                        .FirstOrDefault()
                        ?.GetCustomAttribute<DescriptionAttribute>()
                        ?.Description ?? type.ToString();
+        }
+
+        public static ElectionsConfig ParseConfig(this string configJson)
+        {
+            try
+            {
+                return JsonConvert.DeserializeObject<ElectionsConfig>(configJson);
+            }
+            catch (Exception e)
+            {
+                return new ElectionsConfig();
+            }
         }
     }
 }

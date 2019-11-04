@@ -47,5 +47,11 @@ namespace ElectionResults.Core.Services
             }
             return electionResultsData;
         }
+
+        public async Task<VotesPresence> GetLatestPresence()
+        {
+            var result = await _resultsRepository.GetLatestResults(ResultsLocation.All.ToString(), ResultsType.Presence.ToString());
+            return JsonConvert.DeserializeObject<VotesPresence>(result.StatisticsJson);
+        }
     }
 }

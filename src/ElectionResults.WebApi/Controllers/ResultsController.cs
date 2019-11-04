@@ -39,6 +39,7 @@ namespace ElectionResults.WebApi.Controllers
                     Label = c.Key,
                     Id = c.Key
                 }).ToList();
+            liveResultsResponse.Presence = await _resultsAggregator.GetLatestPresence();
             return liveResultsResponse;
         }
     }

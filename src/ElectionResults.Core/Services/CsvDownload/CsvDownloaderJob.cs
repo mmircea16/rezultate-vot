@@ -7,6 +7,7 @@ using ElectionResults.Core.Models;
 using ElectionResults.Core.Repositories;
 using ElectionResults.Core.Services.BlobContainer;
 using ElectionResults.Core.Storage;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace ElectionResults.Core.Services.CsvDownload
@@ -17,18 +18,24 @@ namespace ElectionResults.Core.Services.CsvDownload
         private readonly IElectionConfigurationSource _electionConfigurationSource;
         private readonly IResultsRepository _resultsRepository;
         private readonly IBucketRepository _bucketRepository;
+        private readonly IElectionPresenceAggregator _electionPresenceAggregator;
+        private readonly ILogger<CsvDownloaderJob> _logger;
         private readonly AppConfig _config;
 
         public CsvDownloaderJob(IBucketUploader bucketUploader,
             IElectionConfigurationSource electionConfigurationSource,
             IResultsRepository resultsRepository,
             IBucketRepository bucketRepository,
+            IElectionPresenceAggregator electionPresenceAggregator,
+            ILogger<CsvDownloaderJob> logger,
             IOptions<AppConfig> config)
         {
             _bucketUploader = bucketUploader;
             _electionConfigurationSource = electionConfigurationSource;
             _resultsRepository = resultsRepository;
             _bucketRepository = bucketRepository;
+            _electionPresenceAggregator = electionPresenceAggregator;
+            _logger = logger;
             _config = config.Value;
         }
 
@@ -47,6 +54,12 @@ namespace ElectionResults.Core.Services.CsvDownload
 
             await Task.WhenAll(tasks);
             Console.WriteLine($"Files downloaded");
+            var result = await _electionPresenceAggregator.GetCurrentPresence();
+            if (result.IsSuccess)
+            {
+                result.Value.Timestamp = timestamp;
+                await _resultsRepository.InsertCurrentPresence(result.Value);
+            }
         }
 
         private async Task InitializeDb()
@@ -64,7 +77,6 @@ namespace ElectionResults.Core.Services.CsvDownload
                 if (response.IsFailure)
                 {
                     Console.WriteLine(response.Error);
-                    return;
                 }
             }
         }

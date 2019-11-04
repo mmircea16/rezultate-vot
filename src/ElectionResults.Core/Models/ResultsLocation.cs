@@ -8,5 +8,7 @@ namespace ElectionResults.Core.Models
         Romania,
         [Description("DSPR")]
         Diaspora,
+        [Description("ALL")]
+        All
     }
 }

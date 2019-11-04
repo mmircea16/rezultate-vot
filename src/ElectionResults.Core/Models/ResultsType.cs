@@ -9,6 +9,7 @@ namespace ElectionResults.Core.Models
         [Description("PART")]
         Partial,
         [Description("FINAL")]
-        Final
+        Final,
+        Presence
     }
 }

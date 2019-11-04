@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 using ElectionResults.Core.Models;
+using ElectionResults.Core.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
 namespace ElectionResults.Core.Storage
 {
@@ -28,14 +30,13 @@ namespace ElectionResults.Core.Storage
             try
             {
                 _logger.LogInformation($"Inserting results");
-                
 
                 Dictionary<string, AttributeValue> item = new Dictionary<string, AttributeValue>();
                 item["id"] = new AttributeValue { S = electionStatistics.Id };
                 item["csvType"] = new AttributeValue { S = electionStatistics.Type };
                 item["csvLocation"] = new AttributeValue { S = electionStatistics.Location };
                 item["statisticsJson"] = new AttributeValue { S = electionStatistics.StatisticsJson };
-                item["csvTimestamp"] = new AttributeValue { N = electionStatistics.FileTimestamp.ToString() };
+                item["csvTimestamp"] = new AttributeValue { N = electionStatistics.Timestamp.ToString() };
                 List<WriteRequest> items = new List<WriteRequest>();
                 items.Add(new WriteRequest
                 {
@@ -65,8 +66,8 @@ namespace ElectionResults.Core.Storage
             var queryResponse = await _dynamoDb.QueryAsync(queryRequest);
 
             var results = GetResults(queryResponse.Items);
-            var latest = results.OrderByDescending(r => r.FileTimestamp).FirstOrDefault();
-            _logger.LogInformation($"Latest for {type} and {location} is {latest.FileTimestamp}");
+            var latest = results.OrderByDescending(r => r.Timestamp).FirstOrDefault();
+            _logger.LogInformation($"Latest for {type} and {location} is {latest.Timestamp}");
             return latest;
         }
 
@@ -75,6 +76,17 @@ namespace ElectionResults.Core.Storage
             var tableExists = await TableExists();
             if (!tableExists)
                 await CreateTable();
+        }
+
+        public virtual async Task InsertCurrentPresence(VotesPresence votesPresence)
+        {
+            var electionStatistics = new ElectionStatistics();
+            electionStatistics.Id = $"{DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks:D19}";
+            electionStatistics.Type = ResultsType.Presence.ToString();
+            electionStatistics.Location = ResultsLocation.All.ToString();
+            electionStatistics.Timestamp = votesPresence.Timestamp;
+            electionStatistics.StatisticsJson = JsonConvert.SerializeObject(votesPresence);
+            await InsertResults(electionStatistics);
         }
 
         private async Task WaitUntilTableReady(string tableName)
@@ -123,7 +135,7 @@ namespace ElectionResults.Core.Storage
             return foundItems.Select(item => new ElectionStatistics
             {
                 Id = item["id"].S,
-                FileTimestamp = Convert.ToInt64(item["csvTimestamp"].N),
+                Timestamp = Convert.ToInt64(item["csvTimestamp"].N),
                 StatisticsJson = item["statisticsJson"].S,
                 Location = item["csvLocation"].S,
                 Type = item["csvType"].S

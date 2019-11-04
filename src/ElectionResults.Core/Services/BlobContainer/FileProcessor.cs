@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using ElectionResults.Core.Infrastructure;
 using ElectionResults.Core.Services.CsvProcessing;
 using ElectionResults.Core.Storage;
 using Microsoft.Extensions.Options;
@@ -13,14 +12,16 @@ namespace ElectionResults.Core.Services.BlobContainer
     public class FileProcessor : IFileProcessor
     {
         private readonly IResultsRepository _resultsRepository;
+        private readonly IElectionPresenceAggregator _electionPresenceAggregator;
         private readonly IStatisticsAggregator _statisticsAggregator;
 
         public FileProcessor(IResultsRepository resultsRepository,
-            IElectionConfigurationSource electionConfigurationSource,
+            IElectionPresenceAggregator electionPresenceAggregator,
             IStatisticsAggregator statisticsAggregator,
             IOptions<AppConfig> config)
         {
             _resultsRepository = resultsRepository;
+            _electionPresenceAggregator = electionPresenceAggregator;
             _statisticsAggregator = statisticsAggregator;
             _statisticsAggregator.CsvParsers = new List<ICsvParser>
             {
@@ -36,7 +37,7 @@ namespace ElectionResults.Core.Services.BlobContainer
             if (aggregationResult.IsSuccess)
             {
                 var electionStatistics = FileNameParser.BuildElectionStatistics(fileName, aggregationResult.Value);
-                Console.WriteLine($"Uploading file {fileName} with timestamp {electionStatistics.FileTimestamp}");
+                Console.WriteLine($"Uploading file {fileName} with timestamp {electionStatistics.Timestamp}");
                 await _resultsRepository.InsertResults(electionStatistics);
             }
         }
