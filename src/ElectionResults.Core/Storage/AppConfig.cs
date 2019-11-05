@@ -6,6 +6,5 @@
         public string BucketName { get; set; }
         public string JobTimer { get; set; }
         public string ElectionsConfig { get; set; }
-        public string VotePresenceUrl { get; set; }
     }
 }

@@ -8,19 +8,18 @@ export const ChartContainer = () => {
   const [showAll, toggleShowAll] = React.useState(false);
   const [candidates, setCandidates] = React.useState(null);
   const [counties, setCounties] = React.useState(null);
-  const [votePresence, setVotePresence] = React.useState(null);
+  const [voterTurnout, setVoterTurnout] = React.useState(null);
     React.useEffect(() => {
     fetch("/api/results")
       .then(data => data.json())
       .then(data => {
-        setVotePresence(data.presence);
+          setVoterTurnout(data.voterTurnout);
           setCandidates(data.candidates);
         const total = { label: "Total", id: "TOTAL" };
         const national = { label: "National", id: "RO" };
         const diaspora = { label: "Diaspora", id: "DSPR" };
         data.counties.unshift(total, diaspora, national);
         setCounties(data.counties);
-        console.log(data.presence);
       });
 
     const connection = new signalR.HubConnectionBuilder()
@@ -57,8 +56,8 @@ export const ChartContainer = () => {
             <div sm={3} className={"votes-numbers"}>
               <h3 className={"votes-title"}>Voturi numarate</h3>
               <div sm={3} className={"votes-results"}>
-                <p className={"votes-percent"}> {votePresence.presencePercentage}%</p>
-                <p className={"votes-text"}> {votePresence.totalNationalVotes.toLocaleString(undefined, { maximumFractionDigits: 2 })}</p>
+                  <p className={"votes-percent"}> {voterTurnout.turnoutPercentage}%</p>
+                  <p className={"votes-text"}> {voterTurnout.totalNationalVotes.toLocaleString(undefined, { maximumFractionDigits: 2 })}</p>
               </div>
             </div>
           </div>

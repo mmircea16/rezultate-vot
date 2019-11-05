@@ -6,9 +6,9 @@ using Newtonsoft.Json;
 
 namespace ElectionResults.Core.Services
 {
-    public interface IElectionPresenceAggregator
+    public interface IVoterTurnoutAggregator
     {
-        Task<Result<VotesPresence>> GetCurrentPresence();
+        Task<Result<VoterTurnout>> GetVoterTurnoutFromBEC();
 
         Task<Result<VoteMonitoringStats>> GetVoteMonitoringStats();
     }

@@ -11,9 +11,9 @@ namespace ElectionResults.Tests.BlobProcessorTests
     public class TestableFileProcessor: FileProcessor
     {
         public TestableFileProcessor(IResultsRepository resultsRepository,
-            IElectionPresenceAggregator electionPresenceAggregator,
+            IVoterTurnoutAggregator voterTurnoutAggregator,
             IStatisticsAggregator statisticsAggregator,
-            IOptions<AppConfig> config) : base(resultsRepository, electionPresenceAggregator, statisticsAggregator, config)
+            IOptions<AppConfig> config) : base(resultsRepository, voterTurnoutAggregator, statisticsAggregator, config)
         {
         }
 

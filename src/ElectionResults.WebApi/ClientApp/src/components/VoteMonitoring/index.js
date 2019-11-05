@@ -50,7 +50,7 @@ export const VoteMonitoring = ({ voteMonitoringData }) => {
             </div>
             <div className={"info-legend bars"}>
               <div className={"parent-bar"}>
-                <p style={{ marginLeft: `${percent + 3}%` }}>
+                <p style={{ marginLeft: `${percent + 4}%` }}>
                   {voteMonitoringData[0].value}
                 </p>
               </div>

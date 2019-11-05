@@ -2,7 +2,7 @@
 
 namespace ElectionResults.Core.Models
 {
-    public class VotingPresenceResponse
+    public class VoterTurnoutResponce
     {
         [JsonProperty("current_info")]
         public CurrentInfo CurrentInfo { get; set; }

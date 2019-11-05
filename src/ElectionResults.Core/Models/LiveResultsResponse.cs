@@ -8,9 +8,6 @@ namespace ElectionResults.Core.Models
         public List<CandidateModel> Candidates { get; set; }
 
         public List<County> Counties { get; set; }
-
-        public VotesPresence Presence { get; set; }
-
-        public VoteMonitoringStats VoteMonitoringStats { get; set; }
+        public VoterTurnout VoterTurnout { get; set; }
     }
 }

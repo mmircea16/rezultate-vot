@@ -45,7 +45,7 @@ namespace ElectionResults.WebApi
             services.AddTransient<IStatisticsAggregator, StatisticsAggregator>();
             services.AddTransient<IBucketRepository, BucketRepository>();
             services.AddTransient<IFileRepository, FileRepository>();
-            services.AddTransient<IElectionPresenceAggregator, ElectionPresenceAggregator>();
+            services.AddTransient<IVoterTurnoutAggregator, VoterTurnoutAggregator>();
             services.AddAWSService<IAmazonDynamoDB>();
             services.AddAWSService<Amazon.S3.IAmazonS3>(new AWSOptions
             {

@@ -10,9 +10,9 @@ namespace ElectionResults.Core.Models
         Partial,
         [Description("FINAL")]
         Final,
-        [Description("PRESENCE")]
-        Presence,
-        [Description("VOTEMONITORING")]
+        [Description("TURNOUT")]
+        VoterTurnout,
+        [Description("MONITORING")]
         VoteMonitoring
     }
 }

@@ -18,7 +18,7 @@ namespace ElectionResults.Core.Services.CsvDownload
         private readonly IElectionConfigurationSource _electionConfigurationSource;
         private readonly IResultsRepository _resultsRepository;
         private readonly IBucketRepository _bucketRepository;
-        private readonly IElectionPresenceAggregator _electionPresenceAggregator;
+        private readonly IVoterTurnoutAggregator _voterTurnoutAggregator;
         private readonly ILogger<CsvDownloaderJob> _logger;
         private readonly AppConfig _config;
 
@@ -26,7 +26,7 @@ namespace ElectionResults.Core.Services.CsvDownload
             IElectionConfigurationSource electionConfigurationSource,
             IResultsRepository resultsRepository,
             IBucketRepository bucketRepository,
-            IElectionPresenceAggregator electionPresenceAggregator,
+            IVoterTurnoutAggregator voterTurnoutAggregator,
             ILogger<CsvDownloaderJob> logger,
             IOptions<AppConfig> config)
         {
@@ -34,7 +34,7 @@ namespace ElectionResults.Core.Services.CsvDownload
             _electionConfigurationSource = electionConfigurationSource;
             _resultsRepository = resultsRepository;
             _bucketRepository = bucketRepository;
-            _electionPresenceAggregator = electionPresenceAggregator;
+            _voterTurnoutAggregator = voterTurnoutAggregator;
             _logger = logger;
             _config = config.Value;
         }
@@ -54,13 +54,13 @@ namespace ElectionResults.Core.Services.CsvDownload
 
             await Task.WhenAll(tasks);
             Console.WriteLine($"Files downloaded");
-            await AddVotePresence(timestamp);
+            await AddVoterTurnout(timestamp);
             await AddVoteMonitoringStats(timestamp);
         }
 
         private async Task AddVoteMonitoringStats(long timestamp)
         {
-            var result = await _electionPresenceAggregator.GetVoteMonitoringStats();
+            var result = await _voterTurnoutAggregator.GetVoteMonitoringStats();
             if (result.IsSuccess)
             {
                 result.Value.Timestamp = timestamp;
@@ -68,13 +68,13 @@ namespace ElectionResults.Core.Services.CsvDownload
             }
         }
 
-        private async Task AddVotePresence(long timestamp)
+        private async Task AddVoterTurnout(long timestamp)
         {
-            var result = await _electionPresenceAggregator.GetCurrentPresence();
+            var result = await _voterTurnoutAggregator.GetVoterTurnoutFromBEC();
             if (result.IsSuccess)
             {
                 result.Value.Timestamp = timestamp;
-                await _resultsRepository.InsertCurrentPresence(result.Value);
+                await _resultsRepository.InsertCurrentVoterTurnout(result.Value);
             }
         }
 

@@ -12,16 +12,16 @@ namespace ElectionResults.Core.Services.BlobContainer
     public class FileProcessor : IFileProcessor
     {
         private readonly IResultsRepository _resultsRepository;
-        private readonly IElectionPresenceAggregator _electionPresenceAggregator;
+        private readonly IVoterTurnoutAggregator _voterTurnoutAggregator;
         private readonly IStatisticsAggregator _statisticsAggregator;
 
         public FileProcessor(IResultsRepository resultsRepository,
-            IElectionPresenceAggregator electionPresenceAggregator,
+            IVoterTurnoutAggregator voterTurnoutAggregator,
             IStatisticsAggregator statisticsAggregator,
             IOptions<AppConfig> config)
         {
             _resultsRepository = resultsRepository;
-            _electionPresenceAggregator = electionPresenceAggregator;
+            _voterTurnoutAggregator = voterTurnoutAggregator;
             _statisticsAggregator = statisticsAggregator;
             _statisticsAggregator.CsvParsers = new List<ICsvParser>
             {

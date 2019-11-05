@@ -10,49 +10,49 @@ using Newtonsoft.Json;
 
 namespace ElectionResults.Core.Services
 {
-    public class ElectionPresenceAggregator : IElectionPresenceAggregator
+    public class VoterTurnoutAggregator : IVoterTurnoutAggregator
     {
         private readonly IElectionConfigurationSource _electionConfigurationSource;
 
-        public ElectionPresenceAggregator(IElectionConfigurationSource electionConfigurationSource)
+        public VoterTurnoutAggregator(IElectionConfigurationSource electionConfigurationSource)
         {
             _electionConfigurationSource = electionConfigurationSource;
         }
 
-        public virtual async Task<Result<VotesPresence>> GetCurrentPresence()
+        public virtual async Task<Result<VoterTurnout>> GetVoterTurnoutFromBEC()
         {
             try
             {
                 var httpClient = new HttpClient();
                 var files = _electionConfigurationSource.GetListOfFilesWithElectionResults();
-                var presenceJson = files.FirstOrDefault(f => f.ResultsType == ResultsType.Presence);
-                if (presenceJson == null)
-                    return Result.Failure<VotesPresence>("File not available");
-                var json = await httpClient.GetStringAsync(presenceJson?.URL);
-                var votingPresenceResponse = JsonConvert.DeserializeObject<VotingPresenceResponse>(json);
-                var permanentLists = votingPresenceResponse.Counties.Sum(c => c.VotersOnPermanentLists);
-                var specialLists = votingPresenceResponse.Counties.Sum(c => c.VotersOnSpecialLists);
-                var mobileVotes = votingPresenceResponse.Counties.Sum(c => c.MobileVotes);
+                var turnoutJson = files.FirstOrDefault(f => f.ResultsType == ResultsType.VoterTurnout);
+                if (turnoutJson == null)
+                    return Result.Failure<VoterTurnout>("File not available");
+                var json = await httpClient.GetStringAsync(turnoutJson?.URL);
+                var voterTurnoutResponse = JsonConvert.DeserializeObject<VoterTurnoutResponce>(json);
+                var permanentLists = voterTurnoutResponse.Counties.Sum(c => c.VotersOnPermanentLists);
+                var specialLists = voterTurnoutResponse.Counties.Sum(c => c.VotersOnSpecialLists);
+                var mobileVotes = voterTurnoutResponse.Counties.Sum(c => c.MobileVotes);
 
-                var diasporaVoters = votingPresenceResponse.Precinct.Sum(c => c.VotersOnSpecialLists);
-                var enlistedVoters = votingPresenceResponse.Counties.Sum(c => c.InitialCount);
+                var diasporaVoters = voterTurnoutResponse.Precinct.Sum(c => c.VotersOnSpecialLists);
+                var enlistedVoters = voterTurnoutResponse.Counties.Sum(c => c.InitialCount);
                 var totalVoters = permanentLists + mobileVotes + (specialLists - diasporaVoters);
-                var votesPresencePercentage = totalVoters / (decimal)enlistedVoters;
-                var votesPresence = new VotesPresence
+                var voterTurnoutPercentage = totalVoters / (decimal)enlistedVoters;
+                var voterTurnout = new VoterTurnout
                 {
                     EnlistedVoters = enlistedVoters,
-                    PresencePercentage = Math.Round(votesPresencePercentage * 100, 2),
+                    TurnoutPercentage = Math.Round(voterTurnoutPercentage * 100, 2),
                     TotalNationalVotes = totalVoters,
                     TotalDiasporaVotes = diasporaVoters,
                     PermanentLists = permanentLists,
                     AdditionalLists = specialLists - diasporaVoters
                 };
-                return Result.Ok(votesPresence);
+                return Result.Ok(voterTurnout);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return Result.Failure<VotesPresence>(e.Message);
+                return Result.Failure<VoterTurnout>(e.Message);
             }
         }
 
@@ -65,7 +65,7 @@ namespace ElectionResults.Core.Services
             var response = JsonConvert.DeserializeObject<List<MonitoringInfo>>(json);
             return Result.Ok(new VoteMonitoringStats
             {
-                VoteInfo = response
+                Statistics = response
             });
         }
     }

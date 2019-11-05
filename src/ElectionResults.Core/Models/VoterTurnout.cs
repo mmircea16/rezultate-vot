@@ -1,12 +1,12 @@
 ﻿namespace ElectionResults.Core.Models
 {
-    public class VotesPresence
+    public class VoterTurnout
     {
         public int EnlistedVoters { get; set; }
 
         public int TotalNationalVotes { get; set; }
 
-        public decimal PresencePercentage { get; set; }
+        public decimal TurnoutPercentage { get; set; }
 
         public int TotalDiasporaVotes { get; set; }
 

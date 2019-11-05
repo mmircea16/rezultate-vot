@@ -78,15 +78,15 @@ namespace ElectionResults.Core.Storage
                 await CreateTable();
         }
 
-        public virtual async Task InsertCurrentPresence(VotesPresence votesPresence)
+        public virtual async Task InsertCurrentVoterTurnout(VoterTurnout voterTurnout)
         {
             var electionStatistics = new ElectionStatistics
             {
                 Id = $"{DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks:D19}",
-                Type = ResultsType.Presence.ConvertEnumToString(),
+                Type = ResultsType.VoterTurnout.ConvertEnumToString(),
                 Location = ResultsLocation.All.ConvertEnumToString(),
-                Timestamp = votesPresence.Timestamp,
-                StatisticsJson = JsonConvert.SerializeObject(votesPresence)
+                Timestamp = voterTurnout.Timestamp,
+                StatisticsJson = JsonConvert.SerializeObject(voterTurnout)
             };
             await InsertResults(electionStatistics);
         }

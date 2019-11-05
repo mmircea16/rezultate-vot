@@ -15,14 +15,14 @@ namespace ElectionResults.Tests.BlobProcessorTests
     public class ProcessStreamShould
     {
         private readonly IStatisticsAggregator _statisticsAggregator;
-        private readonly IElectionPresenceAggregator _electionPresenceAggregator;
+        private readonly IVoterTurnoutAggregator _voterTurnoutAggregator;
         private readonly IResultsRepository _resultsRepository;
         private readonly string _fileName;
 
         public ProcessStreamShould()
         {
             _statisticsAggregator = Substitute.For<IStatisticsAggregator>();
-            _electionPresenceAggregator = Substitute.For<IElectionPresenceAggregator>();
+            _voterTurnoutAggregator = Substitute.For<IVoterTurnoutAggregator>();
             _resultsRepository = Substitute.For<IResultsRepository>();
             _fileName = "a_b_1";
         }
@@ -73,7 +73,7 @@ namespace ElectionResults.Tests.BlobProcessorTests
 
         private TestableFileProcessor CreateTestableBlobProcessor()
         {
-            return new TestableFileProcessor(_resultsRepository, _electionPresenceAggregator, _statisticsAggregator, null);
+            return new TestableFileProcessor(_resultsRepository, _voterTurnoutAggregator, _statisticsAggregator, null);
         }
 
         private void MapStatisticsAggregatorToSuccessfulResult()

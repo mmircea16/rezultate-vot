@@ -97,10 +97,10 @@ namespace ElectionResults.Tests.CsvDownloaderJobTests
             
             var appConfig = new AppConfig { BucketName = "test", TableName = "test" };
             var fakeConfig = new OptionsWrapper<AppConfig>(appConfig);
-            var electionPresenceAggregator = Substitute.For<IElectionPresenceAggregator>();
-            electionPresenceAggregator.GetCurrentPresence().ReturnsForAnyArgs(Result.Failure<VotesPresence>("err"));
-            electionPresenceAggregator.GetVoteMonitoringStats().ReturnsForAnyArgs(Result.Failure<VoteMonitoringStats>("err"));
-            var csvDownloaderJob = new CsvDownloaderJob(_bucketUploader, _electionConfigurationSource, new FakeResultsRepository(fakeConfig), new FakeBucketRepository(), electionPresenceAggregator, null, fakeConfig);
+            var voterTurnoutAggregator = Substitute.For<IVoterTurnoutAggregator>();
+            voterTurnoutAggregator.GetVoterTurnoutFromBEC().ReturnsForAnyArgs(Result.Failure<VoterTurnout>("err"));
+            voterTurnoutAggregator.GetVoteMonitoringStats().ReturnsForAnyArgs(Result.Failure<VoteMonitoringStats>("err"));
+            var csvDownloaderJob = new CsvDownloaderJob(_bucketUploader, _electionConfigurationSource, new FakeResultsRepository(fakeConfig), new FakeBucketRepository(), voterTurnoutAggregator, null, fakeConfig);
             return csvDownloaderJob;
         }
 
@@ -144,7 +144,7 @@ namespace ElectionResults.Tests.CsvDownloaderJobTests
             return Task.CompletedTask;
         }
 
-        public override Task InsertCurrentPresence(VotesPresence votesPresence)
+        public override Task InsertCurrentVoterTurnout(VoterTurnout voterTurnout)
         {
             return Task.CompletedTask;
         }

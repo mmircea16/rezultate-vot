@@ -69,6 +69,5 @@ namespace ElectionResults.Core.Infrastructure
             var electionsConfig = JsonConvert.DeserializeObject<ElectionsConfig>(_config.ElectionsConfig);
             return electionsConfig.Files;
         }
-
     }
 }

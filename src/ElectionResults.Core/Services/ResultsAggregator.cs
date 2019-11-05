@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CSharpFunctionalExtensions;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Services.CsvProcessing;
 using ElectionResults.Core.Storage;
@@ -20,8 +21,9 @@ namespace ElectionResults.Core.Services
         public async Task<LiveResultsResponse> GetResults(ResultsType type, string location = null)
         {
             var liveResultsResponse = new LiveResultsResponse();
-            liveResultsResponse.Presence = await GetLatestPresence();
-            liveResultsResponse.VoteMonitoringStats = await GetVoteMonitoringStats();
+            var voterTurnoutResult = await GetVoterTurnout();
+            if (voterTurnoutResult.IsSuccess)
+                liveResultsResponse.VoterTurnout = voterTurnoutResult.Value;
 
             var selectedResults = await GetResultsByType(type, location);
             var candidates = ConvertCandidates(selectedResults);
@@ -84,16 +86,18 @@ namespace ElectionResults.Core.Services
             return candidates;
         }
 
-        private async Task<VotesPresence> GetLatestPresence()
-        {
-            var result = await _resultsRepository.GetLatestResults(ResultsLocation.All.ConvertEnumToString(), ResultsType.Presence.ConvertEnumToString());
-            return JsonConvert.DeserializeObject<VotesPresence>(result.StatisticsJson);
-        }
-
-        private async Task<VoteMonitoringStats> GetVoteMonitoringStats()
+        public async Task<Result<VoteMonitoringStats>> GetVoteMonitoringStats()
         {
             var result = await _resultsRepository.GetLatestResults(ResultsLocation.All.ConvertEnumToString(), ResultsType.VoteMonitoring.ConvertEnumToString());
-            return JsonConvert.DeserializeObject<VoteMonitoringStats>(result.StatisticsJson);
+            var voteMonitoringStats = JsonConvert.DeserializeObject<VoteMonitoringStats>(result.StatisticsJson);
+            return Result.Ok(voteMonitoringStats);
+        }
+
+        public async Task<Result<VoterTurnout>> GetVoterTurnout()
+        {
+            var result = await _resultsRepository.GetLatestResults(ResultsLocation.All.ConvertEnumToString(), ResultsType.VoterTurnout.ConvertEnumToString());
+            var voterTurnout = JsonConvert.DeserializeObject<VoterTurnout>(result.StatisticsJson);
+            return Result.Ok(voterTurnout);
         }
     }
 }
