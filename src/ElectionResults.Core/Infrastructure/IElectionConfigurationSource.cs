@@ -13,6 +13,6 @@ namespace ElectionResults.Core.Infrastructure
 
         Task<Result> UpdateElectionConfig(ElectionsConfig config);
 
-        string GetConfig();
+        Task<Result<string>> GetConfigAsync();
     }
 }

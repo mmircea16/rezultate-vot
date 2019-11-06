@@ -8,12 +8,13 @@ export const ChartContainer = () => {
   const [showAll, toggleShowAll] = React.useState(false);
   const [candidates, setCandidates] = React.useState(null);
   const [counties, setCounties] = React.useState(null);
-
-  React.useEffect(() => {
+  const [voterTurnout, setVoterTurnout] = React.useState(null);
+    React.useEffect(() => {
     fetch("/api/results")
       .then(data => data.json())
       .then(data => {
-        setCandidates(data.candidates);
+          setVoterTurnout(data.voterTurnout);
+          setCandidates(data.candidates);
         const total = { label: "Total", id: "TOTAL" };
         const national = { label: "National", id: "RO" };
         const diaspora = { label: "Diaspora", id: "DSPR" };
@@ -31,7 +32,10 @@ export const ChartContainer = () => {
       .catch(err => console.log("Error while establishing connection :("));
 
     connection.on("results-updated", data => {
-      setCandidates(data.candidates);
+      console.log("got results");
+    });
+    connection.on("turnout-updated", data => {
+      console.log("received turnout data")
     });
   }, []);
 
@@ -55,8 +59,8 @@ export const ChartContainer = () => {
             <div sm={3} className={"votes-numbers"}>
               <h3 className={"votes-title"}>Voturi numarate</h3>
               <div sm={3} className={"votes-results"}>
-                <p className={"votes-percent"}>30%</p>
-                <p className={"votes-text"}>12.400.000</p>
+                  <p className={"votes-percent"}> {voterTurnout.turnoutPercentage}%</p>
+                  <p className={"votes-text"}> {voterTurnout.totalNationalVotes.toLocaleString(undefined, { maximumFractionDigits: 2 })}</p>
               </div>
             </div>
           </div>

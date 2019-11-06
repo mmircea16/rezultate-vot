@@ -1,5 +1,6 @@
 import React from "react";
 import "./style.css";
+import * as signalR from "@aspnet/signalr";
 
 const NumberArea = ({ bigNumber, text }) => (
   <div className={"vote-monitoring-area"}>
@@ -8,12 +9,25 @@ const NumberArea = ({ bigNumber, text }) => (
   </div>
 );
 export const VoteMonitoring = ({ voteMonitoringData }) => {
-  let messagesNumber;
-  let messagesWithProblems;
-  let percent;
-  if (!voteMonitoringData) {
-    return null;
-  } else {
+    let messagesNumber;
+    let messagesWithProblems;
+    let percent;
+    const connection = new signalR.HubConnectionBuilder()
+    .withUrl("/live-results")
+    .build();
+
+    connection
+    .start()
+    .then(() => console.log("Connection started!"))
+    .catch(err => console.log("Error while establishing connection :("));
+
+    connection.on("monitoring-updated", data => {
+        console.log(data.statistics);
+    //setVoteMonitoringData(data.statistics);
+    });
+    if (!voteMonitoringData) {
+        return null;
+    } else {
     const messagesNumber = voteMonitoringData[0].value;
     const messagesWithProblems = voteMonitoringData[5].value;
     const percent = (messagesWithProblems / messagesNumber) * 100;
@@ -50,7 +64,7 @@ export const VoteMonitoring = ({ voteMonitoringData }) => {
             </div>
             <div className={"info-legend bars"}>
               <div className={"parent-bar"}>
-                <p style={{ marginLeft: `${percent + 3}%` }}>
+                <p style={{ marginLeft: `${percent + 4}%` }}>
                   {voteMonitoringData[0].value}
                 </p>
               </div>
@@ -67,5 +81,5 @@ export const VoteMonitoring = ({ voteMonitoringData }) => {
         </div>
       </div>
     );
-  }
+    }
 };

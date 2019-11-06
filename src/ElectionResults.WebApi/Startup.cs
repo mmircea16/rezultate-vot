@@ -1,7 +1,5 @@
-using System;
 using Amazon;
 using Amazon.DynamoDBv2;
-using Amazon.Extensions.Configuration.SystemsManager;
 using Amazon.Extensions.NETCore.Setup;
 using ElectionResults.Core.Infrastructure;
 using ElectionResults.Core.Repositories;
@@ -21,8 +19,6 @@ using Microsoft.Extensions.Hosting;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 using ElectionResults.WebApi.Hubs;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
-using Microsoft.Extensions.Options;
 
 namespace ElectionResults.WebApi
 {
@@ -49,6 +45,7 @@ namespace ElectionResults.WebApi
             services.AddTransient<IStatisticsAggregator, StatisticsAggregator>();
             services.AddTransient<IBucketRepository, BucketRepository>();
             services.AddTransient<IFileRepository, FileRepository>();
+            services.AddTransient<IVoterTurnoutAggregator, VoterTurnoutAggregator>();
             services.AddAWSService<IAmazonDynamoDB>();
             services.AddAWSService<Amazon.S3.IAmazonS3>(new AWSOptions
             {

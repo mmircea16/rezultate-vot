@@ -76,6 +76,8 @@ const AdminPanel = () => {
                   <option value={0}>Provisional</option>
                   <option value={1}>Partial</option>
                   <option value={2}>Final</option>
+                  <option value={3}>Turnout</option>
+                  <option value={4}>VoteMonitoring</option>
                 </Input>
               </div>
               <div className="form-group">
@@ -84,6 +86,7 @@ const AdminPanel = () => {
                   value={file.ResultsLocation} onChange={(event) => handleFileChange(event, index)}>
                   <option value={0}>Romania</option>
                   <option value={1}>Diaspora</option>
+                  <option value={2}>All</option>
                 </Input>
               </div>
               <div className="form-group">

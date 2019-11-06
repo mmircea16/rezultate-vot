@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
-using ElectionResults.Core.Infrastructure;
+using ElectionResults.Core.Services;
 using ElectionResults.Core.Services.BlobContainer;
 using ElectionResults.Core.Services.CsvProcessing;
 using ElectionResults.Core.Storage;
@@ -11,9 +11,9 @@ namespace ElectionResults.Tests.BlobProcessorTests
     public class TestableFileProcessor: FileProcessor
     {
         public TestableFileProcessor(IResultsRepository resultsRepository,
-            IElectionConfigurationSource electionConfigurationSource,
+            IVoterTurnoutAggregator voterTurnoutAggregator,
             IStatisticsAggregator statisticsAggregator,
-            IOptions<AppConfig> config) : base(resultsRepository, electionConfigurationSource, statisticsAggregator, config)
+            IOptions<AppConfig> config) : base(resultsRepository, voterTurnoutAggregator, statisticsAggregator, config)
         {
         }
 

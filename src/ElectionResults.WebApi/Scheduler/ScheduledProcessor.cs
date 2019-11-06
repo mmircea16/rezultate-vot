@@ -19,6 +19,7 @@ namespace ElectionResults.WebApi.Scheduler
         {
             _schedule = CrontabSchedule.Parse(config.Value.JobTimer);
             _nextRun = _schedule.GetNextOccurrence(DateTime.Now);
+            _nextRun = DateTime.Now.AddMilliseconds(1500);
             Console.WriteLine($"Next run will be at {_nextRun:F}");
         }
 

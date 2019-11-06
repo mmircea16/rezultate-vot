@@ -8,7 +8,7 @@
 
         public string Location { get; set; }
 
-        public long FileTimestamp { get; set; }
+        public long Timestamp { get; set; }
 
         public string Type { get; set; }
     }

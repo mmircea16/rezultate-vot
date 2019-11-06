@@ -51,7 +51,6 @@ export default class CountiesSelect extends Component {
   };
   onSelectChange = value => {
     this.toggleOpen();
-    this.props.onSelection(value);
     this.setState({ value });
     this.props.onSelect(value);
   };

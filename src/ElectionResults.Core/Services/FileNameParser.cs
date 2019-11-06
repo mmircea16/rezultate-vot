@@ -15,7 +15,7 @@ namespace ElectionResults.Core.Services
             var attributes = fileNameWithoutExtension.Split('_');
             electionStatistics.Type = attributes[0];
             electionStatistics.Location = attributes[1];
-            electionStatistics.FileTimestamp = long.Parse(attributes[2]);
+            electionStatistics.Timestamp = long.Parse(attributes[2]);
             electionStatistics.StatisticsJson = JsonConvert.SerializeObject(electionResultsData);
             return electionStatistics;
         }
