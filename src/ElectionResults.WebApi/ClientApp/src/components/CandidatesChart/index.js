@@ -32,7 +32,10 @@ export const ChartContainer = () => {
       .catch(err => console.log("Error while establishing connection :("));
 
     connection.on("results-updated", data => {
-      setCandidates(data.candidates);
+      console.log("got results");
+    });
+    connection.on("turnout-updated", data => {
+      console.log("received turnout data")
     });
   }, []);
 
