@@ -28,9 +28,18 @@ namespace ElectionResults.WebApi.Controllers
         [HttpGet("")]
         public async Task<LiveResultsResponse> GetLatestResults([FromQuery] ResultsType type, string location)
         {
-            var liveResultsResponse = await _resultsAggregator.GetResults(type, location);
-            await _hubContext.Clients.All.SendAsync("results-updated", liveResultsResponse);
-            return liveResultsResponse;
+            try
+            {
+                _logger.LogInformation("Retrieving vote results");
+                var liveResultsResponse = await _resultsAggregator.GetResults(type, location);
+                await _hubContext.Clients.All.SendAsync("results-updated", liveResultsResponse);
+                return liveResultsResponse;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Exception encountered while retrieving results");
+                throw;
+            }
         }
 
         [HttpGet("voter-turnout")]

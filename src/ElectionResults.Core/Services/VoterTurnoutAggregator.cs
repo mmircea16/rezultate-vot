@@ -45,7 +45,8 @@ namespace ElectionResults.Core.Services
                     TotalNationalVotes = totalVoters,
                     TotalDiasporaVotes = diasporaVoters,
                     PermanentLists = permanentLists,
-                    AdditionalLists = specialLists - diasporaVoters
+                    AdditionalLists = specialLists - diasporaVoters,
+                    MobileVotes = mobileVotes
                 };
                 return Result.Ok(voterTurnout);
             }

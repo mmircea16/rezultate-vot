@@ -12,9 +12,10 @@ export const ChartContainer = () => {
     React.useEffect(() => {
     fetch("/api/results")
       .then(data => data.json())
-      .then(data => {
-          setVoterTurnout(data.voterTurnout);
-          setCandidates(data.candidates);
+        .then(data => {
+        console.log(data);
+        setVoterTurnout(data.voterTurnout);
+        setCandidates(data.candidates);
         const total = { label: "Total", id: "TOTAL" };
         const national = { label: "National", id: "RO" };
         const diaspora = { label: "Diaspora", id: "DSPR" };

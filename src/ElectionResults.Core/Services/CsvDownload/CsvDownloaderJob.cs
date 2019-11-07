@@ -37,10 +37,12 @@ namespace ElectionResults.Core.Services.CsvDownload
             _voterTurnoutAggregator = voterTurnoutAggregator;
             _logger = logger;
             _config = config.Value;
+            _logger.LogInformation($"JobTimer is set to: {_config.JobTimer}");
         }
 
         public async Task DownloadFiles()
         {
+            _logger.LogInformation($"Starting to download csv files");
             var files = _electionConfigurationSource.GetListOfFilesWithElectionResults();
             var timestamp = SystemTime.Now.ToUnixTimeSeconds();
             List<Task> tasks = new List<Task>();
@@ -48,14 +50,16 @@ namespace ElectionResults.Core.Services.CsvDownload
             await InitializeDb();
             foreach (var file in files.Where(f => f.Active))
             {
-                Console.WriteLine($"Downloading file {file}");
+                _logger.LogInformation($"Downloading file {file.URL}");
                 tasks.Add(ProcessCsv(file, timestamp));
             }
 
             await Task.WhenAll(tasks);
-            Console.WriteLine($"Files downloaded");
+            _logger.LogInformation($"Files downloaded");
             await AddVoterTurnout(timestamp);
+            _logger.LogInformation("Added voter turnout");
             await AddVoteMonitoringStats(timestamp);
+            _logger.LogInformation("Added vote monitoring stats");
         }
 
         private async Task AddVoteMonitoringStats(long timestamp)
@@ -85,15 +89,23 @@ namespace ElectionResults.Core.Services.CsvDownload
 
         private async Task InitializeBucket()
         {
-            var bucketName = _config.BucketName;
-            var bucketExists = await _bucketRepository.DoesS3BucketExist(bucketName);
-            if (bucketExists == false)
+            try
             {
-                var response = await _bucketRepository.CreateBucket(bucketName);
-                if (response.IsFailure)
+                var bucketName = _config.BucketName;
+                var bucketExists = await _bucketRepository.DoesS3BucketExist(bucketName);
+                if (bucketExists == false)
                 {
-                    Console.WriteLine(response.Error);
+                    _logger.LogInformation($"Bucket {bucketName} doesn't exist");
+                    var response = await _bucketRepository.CreateBucket(bucketName);
+                    if (response.IsFailure)
+                    {
+                        _logger.LogError($"Failed to create bucket: {response.Error}");
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, $"Failed to create bucket {_config.BucketName}");
             }
         }
 

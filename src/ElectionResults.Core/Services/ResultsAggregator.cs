@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Services.CsvProcessing;
 using ElectionResults.Core.Storage;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace ElectionResults.Core.Services
@@ -12,31 +14,42 @@ namespace ElectionResults.Core.Services
     public class ResultsAggregator : IResultsAggregator
     {
         private readonly IResultsRepository _resultsRepository;
+        private readonly ILogger<ResultsAggregator> _logger;
 
-        public ResultsAggregator(IResultsRepository resultsRepository)
+        public ResultsAggregator(IResultsRepository resultsRepository, ILogger<ResultsAggregator> logger)
         {
             _resultsRepository = resultsRepository;
+            _logger = logger;
         }
 
         public async Task<LiveResultsResponse> GetResults(ResultsType type, string location = null)
         {
-            var liveResultsResponse = new LiveResultsResponse();
-            var voterTurnoutResult = await GetVoterTurnout();
-            if (voterTurnoutResult.IsSuccess)
-                liveResultsResponse.VoterTurnout = voterTurnoutResult.Value;
+            try
+            {
+                var liveResultsResponse = new LiveResultsResponse();
+                var voterTurnoutResult = await GetVoterTurnout();
+                _logger.LogInformation("Retrieved voter turnout");
+                if (voterTurnoutResult.IsSuccess)
+                    liveResultsResponse.VoterTurnout = voterTurnoutResult.Value;
 
-            var selectedResults = await GetResultsByType(type, location);
-            var candidates = ConvertCandidates(selectedResults);
-            var counties =
-                selectedResults.Candidates.FirstOrDefault()?.Counties.Select(c => new County
-                {
-                    Label = c.Key,
-                    Id = c.Key
-                }).ToList();
-            liveResultsResponse.Candidates = candidates;
-            liveResultsResponse.Counties = counties;
+                var selectedResults = await GetResultsByType(type, location);
+                var candidates = ConvertCandidates(selectedResults);
+                var counties =
+                    selectedResults.Candidates.FirstOrDefault()?.Counties.Select(c => new County
+                    {
+                        Label = c.Key,
+                        Id = c.Key
+                    }).ToList();
+                liveResultsResponse.Candidates = candidates;
+                liveResultsResponse.Counties = counties;
 
-            return liveResultsResponse;
+                return liveResultsResponse;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Encountered exception while retrieving results");
+                throw;
+            }
         }
 
         private async Task<ElectionResultsData> GetResultsByType(ResultsType type, string location)

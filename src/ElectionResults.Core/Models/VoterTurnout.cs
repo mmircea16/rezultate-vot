@@ -15,5 +15,7 @@
         public int AdditionalLists { get; set; }
 
         public int PermanentLists { get; set; }
+        
+        public int MobileVotes { get; set; }
     }
 }
