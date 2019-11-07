@@ -39,6 +39,7 @@
 .chart-bar {
   width: 100px;
   height: 100%;
+  min-height: 2%;
   background-color: #110D64;
   z-index: 10;
 }
