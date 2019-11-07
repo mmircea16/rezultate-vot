@@ -160,7 +160,7 @@ namespace ElectionResults.Core.Storage
 
         private async Task CreateTable()
         {
-            Console.WriteLine("Creating Table");
+            _logger.LogInformation("Creating Table");
 
             try
             {
@@ -224,7 +224,7 @@ namespace ElectionResults.Core.Storage
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e, "Create table error");
             }
         }
     }

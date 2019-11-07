@@ -49,12 +49,12 @@ export function Footer() {
               </a>
             </div>
             <div>
-              <a className="link-item" href="https://code4.ro/ro/codul-de-conduita">
+              <a className="link-item" target="_blank" href="https://code4.ro/ro/codul-de-conduita/">
                 Codul de conduita
               </a>
             </div>
             <div>
-              <a className="link-item" href="https://code4.ro/ro">
+              <a className="link-item" target="_blank" href="https://code4.ro/ro/">
                 Code for România
               </a>
             </div>

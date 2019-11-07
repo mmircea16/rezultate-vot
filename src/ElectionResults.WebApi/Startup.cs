@@ -1,3 +1,4 @@
+using System.IO;
 using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.Extensions.NETCore.Setup;
@@ -18,7 +19,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 using ElectionResults.WebApi.Hubs;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace ElectionResults.WebApi
 {
@@ -62,11 +66,20 @@ namespace ElectionResults.WebApi
                 configuration.RootPath = "ClientApp/build";
             });
             services.AddSignalR();
+            services.AddLogging(builder =>
+            {
+                var config = Configuration.GetSection("AWS.Logging");
+                builder
+                    .AddConfiguration(config)
+                    .AddConsole()
+                    .AddDebug()
+                    .AddAWSProvider(Configuration.GetAWSLoggingConfigSection().Config);
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            if (env.IsDevelopment())
+            /*if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -75,9 +88,22 @@ namespace ElectionResults.WebApi
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
-            }
-            loggerFactory.AddAWSProvider(Configuration.GetAWSLoggingConfigSection());
-            
+            }*/
+            app.UseExceptionHandler(errorApp =>
+            {
+                errorApp.Run(async context =>
+                {
+                    context.Response.StatusCode = 500;
+                    context.Response.ContentType = "application/json";
+
+                    var exceptionHandlerPathFeature =
+                        context.Features.Get<IExceptionHandlerPathFeature>();
+
+                    await context.Response.WriteAsync(JsonConvert.SerializeObject(exceptionHandlerPathFeature.Error));
+
+                });
+            });
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();

@@ -32,8 +32,8 @@ const selectStyles = {
   option: (provided, state) => ({
     ...provided,
     color: state.isSelected ? "orange" : "grey",
-    backgroundColor: state.isSelected ? "#fff" : "#fff",
     color: state.isFocused ? "orange" : "grey",
+    backgroundColor: state.isSelected ? "#fff" : "#fff",
     fontSize: 16,
     fontWeight: "normal",
     paddingLeft: 20
