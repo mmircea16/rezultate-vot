@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ElectionResults.Core.Infrastructure;
-using ElectionResults.Core.Infrastructure.CsvModels;
 using ElectionResults.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 

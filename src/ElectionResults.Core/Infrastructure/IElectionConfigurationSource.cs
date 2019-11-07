@@ -9,6 +9,8 @@ namespace ElectionResults.Core.Infrastructure
     {
         Task<Result> UpdateJobTimer(string newTimer);
 
+        Task<Result<string>> GetJobTimer();
+
         List<ElectionResultsFile> GetListOfFilesWithElectionResults();
 
         Task<Result> UpdateElectionConfig(ElectionsConfig config);

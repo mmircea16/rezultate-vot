@@ -37,6 +37,18 @@ namespace ElectionResults.Core.Infrastructure
             return Result.Failure("Couldn't update the job timer");
         }
 
+        public async Task<Result<string>> GetJobTimer()
+        {
+            var getParameterRequest = new GetParameterRequest
+            {
+                Name = $"/{Consts.PARAMETER_STORE_NAME}/settings/jobTimer",
+            };
+            var response = await _amazonSettingsClient.GetParameterAsync(getParameterRequest);
+            if (response.HttpStatusCode == HttpStatusCode.OK)
+                return Result.Ok(response.Parameter.Value);
+            return Result.Failure<string>("Couldn't retrieve the job timer");
+        }
+
         public async Task<Result> UpdateElectionConfig(ElectionsConfig config)
         {
             var putParameterRequest = new PutParameterRequest

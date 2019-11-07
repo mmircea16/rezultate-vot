@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using ElectionResults.Core.Infrastructure;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Services;
 using ElectionResults.Core.Services.CsvDownload;
@@ -24,8 +25,9 @@ namespace ElectionResults.WebApi.Scheduler
             IHubContext<ElectionResultsHub> hubContext,
             IResultsAggregator resultsAggregator,
             ILogger<ScheduleTask> logger,
+            IElectionConfigurationSource electionConfigurationSource,
             IOptions<AppConfig> config)
-            : base(serviceScopeFactory, config)
+            : base(serviceScopeFactory, config, electionConfigurationSource, logger)
         {
             _csvDownloaderJob = csvDownloaderJob;
             _hubContext = hubContext;
