@@ -14,7 +14,6 @@ export const ChartContainer = () => {
       .then(data => data.json())
         .then(data => {
         console.log(data);
-        setVoterTurnout(data.voterTurnout);
         setCandidates(data.candidates);
         const total = { label: "Total", id: "TOTAL" };
         const national = { label: "National", id: "RO" };
@@ -22,7 +21,9 @@ export const ChartContainer = () => {
         data.counties.unshift(total, diaspora, national);
         setCounties(data.counties);
       });
-
+    fetch("/api/results/voter-turnout")
+        .then(data => data.json())
+        .then(data => setVoterTurnout(data));
     const connection = new signalR.HubConnectionBuilder()
       .withUrl("/live-results")
       .build();

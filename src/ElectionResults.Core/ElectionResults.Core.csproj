@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -12,6 +12,8 @@
     <PackageReference Include="AWSSDK.SimpleSystemsManagement" Version="3.3.100.8" />
     <PackageReference Include="CSharpFunctionalExtensions" Version="2.1.1" />
     <PackageReference Include="CsvHelper" Version="12.1.2" />
+    <PackageReference Include="LazyCache" Version="2.0.1" />
+    <PackageReference Include="LazyCache.AspNetCore" Version="2.0.1" />
   </ItemGroup>
 
 </Project>

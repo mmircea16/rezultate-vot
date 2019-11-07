@@ -130,12 +130,12 @@ namespace ElectionResults.Tests.CsvDownloaderJobTests
 
     internal class FakeResultsRepository : ResultsRepository
     {
-        public FakeResultsRepository(IOptions<AppConfig> config) : base(config, null, null)
+        public FakeResultsRepository(IOptions<AppConfig> config) : base(config, null, null, null)
         {
 
         }
 
-        public FakeResultsRepository(IOptions<AppConfig> config, IAmazonDynamoDB dynamoDb, ILogger<ResultsRepository> logger) : base(config, dynamoDb, logger)
+        public FakeResultsRepository(IOptions<AppConfig> config, IAmazonDynamoDB dynamoDb, ILogger<ResultsRepository> logger) : base(config, dynamoDb, logger, null)
         {
         }
 
