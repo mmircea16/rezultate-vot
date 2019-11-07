@@ -1,0 +1,91 @@
+.x-container {
+  padding: 40px 0;
+  display: grid;
+  grid-template-columns: 4fr 1fr;
+}
+
+.chart {
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: 300px;
+}
+
+.chart-line {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: #E6E6E6;
+}
+
+.chart-line-text {
+  text-align: end;
+  transform: translateY(-100%);
+  font-weight: bold;
+  font-size: 10px;
+  line-height: 15px;
+  color: #BABABA;
+}
+
+.chart-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  width: 100%;
+  height: 100%;
+}
+
+.chart-bar {
+  width: 100px;
+  height: 100%;
+  background-color: #110D64;
+  z-index: 10;
+}
+
+.chart-title {
+  font-weight: bold;
+  font-size: 27px;
+  line-height: 41px;
+  color: #6B6B6B;
+}
+
+.legend {
+  position: relative;
+  top: -140px;
+  /* left: 50%; */
+}
+
+/* .legend:after {
+  content: '';
+  height: 20px;
+  width: 50%;
+  background: transparent;
+  position: relative;
+  display: block;
+  left: 50%;
+  border-top: 2px solid black;
+  border-right: 2px solid black;
+} */
+
+.legend>.percentage {
+  font-weight: bold;
+  font-size: 26px;
+  line-height: 48px;
+  text-align: center;
+}
+
+.legend>.count {
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 27px;
+  color: #A9A9A9;
+  text-align: center;
+}
+
+.legend>.text {
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 18px;
+  text-align: center;
+}
