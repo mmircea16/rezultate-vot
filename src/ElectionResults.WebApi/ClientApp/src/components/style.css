@@ -1,3 +1,16 @@
+html, body {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    overflow-x: hidden;
+}
+
+footer {
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
 @media (min-width: 1200px) {
   .vote-monitoring-container {
     max-width: 1140px;

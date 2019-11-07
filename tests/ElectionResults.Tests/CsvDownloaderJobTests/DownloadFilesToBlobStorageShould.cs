@@ -113,12 +113,12 @@ namespace ElectionResults.Tests.CsvDownloaderJobTests
 
     internal class FakeBucketRepository : BucketRepository
     {
-        public FakeBucketRepository() : base(null)
+        public FakeBucketRepository() : base(null, null)
         {
 
         }
 
-        public FakeBucketRepository(IAmazonS3 s3Client) : base(s3Client)
+        public FakeBucketRepository(IAmazonS3 s3Client) : base(s3Client, null)
         {
         }
 

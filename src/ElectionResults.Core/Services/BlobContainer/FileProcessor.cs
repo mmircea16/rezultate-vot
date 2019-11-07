@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Amazon.Runtime.Internal.Util;
 using ElectionResults.Core.Services.CsvProcessing;
 using ElectionResults.Core.Storage;
 using Microsoft.Extensions.Logging;
@@ -14,18 +12,15 @@ namespace ElectionResults.Core.Services.BlobContainer
     public class FileProcessor : IFileProcessor
     {
         private readonly IResultsRepository _resultsRepository;
-        private readonly IVoterTurnoutAggregator _voterTurnoutAggregator;
         private readonly IStatisticsAggregator _statisticsAggregator;
         private readonly ILogger<FileProcessor> _logger;
 
         public FileProcessor(IResultsRepository resultsRepository,
-            IVoterTurnoutAggregator voterTurnoutAggregator,
             IStatisticsAggregator statisticsAggregator,
             ILogger<FileProcessor> logger,
             IOptions<AppConfig> config)
         {
             _resultsRepository = resultsRepository;
-            _voterTurnoutAggregator = voterTurnoutAggregator;
             _statisticsAggregator = statisticsAggregator;
             _logger = logger;
             _statisticsAggregator.CsvParsers = new List<ICsvParser>
