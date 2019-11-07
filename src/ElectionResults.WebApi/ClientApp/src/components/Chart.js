@@ -57,6 +57,7 @@ export function ElectionChart() {
             <StripedBar color="#EA8C42" percent={data.turnoutPercentage} count={data.totalNationalVotes} text="Prezența la urne" />
             <StripedBar color="#3C8CD2" percent={calcPercentage(data.permanentLists)} count={data.permanentLists} text="Votanți pe liste permanente și speciale" />
             <StripedBar color="#443F46" percent={calcPercentage(data.additionalLists)} count={data.additionalLists} text="Votanți pe liste suplimentare" />
+            <StripedBar color="#F74B32" percent={calcPercentage(data.mobileVotes)} count={data.mobileVotes} text="Votanți cu urnă mobilă" />
           </div>
         </div>
       </div>
