@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Amazon.Runtime.Internal.Util;
 using ElectionResults.Core.Services.CsvProcessing;
 using ElectionResults.Core.Storage;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace ElectionResults.Core.Services.BlobContainer
@@ -14,15 +16,18 @@ namespace ElectionResults.Core.Services.BlobContainer
         private readonly IResultsRepository _resultsRepository;
         private readonly IVoterTurnoutAggregator _voterTurnoutAggregator;
         private readonly IStatisticsAggregator _statisticsAggregator;
+        private readonly ILogger<FileProcessor> _logger;
 
         public FileProcessor(IResultsRepository resultsRepository,
             IVoterTurnoutAggregator voterTurnoutAggregator,
             IStatisticsAggregator statisticsAggregator,
+            ILogger<FileProcessor> logger,
             IOptions<AppConfig> config)
         {
             _resultsRepository = resultsRepository;
             _voterTurnoutAggregator = voterTurnoutAggregator;
             _statisticsAggregator = statisticsAggregator;
+            _logger = logger;
             _statisticsAggregator.CsvParsers = new List<ICsvParser>
             {
                 new CandidatesResultsParser(config),
@@ -32,12 +37,13 @@ namespace ElectionResults.Core.Services.BlobContainer
 
         public async Task ProcessStream(Stream csvStream, string fileName)
         {
+            _logger.LogInformation($"Processing csv with stream of {csvStream.Length} bytes");
             var csvContent = await ReadCsvContent(csvStream);
             var aggregationResult = await _statisticsAggregator.RetrieveElectionData(csvContent);
             if (aggregationResult.IsSuccess)
             {
                 var electionStatistics = FileNameParser.BuildElectionStatistics(fileName, aggregationResult.Value);
-                Console.WriteLine($"Uploading file {fileName} with timestamp {electionStatistics.Timestamp}");
+                _logger.LogInformation($"Inserting results from {fileName} with timestamp {electionStatistics.Timestamp}");
                 await _resultsRepository.InsertResults(electionStatistics);
             }
         }

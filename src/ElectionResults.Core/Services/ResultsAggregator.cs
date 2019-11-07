@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
+using ElectionResults.Core.Infrastructure.CsvModels;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Services.CsvProcessing;
 using ElectionResults.Core.Storage;
@@ -41,7 +42,7 @@ namespace ElectionResults.Core.Services
                         Id = c.Key
                     }).ToList();
                 liveResultsResponse.Candidates = candidates;
-                liveResultsResponse.Counties = counties;
+                liveResultsResponse.Counties = counties ?? new List<County>();
 
                 return liveResultsResponse;
             }
@@ -54,33 +55,41 @@ namespace ElectionResults.Core.Services
 
         private async Task<ElectionResultsData> GetResultsByType(ResultsType type, string location)
         {
-            string resultsType = type.ConvertEnumToString();
-            var localResults = await _resultsRepository.GetLatestResults(Consts.LOCAL, resultsType);
-            var diasporaResults = await _resultsRepository.GetLatestResults(Consts.DIASPORA, resultsType);
-            var localResultsData = JsonConvert.DeserializeObject<ElectionResultsData>(localResults.StatisticsJson);
-            var diasporaResultsData = JsonConvert.DeserializeObject<ElectionResultsData>(diasporaResults.StatisticsJson);
-            var electionResultsData = StatisticsAggregator.CombineResults(localResultsData, diasporaResultsData);
-            if (string.IsNullOrWhiteSpace(location) == false)
+            try
             {
-                if (location == "TOTAL")
+                string resultsType = type.ConvertEnumToString();
+                var localResults = await _resultsRepository.GetLatestResults(Consts.LOCAL, resultsType);
+                var diasporaResults = await _resultsRepository.GetLatestResults(Consts.DIASPORA, resultsType);
+                var localResultsData = JsonConvert.DeserializeObject<ElectionResultsData>(localResults.StatisticsJson);
+                var diasporaResultsData = JsonConvert.DeserializeObject<ElectionResultsData>(diasporaResults.StatisticsJson);
+                var electionResultsData = StatisticsAggregator.CombineResults(localResultsData, diasporaResultsData);
+                if (string.IsNullOrWhiteSpace(location) == false)
                 {
-                    return electionResultsData;
+                    if (location == "TOTAL")
+                    {
+                        return electionResultsData;
+                    }
+                    if (location == "DSPR")
+                    {
+                        return diasporaResultsData;
+                    }
+                    if (location == "RO")
+                    {
+                        return localResultsData;
+                    }
+                    foreach (var candidate in electionResultsData.Candidates)
+                    {
+                        candidate.Votes = candidate.Counties[location];
+                    }
                 }
-                if (location == "DSPR")
-                {
-                    return diasporaResultsData;
-                }
-                if (location == "RO")
-                {
-                    return localResultsData;
-                }
-                foreach (var candidate in electionResultsData.Candidates)
-                {
-                    candidate.Votes = candidate.Counties[location];
-                }
-            }
 
-            return electionResultsData;
+                return electionResultsData;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, $"Failed to retrieve results for type {type} and location {location}");
+                return new ElectionResultsData { Candidates = new List<CandidateConfig>() };
+            }
         }
 
         private List<CandidateModel> ConvertCandidates(ElectionResultsData electionResultsData)

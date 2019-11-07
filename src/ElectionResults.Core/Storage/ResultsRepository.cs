@@ -67,15 +67,18 @@ namespace ElectionResults.Core.Storage
 
             var results = GetResults(queryResponse.Items);
             var latest = results.OrderByDescending(r => r.Timestamp).FirstOrDefault();
-            _logger.LogInformation($"Latest for {type} and {location} is {latest.Timestamp}");
-            return latest;
+            _logger.LogInformation($"Latest for {type} and {location} is {latest?.Timestamp}");
+            return latest ?? ElectionStatistics.Default;
         }
 
         public virtual async Task InitializeDb()
         {
             var tableExists = await TableExists();
             if (!tableExists)
+            {
+                _logger.LogInformation($"Creating table {_config.TableName}");
                 await CreateTable();
+            }
         }
 
         public virtual async Task InsertCurrentVoterTurnout(VoterTurnout voterTurnout)
