@@ -1,22 +1,23 @@
 import React from "react";
 import { ChartContainer } from "./CandidatesChart";
 import { VoteMonitoring } from "./VoteMonitoring";
+import { ElectionChart } from './Chart';
 import "./style.css";
 
 export const HomePage = () => {
   const [voteMonitoringData, setVoteMonitoringData] = React.useState(null);
+
   React.useEffect(() => {
     fetch("/api/results/monitoring")
       .then(data => data.json())
-      .then(data => {
-        console.log(data);
-        setVoteMonitoringData(data.statistics);
-      });
+      .then(data => setVoteMonitoringData(data.statistics));
   }, []);
+
   return (
     <div>
       <ChartContainer />
       <VoteMonitoring voteMonitoringData={voteMonitoringData} />
+      <ElectionChart />
     </div>
   );
 };
