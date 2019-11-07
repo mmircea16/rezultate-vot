@@ -1,6 +1,7 @@
 import React from "react";
 import "./style.css";
 import * as signalR from "@aspnet/signalr";
+import { ElectionChart } from "../Chart";
 
 const NumberArea = ({ bigNumber, text }) => (
   <div className={"vote-monitoring-area"}>
@@ -9,25 +10,25 @@ const NumberArea = ({ bigNumber, text }) => (
   </div>
 );
 export const VoteMonitoring = ({ voteMonitoringData }) => {
-    let messagesNumber;
-    let messagesWithProblems;
-    let percent;
-    const connection = new signalR.HubConnectionBuilder()
+  let messagesNumber;
+  let messagesWithProblems;
+  let percent;
+  const connection = new signalR.HubConnectionBuilder()
     .withUrl("/live-results")
     .build();
 
-    connection
+  connection
     .start()
     .then(() => console.log("Connection started!"))
     .catch(err => console.log("Error while establishing connection :("));
 
-    connection.on("monitoring-updated", data => {
-        console.log(data.statistics);
+  connection.on("monitoring-updated", data => {
+    console.log(data.statistics);
     //setVoteMonitoringData(data.statistics);
-    });
-    if (!voteMonitoringData) {
-        return null;
-    } else {
+  });
+  if (!voteMonitoringData) {
+    return null;
+  } else {
     const messagesNumber = voteMonitoringData[0].value;
     const messagesWithProblems = voteMonitoringData[5].value;
     const percent = (messagesWithProblems / messagesNumber) * 100;
@@ -64,7 +65,7 @@ export const VoteMonitoring = ({ voteMonitoringData }) => {
             </div>
             <div className={"info-legend bars"}>
               <div className={"parent-bar"}>
-                <p style={{ marginLeft: `${percent + 4}%` }}>
+                <p style={{ paddingLeft: `${percent + 9}%` }}>
                   {voteMonitoringData[0].value}
                 </p>
               </div>
@@ -79,7 +80,8 @@ export const VoteMonitoring = ({ voteMonitoringData }) => {
             </div>
           </div>
         </div>
+        <ElectionChart />
       </div>
     );
-    }
+  }
 };
