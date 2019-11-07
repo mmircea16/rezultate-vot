@@ -14,19 +14,19 @@ export function Footer() {
         <Col
           className="social-media-container"
         >
-          <a className="social-link-item" href="https://www.facebook.com/code4romania">
+          <a className="social-link-item" href="https://www.facebook.com/code4romania" target="_blank">
             <img src={facebookLogo} width={48} height={48} alt="Facebook" />
           </a>
-          <a className="social-link-item" href="https://www.instagram.com/code4romania">
+          <a className="social-link-item" href="https://www.instagram.com/code4romania" target="_blank">
             <img src={instagramLogo} width={48} height={48} alt="Instagram" />
           </a>
-          <a className="social-link-item" href="https://www.linkedin.com/company/code4romania">
+          <a className="social-link-item" href="https://www.linkedin.com/company/code4romania" target="_blank">
             <img src={linkedinLogo} width={48} height={48} alt="LinkedIn" />
           </a>
-          <a className="social-link-item" href="https://twitter.com/Code4Romania">
+          <a className="social-link-item" href="https://twitter.com/Code4Romania" target="_blank">
             <img src={twitterLogo} width={48} height={48} alt="Twitter" />
           </a>
-          <a id="donate-link-button" href="https://code4.ro/ro/doneaza/">DONEAZĂ</a>
+          <a id="donate-link-button" href="https://code4.ro/ro/doneaza/" target="_blank">DONEAZĂ</a>
         </Col>
       </Row>
       <Container className="text-white footer">

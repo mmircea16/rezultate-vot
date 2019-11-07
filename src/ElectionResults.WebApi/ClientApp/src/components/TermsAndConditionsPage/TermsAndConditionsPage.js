@@ -42,7 +42,7 @@ export const TermsAndConditionsPage = () => {
 
         <h2 className="static-h2">Despre Code for Romania</h2>
 
-        <p className="static-paragraph">Code for Romania este o organizație neguvernamentală independentă, neafiliată politic și apolitică, înființată în anul 2016, al cărei scop este de a mobiliza tinerii profesioniști din domeniul IT să creeze instrumente digitale care ajută în soluționarea problemelor sociale. Code for Romania este înființată și funcționează în conformitate cu legea română, actul constitutiv și statutul său și <a className="static-link" href="https://code4.ro/ro/codul-de-conduita/">codul de conduită</a>.</p>
+        <p className="static-paragraph">Code for Romania este o organizație neguvernamentală independentă, neafiliată politic și apolitică, înființată în anul 2016, al cărei scop este de a mobiliza tinerii profesioniști din domeniul IT să creeze instrumente digitale care ajută în soluționarea problemelor sociale. Code for Romania este înființată și funcționează în conformitate cu legea română, actul constitutiv și statutul său și <a className="static-link" href="https://code4.ro/ro/codul-de-conduita/" target="_blank">codul de conduită</a>.</p>
     </div>
   );
 };

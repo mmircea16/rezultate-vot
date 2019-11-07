@@ -98,7 +98,7 @@ export const ConfidentialityPolicyPage = () => {
 
       <p className="static-paragraph">Toate browserele moderne oferă posibilitatea de a schimba setarile cookie-urilor. Aceste setari se găsesc de regula în "opțiuni" sau în meniul de "preferințe" al browserului tău.</p>
 
-      <p className="static-paragraph">Pentru setarile cookie-urilor generate de terți, și pentru mai multe informații privind confidențialitatea legată de publicitatea online, IAB România pune la dispozitie urmatorul site: <a className="static-link" href="http://www.youronlinechoices.com/ro/">http://www.youronlinechoices.com/ro/</a></p>
+      <p className="static-paragraph">Pentru setarile cookie-urilor generate de terți, și pentru mai multe informații privind confidențialitatea legată de publicitatea online, IAB România pune la dispozitie urmatorul site: <a className="static-link" href="http://www.youronlinechoices.com/ro/" target="_blank">http://www.youronlinechoices.com/ro/</a></p>
 
     </div>
   );
