@@ -19,7 +19,9 @@ export function DonateHeader() {
     <div>
       <Container>
         <Media src={code4Ro} />
-        <Button color="success">Donează</Button>
+        <a href="https://code4.ro/ro/doneaza/">
+          <Button color="success">Donează</Button>
+        </a>
       </Container>
     </div>
   )

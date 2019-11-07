@@ -2,6 +2,31 @@ footer {
   background-color: #110d64;
 }
 
+footer .social-media-container {
+  display: flex;
+  justify-content: flex-end;
+  background-color: #F5F5F5;
+  border-top: 1px solid #E0E0E0;
+}
+
+.social-link-item {
+  height: 48px;
+  margin-left: 2px;
+}
+
+#donate-link-button {
+  max-width: 200px;
+  width: calc(100vw - 200px);
+  margin-left: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #FFF;
+  font-size: 17px;
+  background-color: #28a745;
+  text-decoration: none;
+}
+
 .footer.container {
   padding-top: 2em;
   padding-bottom: 2em;
@@ -36,4 +61,20 @@ footer {
   display: flex;
   justify-content: flex-end;
   padding-bottom: 0.5em;
+}
+
+@media screen and (max-width: 575px) {
+
+  footer {
+    text-align: center;
+  }
+
+  .usefull-links {
+    margin-bottom: 10px;
+  }
+
+  .logo-container {
+    justify-content: center;
+  }
+
 }
