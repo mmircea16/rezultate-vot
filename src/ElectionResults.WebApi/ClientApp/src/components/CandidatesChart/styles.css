@@ -216,6 +216,15 @@
   .bar-votes-percent {
     width: 64px;
   }
+  .child-bar {
+    min-width: 15%;
+  }
+  .parent-bar {
+    padding-left: 17%;
+  }
+  .vote-monitoring-title {
+    text-align: center;
+  }
 }
 
 @media (min-width: 800px) {
@@ -237,6 +246,12 @@
   .bar-votes-percent {
     width: 80px;
   }
+  .child-bar {
+    min-width: 7%;
+  }
+  .parent-bar {
+    padding-left: 9%;
+  }
 }
 
 @media (min-width: 1400px) {
@@ -257,5 +272,8 @@
 
   .bar-votes-percent {
     width: 100px;
+  }
+  .child-bar {
+    min-width: 5%;
   }
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { ChartContainer } from "./CandidatesChart";
 import { VoteMonitoring } from "./VoteMonitoring";
-import { ElectionChart } from './Chart';
+
 import "./style.css";
 
 export const HomePage = () => {
@@ -17,7 +17,6 @@ export const HomePage = () => {
     <div>
       <ChartContainer />
       <VoteMonitoring voteMonitoringData={voteMonitoringData} />
-      <ElectionChart />
     </div>
   );
 };

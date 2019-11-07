@@ -1,4 +1,7 @@
-﻿import React, { Component } from "react";
+﻿/** @jsx jsx */
+
+import { jsx } from "@emotion/core";
+import React, { Component } from "react";
 import Button from "@atlaskit/button";
 import Select, { components } from "react-select";
 import { defaultTheme } from "react-select";

@@ -9,10 +9,10 @@ export const ChartContainer = () => {
   const [candidates, setCandidates] = React.useState(null);
   const [counties, setCounties] = React.useState(null);
   const [voterTurnout, setVoterTurnout] = React.useState(null);
-    React.useEffect(() => {
+  React.useEffect(() => {
     fetch("/api/results")
       .then(data => data.json())
-        .then(data => {
+      .then(data => {
         console.log(data);
         setVoterTurnout(data.voterTurnout);
         setCandidates(data.candidates);
@@ -36,7 +36,7 @@ export const ChartContainer = () => {
       console.log("got results");
     });
     connection.on("turnout-updated", data => {
-      console.log("received turnout data")
+      console.log("received turnout data");
     });
   }, []);
 
@@ -60,8 +60,16 @@ export const ChartContainer = () => {
             <div sm={3} className={"votes-numbers"}>
               <h3 className={"votes-title"}>Voturi numarate</h3>
               <div sm={3} className={"votes-results"}>
-                  <p className={"votes-percent"}> {voterTurnout.turnoutPercentage}%</p>
-                  <p className={"votes-text"}> {voterTurnout.totalNationalVotes.toLocaleString(undefined, { maximumFractionDigits: 2 })}</p>
+                <p className={"votes-percent"}>
+                  {" "}
+                  {voterTurnout.turnoutPercentage}%
+                </p>
+                <p className={"votes-text"}>
+                  {" "}
+                  {voterTurnout.totalNationalVotes.toLocaleString(undefined, {
+                    maximumFractionDigits: 2
+                  })}
+                </p>
               </div>
             </div>
           </div>
