@@ -1,7 +1,7 @@
 import React from "react";
 import { ChartContainer } from "./CandidatesChart";
 import { VoteMonitoring } from "./VoteMonitoring";
-import { ElectionChart } from './Chart';
+
 import "./style.css";
 import ReactGA from 'react-ga';
 
@@ -27,7 +27,6 @@ export const HomePage = () => {
     <div>
       <ChartContainer />
       <VoteMonitoring voteMonitoringData={voteMonitoringData} />
-      <ElectionChart />
     </div>
   );
 };
