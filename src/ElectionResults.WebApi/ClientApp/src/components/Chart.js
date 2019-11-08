@@ -1,5 +1,6 @@
 import React from "react";
 import "./Chart.css";
+import * as signalR from "@aspnet/signalr";
 
 const Line = ({ percent }) => (
   <div className="chart-line" style={{ top: `calc(100% - ${percent}%)` }}>
@@ -37,14 +38,31 @@ export function ElectionChart() {
   React.useEffect(() => {
     fetch("/api/results/voter-turnout")
       .then(result => result.json())
-      .then(result => setData(result));
+          .then(result => setData(result));
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/live-results")
+        .build();
+
+    connection
+        .start()
+        .then(() => console.log("Connection started!"))
+        .catch(err => console.log("Error while establishing connection :("));
+
+    connection.on("turnout-updated", data => {
+        console.log("received turnout data in chars");
+        console.log(data);
+        setData(data);
+    });
   }, []);
   if (!data) {
     return null;
   } else {
     return (
       <div className="border-radius">
-        <div className="x-container">
+        <div className={"vote-monitoring-title-presence"}>
+            <h1>PREZENȚĂ LA VOT</h1>
+          </div>
+        <div className="x-container">        
           <div>
             <div className="text-center chart-title">Național</div>
             <div className="chart">
@@ -68,7 +86,7 @@ export function ElectionChart() {
                   </div>
                 </div>
                 <StripedBar
-                  color="#EA8C42"
+                  color="#FFCC00"
                   percent={data.turnoutPercentage}
                   count={data.totalNationalVotes}
                   text="Prezența la urne"
@@ -100,7 +118,7 @@ export function ElectionChart() {
               <div
                 className="chart-bar"
                 style={{
-                  background: "#EA8C42",
+                  background: "#FFCC00",
                   height: "45%",
                   alignSelf: "flex-end"
                 }}

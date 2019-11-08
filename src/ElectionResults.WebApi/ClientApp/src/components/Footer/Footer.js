@@ -8,8 +8,9 @@ import twitterLogo from "../../images/twitter_grey.png";
 import "./Footer.css";
 
 export function Footer() {
+
   return (
-    <footer>
+      <footer>
       <Row>
         <Col
           className="social-media-container"

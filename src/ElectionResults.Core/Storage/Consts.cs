@@ -5,5 +5,7 @@
         public const string LOCAL = "RO";
         public const string DIASPORA = "DSPR";
         public const string PARAMETER_STORE_NAME = "vote-results";
+        public const string VOTE_MONITORING_KEY = "vote-monitoring";
+        public const string VOTE_TURNOUT_KEY = "vote-turnout";
     }
 }

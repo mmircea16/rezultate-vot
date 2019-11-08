@@ -1,4 +1,3 @@
-using System.IO;
 using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.Extensions.NETCore.Setup;
@@ -60,6 +59,7 @@ namespace ElectionResults.WebApi
             {
                 Region = RegionEndpoint.EUCentral1
             });
+            services.AddLazyCache();
             services.AddSingleton<IHostedService, ScheduleTask>();
             services.AddSpaStaticFiles(configuration =>
             {
@@ -75,6 +75,15 @@ namespace ElectionResults.WebApi
                     .AddDebug()
                     .AddAWSProvider(Configuration.GetAWSLoggingConfigSection().Config);
             });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("origins",
+                    builder =>
+                    {
+                        builder.WithOrigins("*");
+                    });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -89,6 +98,7 @@ namespace ElectionResults.WebApi
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }*/
+            app.UseCors("origins");
             app.UseExceptionHandler(errorApp =>
             {
                 errorApp.Run(async context =>

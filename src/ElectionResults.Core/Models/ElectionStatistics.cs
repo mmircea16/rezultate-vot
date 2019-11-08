@@ -1,4 +1,7 @@
-﻿namespace ElectionResults.Core.Models
+﻿using System.Collections.Generic;
+using ElectionResults.Core.Infrastructure.CsvModels;
+
+namespace ElectionResults.Core.Models
 {
     public class ElectionStatistics
     {
@@ -11,5 +14,7 @@
         public long Timestamp { get; set; }
 
         public string Type { get; set; }
+
+        public static ElectionStatistics Default { get; } = new ElectionStatistics();
     }
 }

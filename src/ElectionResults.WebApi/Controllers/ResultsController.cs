@@ -2,9 +2,9 @@ using System;
 using System.Threading.Tasks;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Services;
-using ElectionResults.WebApi.Hubs;
+using ElectionResults.Core.Storage;
+using LazyCache;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
 namespace ElectionResults.WebApi.Controllers
@@ -14,26 +14,32 @@ namespace ElectionResults.WebApi.Controllers
     {
         private readonly IResultsAggregator _resultsAggregator;
         private readonly ILogger<ResultsController> _logger;
-        private readonly IHubContext<ElectionResultsHub> _hubContext;
+        private readonly IAppCache _appCache;
 
         public ResultsController(IResultsAggregator resultsAggregator,
             ILogger<ResultsController> logger,
-            IHubContext<ElectionResultsHub> hubContext)
+            IAppCache appCache)
         {
             _resultsAggregator = resultsAggregator;
             _logger = logger;
-            _hubContext = hubContext;
+            _appCache = appCache;
         }
 
         [HttpGet("")]
-        public async Task<LiveResultsResponse> GetLatestResults([FromQuery] ResultsType type, string location)
+        public async Task<ActionResult<LiveResultsResponse>> GetLatestResults([FromQuery] ResultsType type, string location)
         {
             try
             {
-                _logger.LogInformation("Retrieving vote results");
-                var liveResultsResponse = await _resultsAggregator.GetResults(type, location);
-                await _hubContext.Clients.All.SendAsync("results-updated", liveResultsResponse);
-                return liveResultsResponse;
+                var key = $"results-{type.ConvertEnumToString()}-{location}";
+                var result = await _appCache.GetOrAddAsync(
+                    key, () => _resultsAggregator.GetResults(type, location), DateTimeOffset.Now.AddMinutes(5));
+                if (result.IsFailure)
+                {
+                    _appCache.Remove(key);
+                    _logger.LogError(result.Error);
+                    return BadRequest(result.Error);
+                }
+                return result.Value;
             }
             catch (Exception e)
             {
@@ -47,14 +53,15 @@ namespace ElectionResults.WebApi.Controllers
         {
             try
             {
-                _logger.LogInformation("Retrieving voter turnout stats");
-                var result = await _resultsAggregator.GetVoterTurnout();
-                if (result.IsSuccess)
+                var result = await _appCache.GetOrAddAsync(
+                    Consts.VOTE_TURNOUT_KEY, () => _resultsAggregator.GetVoterTurnout(), DateTimeOffset.Now.AddMinutes(5));
+                if (result.IsFailure)
                 {
-                    await _hubContext.Clients.All.SendAsync("turnout-updated", result.Value);
-                    return result.Value;
+                    _appCache.Remove(Consts.VOTE_TURNOUT_KEY);
+                    _logger.LogError(result.Error);
+                    return BadRequest(result.Error);
                 }
-                return BadRequest(result.Error);
+                return result.Value;
             }
             catch (Exception e)
             {
@@ -68,14 +75,15 @@ namespace ElectionResults.WebApi.Controllers
         {
             try
             {
-                _logger.LogInformation("Retrieving vote monitoring stats");
-                var result = await _resultsAggregator.GetVoteMonitoringStats();
-                if (result.IsSuccess)
+                var result = await _appCache.GetOrAddAsync(
+                    Consts.VOTE_MONITORING_KEY, () => _resultsAggregator.GetVoteMonitoringStats(), DateTimeOffset.Now.AddMinutes(5));
+                if (result.IsFailure)
                 {
-                    await _hubContext.Clients.All.SendAsync("monitoring-updated", result.Value);
-                    return result.Value;
+                    _appCache.Remove(Consts.VOTE_TURNOUT_KEY);
+                    _logger.LogError(result.Error);
+                    return BadRequest(result.Error);
                 }
-                return BadRequest(result.Error);
+                return result.Value;
             }
             catch (Exception e)
             {

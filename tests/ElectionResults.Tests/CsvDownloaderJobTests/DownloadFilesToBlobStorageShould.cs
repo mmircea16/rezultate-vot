@@ -113,12 +113,12 @@ namespace ElectionResults.Tests.CsvDownloaderJobTests
 
     internal class FakeBucketRepository : BucketRepository
     {
-        public FakeBucketRepository() : base(null)
+        public FakeBucketRepository() : base(null, null)
         {
 
         }
 
-        public FakeBucketRepository(IAmazonS3 s3Client) : base(s3Client)
+        public FakeBucketRepository(IAmazonS3 s3Client) : base(s3Client, null)
         {
         }
 
@@ -130,12 +130,12 @@ namespace ElectionResults.Tests.CsvDownloaderJobTests
 
     internal class FakeResultsRepository : ResultsRepository
     {
-        public FakeResultsRepository(IOptions<AppConfig> config) : base(config, null, null)
+        public FakeResultsRepository(IOptions<AppConfig> config) : base(config, null, null, null)
         {
 
         }
 
-        public FakeResultsRepository(IOptions<AppConfig> config, IAmazonDynamoDB dynamoDb, ILogger<ResultsRepository> logger) : base(config, dynamoDb, logger)
+        public FakeResultsRepository(IOptions<AppConfig> config, IAmazonDynamoDB dynamoDb, ILogger<ResultsRepository> logger) : base(config, dynamoDb, logger, null)
         {
         }
 

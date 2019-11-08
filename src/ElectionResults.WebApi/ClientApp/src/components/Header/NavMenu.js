@@ -25,21 +25,21 @@ export class NavMenu extends Component {
   render() {
     return (
       <header>
-        <Navbar color="light" light expand="md">
+        <Navbar light expand="md">
           <NavbarBrand tag={Link} to="/">
-            <img src={votLogo} width={80} height={80} alt="Rezultate Vot" />
+            <img src={votLogo} width={90} height={80} alt="Rezultate Vot" />
           </NavbarBrand>
           <NavbarToggler className="mr-2 menu-toggle" onClick={this.toggleNavbar} />
           <Collapse isOpen={!this.state.collapsed} navbar>
             <Nav className="ml-auto" navbar>
               <NavItem>
-                <NavLink tag={Link} className="text-white" to="/">ISTORIC VOT</NavLink>
+                <NavLink tag={Link} className="text-dark" to="/">ISTORIC VOT</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink tag={Link} className="text-white" to="/">PREZENȚA LA VOT</NavLink>
+                <NavLink tag={Link} className="text-dark" to="/">PREZENȚA LA VOT</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink tag={Link} className="text-white" to="/">DESPRE NOI</NavLink>
+                <NavLink tag={Link} className="text-dark" to="/">DESPRE NOI</NavLink>
               </NavItem>
             </Nav>
           </Collapse>

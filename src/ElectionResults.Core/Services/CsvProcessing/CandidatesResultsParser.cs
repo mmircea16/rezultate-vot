@@ -34,6 +34,7 @@ namespace ElectionResults.Core.Services.CsvProcessing
                 ImageUrl = c.ImageUrl,
                 Name = c.Name
             }).ToList();
+            
             await PopulateCandidatesListWithVotes(csvContent, electionResultsData.Candidates);
             var sumOfVotes = electionResultsData.Candidates.Sum(c => c.Votes);
             electionResultsData.Candidates = StatisticsAggregator.CalculatePercentagesForCandidates(electionResultsData.Candidates, sumOfVotes);

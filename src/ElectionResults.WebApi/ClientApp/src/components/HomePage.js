@@ -3,20 +3,17 @@ import { ChartContainer } from "./CandidatesChart";
 import { VoteMonitoring } from "./VoteMonitoring";
 
 import "./style.css";
+import ReactGA from 'react-ga';
 
+const trackingId = "UA-151651448-1";
+ReactGA.initialize(trackingId);
+ReactGA.pageview('/home');
 export const HomePage = () => {
-  const [voteMonitoringData, setVoteMonitoringData] = React.useState(null);
-
-  React.useEffect(() => {
-    fetch("/api/results/monitoring")
-      .then(data => data.json())
-      .then(data => setVoteMonitoringData(data.statistics));
-  }, []);
-
+    
   return (
     <div>
       <ChartContainer />
-      <VoteMonitoring voteMonitoringData={voteMonitoringData} />
+      <VoteMonitoring />
     </div>
   );
 };

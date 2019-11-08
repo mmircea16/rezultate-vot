@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import { ChartBar } from "./ChartBar";
 import CountiesSelect from "./CountiesSelect";
 import { FormGroup, Col, Button } from "reactstrap";
@@ -9,35 +9,41 @@ export const ChartContainer = () => {
   const [candidates, setCandidates] = React.useState(null);
   const [counties, setCounties] = React.useState(null);
   const [voterTurnout, setVoterTurnout] = React.useState(null);
-  React.useEffect(() => {
-    fetch("/api/results")
-      .then(data => data.json())
-      .then(data => {
-        console.log(data);
-        setVoterTurnout(data.voterTurnout);
-        setCandidates(data.candidates);
-        const total = { label: "Total", id: "TOTAL" };
-        const national = { label: "National", id: "RO" };
-        const diaspora = { label: "Diaspora", id: "DSPR" };
-        data.counties.unshift(total, diaspora, national);
-        setCounties(data.counties);
-      });
+    React.useEffect(() => {
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/live-results")
+            .build();
 
-    const connection = new signalR.HubConnectionBuilder()
-      .withUrl("/live-results")
-      .build();
+        connection
+            .start()
+            .then(() => console.log("Connection started!"))
+            .catch(err => console.log("Error while establishing connection :("));
 
-    connection
-      .start()
-      .then(() => console.log("Connection started!"))
-      .catch(err => console.log("Error while establishing connection :("));
-
-    connection.on("results-updated", data => {
-      console.log("got results");
-    });
-    connection.on("turnout-updated", data => {
-      console.log("received turnout data");
-    });
+        connection.on("results-updated", data => {
+            console.log("received candidates");
+            setCandidates(data.candidates);
+        });
+        fetch("/api/results/voter-turnout")
+            .then(data => data.json())
+            .then(data => setVoterTurnout(data));
+        return;
+        fetch("/api/results")
+          .then(data => data.json())
+          .then(data => {
+            console.log(data);
+            setCandidates(data.candidates);
+            const total = { label: "Total", id: "TOTAL" };
+            const national = { label: "National", id: "RO" };
+            const diaspora = { label: "Diaspora", id: "DSPR" };
+            data.counties.unshift(total, diaspora, national);
+            setCounties(data.counties);
+          });
+        
+        connection.on("turnout-updated", data => {
+            console.log("received turnout data");
+            console.log(data);
+            setVoterTurnout(data);
+        });
   }, []);
 
   const selectionChanged = value => {
@@ -52,11 +58,8 @@ export const ChartContainer = () => {
         <div>
           <div sm={12} className={"votes-container"}>
             <p className={"container-text"}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              Viverra nam libero justo laoreet sit amet cursus sit. Malesuada
-              nunc vel risus commodo viverra maecenas.
-            </p>
+      Rezultate Vot, transparentizează întreg procesul electoral furnizând în timp real, într-o formă grafică intuitivă, ușor de înțeles, datele oficiale furnizate de către AEP și Birourile Electorale cât și datele preluate prin aplicația Monitorizare Vot dezvoltată de Code for Romania, despre alegerile din România.
+      </p>
             <div sm={3} className={"votes-numbers"}>
               <h3 className={"votes-title"}>Voturi numarate</h3>
               <div sm={3} className={"votes-results"}>
@@ -99,10 +102,7 @@ export const ChartContainer = () => {
         <div className={"default-container"}>
           <div className={"votes-container"}>
             <p className={"container-text"}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              Viverra nam libero justo laoreet sit amet cursus sit. Malesuada
-              nunc vel risus commodo viverra maecenas.
+      Rezultate Vot, transparentizează întreg procesul electoral furnizând în timp real, într-o formă grafică intuitivă, ușor de înțeles, datele oficiale furnizate de către AEP și Birourile Electorale cât și datele preluate prin aplicația Monitorizare Vot dezvoltată de Code for Romania, despre alegerile din România.
             </p>
           </div>
           <div className={"question"}>
