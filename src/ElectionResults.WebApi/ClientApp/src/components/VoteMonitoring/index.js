@@ -10,29 +10,26 @@ const NumberArea = ({ bigNumber, text }) => (
   </div>
 );
 export const VoteMonitoring = () => {
-  let messagesNumber;
-  let messagesWithProblems;
-  let percent;
-    const [voteMonitoringData, setVoteMonitoringData] = React.useState(null);
-    const connection = new signalR.HubConnectionBuilder()
+  const [voteMonitoringData, setVoteMonitoringData] = React.useState(null);
+  const connection = new signalR.HubConnectionBuilder()
     .withUrl("/live-results")
     .build();
 
   React.useEffect(() => {
-      fetch("/api/results/monitoring")
-          .then(data => data.json())
-          .then(data => setVoteMonitoringData(data.statistics));
-      connection
-          .start()
-          .then(() => console.log("Connection started!"))
-          .catch(err => console.log("Error while establishing connection :("));
+    fetch("/api/results/monitoring")
+      .then(data => data.json())
+      .then(data => setVoteMonitoringData(data.statistics));
+    connection
+      .start()
+      .then(() => console.log("Connection started!"))
+      .catch(err => console.log("Error while establishing connection :("));
 
-      connection.on("monitoring-updated", data => {
-          console.log("received statistics");
-          setVoteMonitoringData(data.statistics);
-      });
+    connection.on("monitoring-updated", data => {
+      console.log("received statistics");
+      setVoteMonitoringData(data.statistics);
+    });
   }, []);
- 
+
   if (!voteMonitoringData) {
     return null;
   } else {
