@@ -62,12 +62,24 @@ export function ElectionChart() {
         <div className={"vote-monitoring-title-presence"}>
             <h1>PREZENȚĂ LA VOT</h1>
         </div>
-        <div className="vote-monitoring-total">
-          { dotFormat(data.enlistedVoters) } număr total de înscriși pe listele permanente și speciale
-        </div>
         <div className="x-container">        
           <div>
-            <div className="text-center chart-title">{ dotFormat(data.enlistedVoters) } votanți</div>
+          <div className={"info-legend bars"} style={{marginBottom: '50px'}}>
+              <div className={"parent-bar"}>
+                <p style={{ paddingLeft: `${25}%`, fontSize: '14px' }}>
+                100% { dotFormat(data.enlistedVoters) } (număr total de înscriși pe listele permanente și speciale)
+                </p>
+              </div>
+              <div
+                style={{
+                  width: `${30}%`
+                }}
+                className={"child-bar"}
+              >
+                <p style={{fontSize: '14px', margin: '0 auto'}}>{(((data.totalDiasporaVotes + data.totalNationalVotes)/data.enlistedVoters) * 100).toFixed(2)}% 
+                ({(dotFormat(data.totalDiasporaVotes + data.totalNationalVotes))} au votat)</p>
+              </div>
+            </div>
             <div className="chart">
               <div>
                 <Line percent={0} />
@@ -77,12 +89,6 @@ export function ElectionChart() {
                 <Line percent={100} />
               </div>
               <div className="chart-container">
-                <StripedBar
-                  color="#FFCC00"
-                  percent={data.turnoutPercentage}
-                  count={data.totalNationalVotes}
-                  text="Prezența la urne"
-                />
                 <StripedBar
                   color="#3C8CD2"
                   percent={calcPercentage(data.permanentLists)}
@@ -104,9 +110,14 @@ export function ElectionChart() {
               </div>
             </div>
           </div>
+          <div className={"vote-monitoring-numbers"} style={{flexFlow: 'column'}}>
+                <div className={"vote-monitoring-area"} style={{width: '80%', margin: '0 auto'}}>
+                  <p style={{fontSize: '22px'}}>{dotFormat(data.totalDiasporaVotes)}</p>
+                  <p style={{fontSize: '14px'}}>{"Votanți în Diaspora"}</p>
+                </div>
+          </div>
           <div>
-            <div className="text-center chart-title">Diaspora</div>
-            <div className="chart" style={{ justifyContent: "center" }}>
+            {/* <div className="chart" style={{ justifyContent: "center" }}>
               <div
                 className="chart-bar"
                 style={{
@@ -117,10 +128,10 @@ export function ElectionChart() {
               >
                 <Legend
                                 count={dotFormat(data.totalDiasporaVotes)}
-                                text={`Alegători din care ${dotFormat(data.diasporaWithoutMailVotes)} prezenți la urne`}
+                                text={"Votanți în Diaspora"}
                 />
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
