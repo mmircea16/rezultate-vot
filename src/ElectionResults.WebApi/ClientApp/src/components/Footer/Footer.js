@@ -60,7 +60,7 @@ export function Footer() {
               </a>
             </div>
             <div>
-              <a className="link-item" href="#">
+              <a className="link-item" href="mailto: contact@code4.ro">
                 Contact
               </a>
             </div>
