@@ -60,7 +60,8 @@ namespace ElectionResults.Core.Services
                 TotalDiasporaVotes = mailDiasporaVotes,
                 PermanentLists = permanentLists,
                 AdditionalLists = specialLists - diasporaVoters,
-                MobileVotes = mobileVotes
+                MobileVotes = mobileVotes,
+                DiasporaWithoutMailVotes = diasporaVoters 
             };
             return voterTurnout;
         }
