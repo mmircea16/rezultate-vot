@@ -17,5 +17,7 @@
         public int PermanentLists { get; set; }
         
         public int MobileVotes { get; set; }
+
+        public int DiasporaWithoutMailVotes { get; set; }
     }
 }

@@ -124,8 +124,8 @@ export function ElectionChart() {
                 }}
               >
                 <Legend
-                  count={dotFormat(data.totalDiasporaVotes)}
-                  text="Alegători prezenți la urne"
+                                count={dotFormat(data.totalDiasporaVotes)}
+                                text={`Alegători din care ${dotFormat(data.diasporaWithoutMailVotes)} prezenți la urne`}
                 />
               </div>
             </div>
