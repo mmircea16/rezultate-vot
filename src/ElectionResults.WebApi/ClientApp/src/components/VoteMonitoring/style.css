@@ -16,6 +16,13 @@
   left: -36px;
 }
 
+.vote-monitoring-message {
+  font-size: 1.25em;
+  position: relative;
+  left: -36px;
+  padding: 0px 10px 40px 10px;
+}
+
 .vote-monitoring-area {
   background-color: #443f46;
   width: 20%;
