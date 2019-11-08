@@ -61,7 +61,7 @@ export default class CountiesSelect extends Component {
     if (!value) return "Total";
     if (value.id === "DSPR" || value.id === "RO" || value.id === "TOTAL")
       return value.label;
-    return `Judet: ${value.label}`;
+    return `Județ: ${value.label}`;
   };
   render() {
     const { isOpen, value } = this.state;

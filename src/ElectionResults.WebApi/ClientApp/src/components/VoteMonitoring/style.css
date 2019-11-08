@@ -4,6 +4,7 @@
 .vote-monitoring-container {
   height: 500px;
   background-color: #e5e5e5;
+  margin-bottom: 130px;
 }
 
 .vote-monitoring-title {
@@ -60,6 +61,8 @@
 }
 .full-width-container {
   position: relative;
+  background-color: #e5e5e5;
+  padding-bottom: 130px;
 }
 .full-width-container:before {
   content: "";
@@ -74,13 +77,12 @@
 .square {
   height: 20px;
   width: 20px;
-
   font-size: 20px;
   margin-right: 10px;
 }
 
 .square.right {
-  background-color: #ea8c42;
+  background-color: #FFCC00;
 }
 
 .square.left {
@@ -98,7 +100,7 @@
 }
 
 .child-bar {
-  background-color: #ea8c42;
+  background-color: #FFCC00;
   height: 56px;
   position: absolute;
   top: 29px;

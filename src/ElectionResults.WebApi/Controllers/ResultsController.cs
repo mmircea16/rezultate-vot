@@ -25,7 +25,6 @@ namespace ElectionResults.WebApi.Controllers
             _appCache = appCache;
         }
 
-        private static int requestId = 0;
         [HttpGet("")]
         public async Task<ActionResult<LiveResultsResponse>> GetLatestResults([FromQuery] ResultsType type, string location)
         {

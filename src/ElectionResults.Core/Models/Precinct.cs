@@ -6,5 +6,8 @@ namespace ElectionResults.Core.Models
     {
         [JsonProperty("LS")]
         public int VotersOnSpecialLists { get; set; }
+
+        [JsonProperty("LT")]
+        public int MailDiasporaVotes { get; set; }
     }
 }

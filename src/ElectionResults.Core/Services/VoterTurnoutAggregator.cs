@@ -28,26 +28,7 @@ namespace ElectionResults.Core.Services
                 var turnoutJson = files.FirstOrDefault(f => f.ResultsType == ResultsType.VoterTurnout);
                 if (turnoutJson == null)
                     return Result.Failure<VoterTurnout>("File not available");
-                var json = await httpClient.GetStringAsync(turnoutJson?.URL);
-                var voterTurnoutResponse = JsonConvert.DeserializeObject<VoterTurnoutResponce>(json);
-                var permanentLists = voterTurnoutResponse.Counties.Sum(c => c.VotersOnPermanentLists);
-                var specialLists = voterTurnoutResponse.Counties.Sum(c => c.VotersOnSpecialLists);
-                var mobileVotes = voterTurnoutResponse.Counties.Sum(c => c.MobileVotes);
-
-                var diasporaVoters = voterTurnoutResponse.Precinct.Sum(c => c.VotersOnSpecialLists);
-                var enlistedVoters = voterTurnoutResponse.Counties.Sum(c => c.InitialCount);
-                var totalVoters = permanentLists + mobileVotes + (specialLists - diasporaVoters);
-                var voterTurnoutPercentage = totalVoters / (decimal)enlistedVoters;
-                var voterTurnout = new VoterTurnout
-                {
-                    EnlistedVoters = enlistedVoters,
-                    TurnoutPercentage = Math.Round(voterTurnoutPercentage * 100, 2),
-                    TotalNationalVotes = totalVoters,
-                    TotalDiasporaVotes = diasporaVoters,
-                    PermanentLists = permanentLists,
-                    AdditionalLists = specialLists - diasporaVoters,
-                    MobileVotes = mobileVotes
-                };
+                var voterTurnout = await GetVoterTurnoutByUrl(httpClient, turnoutJson.URL);
                 return Result.Ok(voterTurnout);
             }
             catch (Exception e)
@@ -55,6 +36,33 @@ namespace ElectionResults.Core.Services
                 Console.WriteLine(e);
                 return Result.Failure<VoterTurnout>(e.Message);
             }
+        }
+
+        private static async Task<VoterTurnout> GetVoterTurnoutByUrl(HttpClient httpClient, string url)
+        {
+            var json = await httpClient.GetStringAsync(url);
+            var voterTurnoutResponse = JsonConvert.DeserializeObject<VoterTurnoutResponce>(json);
+            var permanentLists = voterTurnoutResponse.Counties.Sum(c => c.VotersOnPermanentLists);
+            var specialLists = voterTurnoutResponse.Counties.Sum(c => c.VotersOnSpecialLists);
+            var mobileVotes = voterTurnoutResponse.Counties.Sum(c => c.MobileVotes);
+            var mailDiasporaVotes = voterTurnoutResponse.Precinct.Sum(p => p.MailDiasporaVotes);
+
+            var diasporaVoters = voterTurnoutResponse.Precinct.Sum(c => c.VotersOnSpecialLists);
+            var enlistedVoters = voterTurnoutResponse.Counties.Sum(c => c.InitialCount);
+            var totalVoters = permanentLists + mobileVotes + (specialLists - diasporaVoters);
+            var voterTurnoutPercentage = totalVoters / (decimal)enlistedVoters;
+
+            var voterTurnout = new VoterTurnout
+            {
+                EnlistedVoters = enlistedVoters,
+                TurnoutPercentage = Math.Round(voterTurnoutPercentage * 100, 2),
+                TotalNationalVotes = totalVoters,
+                TotalDiasporaVotes = mailDiasporaVotes,
+                PermanentLists = permanentLists,
+                AdditionalLists = specialLists - diasporaVoters,
+                MobileVotes = mobileVotes
+            };
+            return voterTurnout;
         }
 
         public async Task<Result<VoteMonitoringStats>> GetVoteMonitoringStats()

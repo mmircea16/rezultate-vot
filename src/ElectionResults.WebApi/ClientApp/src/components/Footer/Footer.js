@@ -9,11 +9,8 @@ import "./Footer.css";
 
 export function Footer() {
 
-    let search = window.location.search;
-    let params = new URLSearchParams(search);
-    var admin = params.get('admin');
   return (
-      <footer style={{position: admin ? 'static' : 'absolute'}}>
+      <footer>
       <Row>
         <Col
           className="social-media-container"
