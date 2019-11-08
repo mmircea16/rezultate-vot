@@ -226,6 +226,9 @@
   .vote-monitoring-title {
     text-align: center;
   }
+  .vote-monitoring-message {
+    margin-left: 20px;
+  }
 }
 
 @media (min-width: 800px) {
