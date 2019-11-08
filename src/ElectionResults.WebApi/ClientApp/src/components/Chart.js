@@ -67,7 +67,7 @@ export function ElectionChart() {
         </div>
         <div className="x-container">        
           <div>
-            <div className="text-center chart-title">Național</div>
+            <div className="text-center chart-title">{ dotFormat(data.enlistedVoters) } votanți</div>
             <div className="chart">
               <div>
                 <Line percent={0} />

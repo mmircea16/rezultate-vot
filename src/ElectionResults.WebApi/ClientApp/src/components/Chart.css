@@ -107,7 +107,7 @@
   left: -36px;
   top: -160px;
 }
-.vote-monitoring-total{
+.vote-monitoring-total {
   position: relative;
   left: -36px;
   top: -160px;
@@ -119,5 +119,10 @@
 
   .chart-bar {
     width: 32px
+  }
+
+  .vote-monitoring-title-presence,
+  .vote-monitoring-total {
+    text-align: center;
   }
 }
