@@ -61,10 +61,13 @@ export function ElectionChart() {
       <div className="border-radius">
         <div className={"vote-monitoring-title-presence"}>
             <h1>PREZENȚĂ LA VOT</h1>
-          </div>
+        </div>
+        <div className="vote-monitoring-total">
+          { dotFormat(data.enlistedVoters) } număr total de înscriși pe listele permanente și speciale
+        </div>
         <div className="x-container">        
           <div>
-            <div className="text-center chart-title">Național</div>
+            <div className="text-center chart-title">{ dotFormat(data.enlistedVoters) } votanți</div>
             <div className="chart">
               <div>
                 <Line percent={0} />
@@ -74,17 +77,6 @@ export function ElectionChart() {
                 <Line percent={100} />
               </div>
               <div className="chart-container">
-                <div className="chart-bar">
-                  <div className="legend" style={{ left: "-100%", top: "0" }}>
-                    <div className="percentage">100 %</div>
-                    <div className="count">
-                      {dotFormat(data.enlistedVoters)}
-                    </div>
-                    <div className="text">
-                      Înscriși pe liste permanente și speciale
-                    </div>
-                  </div>
-                </div>
                 <StripedBar
                   color="#FFCC00"
                   percent={data.turnoutPercentage}
