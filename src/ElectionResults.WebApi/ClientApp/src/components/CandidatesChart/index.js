@@ -5,11 +5,26 @@ import { FormGroup, Col, Button } from "reactstrap";
 import * as signalR from "@aspnet/signalr";
 
 export const ChartContainer = () => {
+  let timeInterval;
+  const votingClosingTime = new Date(2019, 10, 10, 21);
   const [showAll, toggleShowAll] = React.useState(false);
   const [candidates, setCandidates] = React.useState(null);
   const [counties, setCounties] = React.useState(null);
   const [voterTurnout, setVoterTurnout] = React.useState(null);
+  const [displayQuestion, setDisplayQuestion] = React.useState(new Date() >= votingClosingTime);
+
     React.useEffect(() => {
+        if (!displayQuestion) {
+          timeInterval = setInterval(() => {
+            const currentTime = new Date();
+
+            if (!displayQuestion && currentTime >= votingClosingTime) {
+              setDisplayQuestion(true);
+              clearInterval(timeInterval);
+            }
+          }, 1000);
+        }
+
         const connection = new signalR.HubConnectionBuilder()
             .withUrl("/live-results")
             .build();
@@ -26,7 +41,13 @@ export const ChartContainer = () => {
         fetch("/api/results/voter-turnout")
             .then(data => data.json())
             .then(data => setVoterTurnout(data));
-        return;
+
+        return () => {
+          if (timeInterval) {
+            clearInterval(timeInterval);
+          }
+        };
+
         fetch("/api/results")
           .then(data => data.json())
           .then(data => {
@@ -105,11 +126,13 @@ export const ChartContainer = () => {
       Rezultate Vot, transparentizează întreg procesul electoral furnizând în timp real, într-o formă grafică intuitivă, ușor de înțeles, datele oficiale furnizate de către AEP și Birourile Electorale cât și datele preluate prin aplicația Monitorizare Vot dezvoltată de Code for Romania, despre alegerile din România.
             </p>
           </div>
-          <div className={"question"}>
-            <p className={"question-text"}>
-              Cine sunt candidatii care merg in turul 2?
-            </p>
-          </div>
+          {
+            displayQuestion ? <div className={"question"}>
+              <p className={"question-text"}>
+                Cine sunt candidatii care merg in turul 2?
+              </p>
+            </div> : ""
+          }
         </div>
       )}
     </div>
