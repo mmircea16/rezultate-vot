@@ -88,7 +88,6 @@ export const VoteMonitoring = () => {
             </div>
           </div>
         </div>
-        <ElectionChart />
       </div>
     );
   }
