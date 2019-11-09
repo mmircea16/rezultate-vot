@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
+import { Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink, Container } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import votLogo from '../../images/rezultateVot.png';
 import './NavMenu.css';
@@ -26,20 +26,22 @@ export class NavMenu extends Component {
     return (
       <header>
         <Navbar light expand="md">
-          <NavbarBrand tag={Link} to="/">
-            <img src={votLogo} width={90} height={80} alt="Rezultate Vot" />
-          </NavbarBrand>
-          <NavbarToggler className="mr-2 menu-toggle" onClick={this.toggleNavbar} />
-          <Collapse isOpen={!this.state.collapsed} navbar>
-            <Nav className="ml-auto" navbar>
-              <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/">ISTORIC VOT</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/">DESPRE NOI</NavLink>
-              </NavItem>
-            </Nav>
-          </Collapse>
+          <Container>
+            <NavbarBrand tag={Link} to="/">
+              <img src={votLogo} width={90} height={80} alt="Rezultate Vot" />
+            </NavbarBrand>
+            <NavbarToggler className="mr-2 menu-toggle" onClick={this.toggleNavbar} />
+            <Collapse isOpen={!this.state.collapsed} navbar>
+              <Nav className="ml-auto" navbar>
+                <NavItem>
+                  <NavLink tag={Link} className="text-dark" to="/">ISTORIC VOT</NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink tag={Link} className="text-dark" to="/">DESPRE NOI</NavLink>
+                </NavItem>
+              </Nav>
+            </Collapse>
+          </Container>
         </Navbar>
       </header>
     );
