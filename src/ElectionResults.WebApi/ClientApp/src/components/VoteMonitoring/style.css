@@ -93,13 +93,13 @@
 }
 
 .square.left {
-  background-color: #110d64;
+  background-color: #352245;
 }
 
 .parent-bar {
   width: 100%;
   height: 56px;
-  background-color: #110d64;
+  background-color: #352245;
   color: #fff;
   display: flex;
   align-items: center;
