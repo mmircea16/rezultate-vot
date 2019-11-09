@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Button, Media } from 'reactstrap';
+import { Button, Media, Label } from 'reactstrap';
 import code4Ro from '../../images/code4Romania.svg';
 
 const Container = styled.div`
@@ -18,6 +18,7 @@ export function DonateHeader() {
   return (
     <div>
       <Container>
+        <Label className="info-label">an app developed by</Label>
         <Media src={code4Ro} />
         <a href="https://code4.ro/ro/doneaza/">
           <Button color="success">Donează</Button>
