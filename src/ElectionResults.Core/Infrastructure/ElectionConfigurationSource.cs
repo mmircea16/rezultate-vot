@@ -22,12 +22,12 @@ namespace ElectionResults.Core.Infrastructure
             _amazonSettingsClient = new AmazonSimpleSystemsManagementClient();
         }
 
-        public async Task<Result> UpdateJobTimer(string newTimer)
+        public async Task<Result> UpdateInterval(int seconds)
         {
             var putParameterRequest = new PutParameterRequest
             {
-                Name = $"/{Consts.PARAMETER_STORE_NAME}/settings/jobTimer",
-                Value = newTimer,
+                Name = $"/{Consts.PARAMETER_STORE_NAME}/settings/intervalInSeconds",
+                Value = seconds.ToString(),
                 Type = ParameterType.String,
                 Overwrite = true
             };
@@ -37,16 +37,16 @@ namespace ElectionResults.Core.Infrastructure
             return Result.Failure("Couldn't update the job timer");
         }
 
-        public async Task<Result<string>> GetJobTimer()
+        public async Task<Result<int>> GetInterval()
         {
             var getParameterRequest = new GetParameterRequest
             {
-                Name = $"/{Consts.PARAMETER_STORE_NAME}/settings/jobTimer",
+                Name = $"/{Consts.PARAMETER_STORE_NAME}/settings/intervalInSeconds",
             };
             var response = await _amazonSettingsClient.GetParameterAsync(getParameterRequest);
             if (response.HttpStatusCode == HttpStatusCode.OK)
-                return Result.Ok(response.Parameter.Value);
-            return Result.Failure<string>("Couldn't retrieve the job timer");
+                return Result.Ok(int.Parse(response.Parameter.Value));
+            return Result.Failure<int>("Couldn't retrieve the job timer");
         }
 
         public async Task<Result> UpdateElectionConfig(ElectionsConfig config)

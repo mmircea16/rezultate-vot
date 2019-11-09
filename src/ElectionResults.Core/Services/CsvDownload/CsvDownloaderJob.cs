@@ -37,7 +37,7 @@ namespace ElectionResults.Core.Services.CsvDownload
             _voterTurnoutAggregator = voterTurnoutAggregator;
             _logger = logger;
             _config = config.Value;
-            _logger.LogInformation($"JobTimer is set to: {_config.JobTimer}");
+            _logger.LogInformation($"Interval is set to: {_config.IntervalInSeconds} seconds");
         }
 
         public async Task DownloadFiles()

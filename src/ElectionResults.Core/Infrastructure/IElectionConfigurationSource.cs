@@ -7,9 +7,9 @@ namespace ElectionResults.Core.Infrastructure
 {
     public interface IElectionConfigurationSource
     {
-        Task<Result> UpdateJobTimer(string newTimer);
+        Task<Result> UpdateInterval(int newTimer);
 
-        Task<Result<string>> GetJobTimer();
+        Task<Result<int>> GetInterval();
 
         List<ElectionResultsFile> GetListOfFilesWithElectionResults();
 
