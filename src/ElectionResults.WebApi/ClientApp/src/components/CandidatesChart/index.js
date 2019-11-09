@@ -34,9 +34,10 @@ export const ChartContainer = () => {
             .then(() => console.log("Connection started!"))
             .catch(err => console.log("Error while establishing connection :("));
 
-        connection.on("results-updated", data => {
-            console.log("received candidates");
-            setCandidates(data.candidates);
+        connection.on("turnout-updated", data => {
+            console.log("received turnout data");
+            console.log(data);
+            setVoterTurnout(data);
         });
         fetch("/api/results/voter-turnout")
             .then(data => data.json())
@@ -59,11 +60,10 @@ export const ChartContainer = () => {
             data.counties.unshift(total, diaspora, national);
             setCounties(data.counties);
           });
-        
-        connection.on("turnout-updated", data => {
-            console.log("received turnout data");
-            console.log(data);
-            setVoterTurnout(data);
+
+        connection.on("results-updated", data => {
+            console.log("received candidates");
+            setCandidates(data.candidates);
         });
   }, []);
 
