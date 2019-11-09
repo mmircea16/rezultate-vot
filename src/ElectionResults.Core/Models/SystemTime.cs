@@ -12,7 +12,7 @@ namespace ElectionResults.Core.Models
             {
                 if (_now == DateTimeOffset.MinValue)
                 {
-                    return DateTimeOffset.Now;
+                    return DateTimeOffset.UtcNow;
                 }
                 return _now;
             }

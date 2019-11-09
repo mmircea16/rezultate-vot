@@ -30,7 +30,7 @@ namespace ElectionResults.WebApi.Controllers
         {
             try
             {
-                var key = $"results-{type.ConvertEnumToString()}-{location}";
+                var key = $"results-{type.ConvertEnumToString()}{location}";
                 var result = await _appCache.GetOrAddAsync(
                     key, () => _resultsAggregator.GetResults(type, location), DateTimeOffset.Now.AddMinutes(5));
                 if (result.IsFailure)
