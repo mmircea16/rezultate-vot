@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Route } from "react-router";
 import { Layout } from "./components/Layout";
 import { AdminPanel } from "./components/AdminPanel/AdminPanel";
+import { AboutProjectPage } from "./components/AboutProjectPage/AboutProjectPage";
 import { AboutUsPage } from "./components/AboutUsPage/AboutUsPage";
 import { ConfidentialityPolicyPage } from "./components/ConfidentialityPolicyPage/ConfidentialityPolicyPage";
 import { TermsAndConditionsPage } from "./components/TermsAndConditionsPage/TermsAndConditionsPage";
@@ -15,6 +16,7 @@ export default class App extends Component {
       <Layout>
         <Route exact path="/" component={HomePage} />
         <Route path="/admin" component={AdminPanel} />
+        <Route path="/despre-proiect" component={AboutProjectPage} />
         <Route path="/despre-noi" component={AboutUsPage} />
         <Route path="/politica-de-confidentialitate" component={ConfidentialityPolicyPage} />
         <Route path="/termeni-si-conditii" component={TermsAndConditionsPage} />
