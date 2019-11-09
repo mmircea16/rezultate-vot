@@ -67,7 +67,7 @@ export function ElectionChart() {
           <div className={"info-legend bars"} style={{marginBottom: '50px'}}>
               <div className={"parent-bar"}>
                 <p style={{ paddingLeft: `${25}%`, fontSize: '14px' }}>
-                100% { dotFormat(data.enlistedVoters) } (număr total de înscriși pe listele permanente și speciale)
+                100% ({ dotFormat(data.enlistedVoters) } cetățeni cu drept de vot)
                 </p>
               </div>
               <div
