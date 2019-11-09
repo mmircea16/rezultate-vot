@@ -172,8 +172,10 @@ export function ElectionChart() {
               </div>
             </div> */}
           </div>
-        </div>
-      </div>
+            </div> 
+    <p className="becro">Date preluate de la <a href="https://prezenta.bec.ro" target="_blank">prezenta.bec.ro</a></p>
+
+    </div>
     );
   }
 }
