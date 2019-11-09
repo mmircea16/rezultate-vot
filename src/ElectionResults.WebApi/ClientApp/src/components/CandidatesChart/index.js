@@ -35,7 +35,7 @@ export const ChartContainer = () => {
             .catch(err => console.log("Error while establishing connection :("));
 
         connection.on("turnout-updated", data => {
-            console.log("received turnout data");
+            console.log("received turnout data in candidates");
             console.log(data);
             setVoterTurnout(data);
         });

@@ -62,8 +62,8 @@ TBD
 The settings are stored in appsettings.json.
 In this file you'll find the following settings:
 
-- **jobTimer**: "*/5 * * * *"
-  - runs the CSV downloader job every 5 minutes
+- **interval**: 30
+  - runs the CSV downloader job every 30 seconds
 - **bucketName**: "code4-presidential-2019"
   - the name of the bucket where CSV files are downloaded
 - **tableName**: "electionresults"

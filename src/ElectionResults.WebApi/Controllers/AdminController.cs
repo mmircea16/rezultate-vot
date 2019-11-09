@@ -16,10 +16,10 @@ namespace ElectionResults.WebApi.Controllers
             _electionConfigurationSource = electionConfigurationSource;
         }
 
-        [HttpPut("jobTimer")]
-        public async Task<ActionResult> SetJobTimer([FromBody] string interval)
+        [HttpPut("interval")]
+        public async Task<ActionResult> SetInterval([FromBody] int interval)
         {
-            var result = await _electionConfigurationSource.UpdateJobTimer(interval);
+            var result = await _electionConfigurationSource.UpdateInterval(interval);
             if (result.IsSuccess)
                 return Ok();
             return BadRequest(result.Error);

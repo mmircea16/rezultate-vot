@@ -15,15 +15,15 @@ namespace ElectionResults.WebApi.Scheduler
     {
         private readonly IElectionConfigurationSource _electionConfigurationSource;
         private readonly ILogger<ScheduledProcessor> _logger;
-        private CrontabSchedule _schedule;
         private DateTime _nextRun;
+        private int _intervalInSeconds;
 
         public ScheduledProcessor(IServiceScopeFactory serviceScopeFactory, IOptions<AppConfig> config, IElectionConfigurationSource electionConfigurationSource, ILogger<ScheduledProcessor> logger) : base(serviceScopeFactory)
         {
             _electionConfigurationSource = electionConfigurationSource;
             _logger = logger;
-            _schedule = CrontabSchedule.Parse(config.Value.JobTimer);
-            _nextRun = _schedule.GetNextOccurrence(DateTime.Now);
+            _intervalInSeconds = config.Value.IntervalInSeconds;
+            _nextRun = DateTime.Now.AddSeconds(_intervalInSeconds);
             _logger.LogInformation($"Next run will be at {_nextRun:F}");
         }
 
@@ -32,19 +32,17 @@ namespace ElectionResults.WebApi.Scheduler
             do
             {
                 var now = DateTime.Now;
-                var config = await _electionConfigurationSource.GetJobTimer();
+                var config = await _electionConfigurationSource.GetInterval();
                 if (config.IsSuccess)
                 {
-                    _schedule = CrontabSchedule.Parse(config.Value);
+                    _intervalInSeconds = config.Value;
                 }
-                var nextrun = _schedule.GetNextOccurrence(now);
                 if (now > _nextRun)
                 {
                     await Process();
-                    _nextRun = _schedule.GetNextOccurrence(DateTime.Now);
+                    _nextRun = DateTime.Now.AddSeconds(_intervalInSeconds);
                     _logger.LogInformation($"Next run will be at {_nextRun:F}");
                 }
-                await Task.Delay(5000, stoppingToken); //5 seconds delay
             }
             while (!stoppingToken.IsCancellationRequested);
         }

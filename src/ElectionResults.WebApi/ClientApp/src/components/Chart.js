@@ -69,7 +69,7 @@ export function ElectionChart() {
       .catch(err => console.log("Error while establishing connection :("));
 
     connection.on("turnout-updated", data => {
-      console.log("received turnout data in chars");
+      console.log("received turnout data in charts");
       setData(data);
     });
   }, []);
