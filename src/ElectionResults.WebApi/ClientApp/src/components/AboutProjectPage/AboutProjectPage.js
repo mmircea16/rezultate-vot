@@ -26,11 +26,7 @@ export const AboutProjectPage = () => {
 
         <p>Mulțumim tuturor celor care au făcut acest lucru posibil într-un timp record!</p>
 
-        <p className="mt-5">Proiect realizat în totalitate prin implicarea voluntarilor Code for Romania:</p>
-
-        <p className="mt-3 text-center">Bogdan Bujdea</p>
-
-        <p className="mt-3 text-center">Adelina Nicolov</p>
+        <p className="mt-5">Proiect realizat în totalitate prin implicarea voluntarilor Code for Romania.  Mulțumim echipei formate din : Bogdan Bujdea, Larisa Bujdea, Adelina Nicolov, Andrei Scripcariu, Calin Bule, Andrei Mitrea, Constantin Lungu, Paul Bricman, Robert Badea, Tudor Amariei</p>
 
     </div>
   );
