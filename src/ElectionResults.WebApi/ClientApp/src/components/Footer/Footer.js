@@ -1,6 +1,5 @@
 import React from "react";
 import { Container, Row, Col, Label, Input, Media } from "reactstrap";
-import { Link } from 'react-router-dom';
 import code4Ro from "../../images/code4RoGrey.svg";
 import facebookLogo from "../../images/facebook_grey.png";
 import instagramLogo from "../../images/instagram_grey.png";
@@ -41,14 +40,14 @@ export function Footer() {
           >
             <h4 className="link-title">Linkuri Utile</h4>
             <div>
-              <Link className="link-item" to="/termeni-si-conditii">
+              <a className="link-item" href="/termeni-si-conditii">
                 Termeni și condiții
-              </Link>
+              </a>
             </div>
             <div>
-              <Link className="link-item" to="/politica-de-confidentialitate">
+              <a className="link-item" href="/politica-de-confidentialitate">
                 Politica de confidențialitate
-              </Link>
+              </a>
             </div>
             <div>
               <a className="link-item" target="_blank" href="https://code4.ro/ro/codul-de-conduita/">
@@ -70,17 +69,7 @@ export function Footer() {
             xs="12"
             sm="6"
           >
-            <div className="form-group">
-              <Label className="link-title" for="email">
-                Abonează-te la newsletter
-              </Label>
-              <Input
-                className="input-large"
-                type="text"
-                name="email"
-                placeholder="Introdu adresa de e-mail si apasă ENTER"
-              />
-            </div>
+            <div className="text-sm-right mb-2"><a href="http://bit.ly/2q06tSu" target="_blank">Abonează-te la newsletter</a></div>
             <div className="logo-container">
               <Media src={code4Ro} />
             </div>
