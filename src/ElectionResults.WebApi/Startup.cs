@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace ElectionResults.WebApi
 {
@@ -66,6 +67,10 @@ namespace ElectionResults.WebApi
                 configuration.RootPath = "ClientApp/build";
             });
             services.AddSignalR();
+            services.AddSignalR().AddJsonProtocol((options) =>
+            {
+                options.PayloadSerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
             services.AddLogging(builder =>
             {
                 var config = Configuration.GetSection("AWS.Logging");

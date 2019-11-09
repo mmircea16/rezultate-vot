@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using ElectionResults.Core.Infrastructure;
 using ElectionResults.Core.Models;
@@ -6,6 +7,7 @@ using ElectionResults.Core.Services;
 using ElectionResults.Core.Services.CsvDownload;
 using ElectionResults.Core.Storage;
 using ElectionResults.WebApi.Hubs;
+using LazyCache;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -19,6 +21,7 @@ namespace ElectionResults.WebApi.Scheduler
         private readonly IHubContext<ElectionResultsHub> _hubContext;
         private readonly IResultsAggregator _resultsAggregator;
         private readonly ILogger<ScheduleTask> _logger;
+        private readonly IAppCache _appCache;
 
         public ScheduleTask(IServiceScopeFactory serviceScopeFactory,
             ICsvDownloaderJob csvDownloaderJob,
@@ -26,6 +29,7 @@ namespace ElectionResults.WebApi.Scheduler
             IResultsAggregator resultsAggregator,
             ILogger<ScheduleTask> logger,
             IElectionConfigurationSource electionConfigurationSource,
+            IAppCache appCache,
             IOptions<AppConfig> config)
             : base(serviceScopeFactory, config, electionConfigurationSource, logger)
         {
@@ -33,6 +37,7 @@ namespace ElectionResults.WebApi.Scheduler
             _hubContext = hubContext;
             _resultsAggregator = resultsAggregator;
             _logger = logger;
+            _appCache = appCache;
         }
 
         public override async Task ProcessInScope(IServiceProvider serviceProvider)
@@ -48,23 +53,25 @@ namespace ElectionResults.WebApi.Scheduler
 
         private async Task SendUpdatedResults()
         {
-            _logger.LogInformation($"Sending updated results");
-            var provisionalResults = await _resultsAggregator.GetResults(ResultsType.Provisional);
-            await _hubContext.Clients.All.SendAsync("results-updated", provisionalResults);
+            var key = $"results-{ResultsType.Provisional.ConvertEnumToString()}";
+            _appCache.Remove(key);
+            var result = await _appCache.GetOrAddAsync(
+                key, () => _resultsAggregator.GetResults(ResultsType.Provisional), DateTimeOffset.Now.AddMinutes(1));
+            await _hubContext.Clients.All.SendAsync("results-updated", result.Value);
         }
 
         private async Task SendUpdatedVoterTurnout()
         {
-            _logger.LogInformation($"Sending voter turnout updates");
-            var voterTurnoutResult = await _resultsAggregator.GetVoterTurnout();
+            _appCache.Remove(Consts.VOTE_TURNOUT_KEY);
+            var voterTurnoutResult = await _appCache.GetOrAddAsync(Consts.VOTE_TURNOUT_KEY, () => _resultsAggregator.GetVoterTurnout(), DateTimeOffset.Now.AddMinutes(1));
             if (voterTurnoutResult.IsSuccess)
                 await _hubContext.Clients.All.SendAsync("turnout-updated", voterTurnoutResult.Value);
         }
 
         private async Task SendUpdatedVoteMonitoringStats()
         {
-            _logger.LogInformation($"Sending vote monitoring updates");
-            var stats = await _resultsAggregator.GetVoteMonitoringStats();
+            _appCache.Remove(Consts.VOTE_MONITORING_KEY);
+            var stats = await _appCache.GetOrAddAsync(Consts.VOTE_MONITORING_KEY, () => _resultsAggregator.GetVoteMonitoringStats(), DateTimeOffset.Now.AddMinutes(1));
             if (stats.IsSuccess)
                 await _hubContext.Clients.All.SendAsync("monitoring-updated", stats.Value);
         }

@@ -34,10 +34,10 @@ export class NavMenu extends Component {
             <Collapse isOpen={!this.state.collapsed} navbar>
               <Nav className="ml-auto" navbar>
                 <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/">ISTORIC VOT</NavLink>
+                  <NavLink tag={Link} className="text-dark" to="/despre-proiect">DESPRE PROIECT</NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/">DESPRE NOI</NavLink>
+                  <NavLink tag={Link} className="text-dark" to="/despre-noi">DESPRE NOI</NavLink>
                 </NavItem>
               </Nav>
             </Collapse>

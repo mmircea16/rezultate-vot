@@ -48,7 +48,7 @@ export const VoteMonitoring = () => {
           <div className={"vote-monitoring-numbers"}>
             {NumberArea({
               bigNumber: voteMonitoringData[1].value,
-              text: "Secții de votare"
+              text: "Secții de votare acoperite"
             })}
             {NumberArea({
               bigNumber: voteMonitoringData[2].value,
