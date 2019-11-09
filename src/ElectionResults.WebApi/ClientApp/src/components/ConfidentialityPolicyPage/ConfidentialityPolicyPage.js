@@ -1,6 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 export const ConfidentialityPolicyPage = () => {
+
+  useEffect(() => {
+    // Scroll to the top of the page; workaround for when navigating from footer.
+    document.body.scrollTop = 0;
+  }, []);
+
   return (
     <div
       className="static-container"
