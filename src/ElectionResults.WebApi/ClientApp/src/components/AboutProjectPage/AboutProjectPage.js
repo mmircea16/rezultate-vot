@@ -22,11 +22,11 @@ export const AboutProjectPage = () => {
             <li>istoricul electoral al României de-a lungul timpului - într-o etapă de dezvoltare ulterioară.</li>
         </ul>
 
-        <p>În anul 2020 platforma va agrega și mai multe informații utile. Voluntarii Code for Romania lucrează în continuare pentru a adăuga module care vor permite ca datele istorice despre votul din România să poată fi vizualizate și înțelese astfel mai bine.</p>
+        <p>În anul 2020 platforma va agrega și mai multe informații utile. <span className="emphasize">Voluntarii Code for Romania lucrează în continuare pentru a adăuga module care vor permite ca datele istorice despre votul din România să poată fi vizualizate și înțelese astfel mai bine.</span></p>
 
         <p>Mulțumim tuturor celor care au făcut acest lucru posibil într-un timp record!</p>
 
-        <p className="mt-5">Proiect realizat în totalitate prin implicarea voluntarilor Code for Romania.  Mulțumim echipei formate din : Bogdan Bujdea, Elena Bujdea, Adelina Nicolov, Andrei Scripcariu, Calin Bule, Andrei Mitrea, Constantin Lungu, Paul Bricman, Robert Badea, Tudor Amariei</p>
+        <p className="mt-5">Proiect realizat în totalitate prin implicarea voluntarilor Code for Romania.  Mulțumim echipei formate din : <span className="emphasize">Bogdan Bujdea, Elena Bujdea, Adelina Nicolov, Andrei Scripcariu, Calin Bule, Andrei Mitrea, Constantin Lungu, Paul Bricman, Robert Badea, Tudor Amariei, Răzvan Ciucă</span></p>
 
     </div>
   );
