@@ -35,6 +35,7 @@ const StripedBar = ({ color, percent, count, text, orizontal }) => {
 const LegendDot = ({ color, text }) => (
   <div style={{ display: 'flex', margin: '5px 0' }}>
     <div style={{
+      minWidth: '20px',
       width: '20px',
       height: '20px',
       display: 'inline-block',
@@ -81,23 +82,32 @@ export function ElectionChart() {
         <div className={"vote-monitoring-title-presence"}>
           <h1>PREZENȚĂ LA VOT</h1>
         </div>
-        {windowSize.width > MAX_MOBILE_WIDTH
-          ? (
-            <div className="vote-monitoring-total">
-              {dotFormat(data.enlistedVoters)} număr total de înscriși pe listele permanente și speciale
-            </div>)
-          : null
-        }
         <div className="x-container">
           <div>
             {windowSize.width > MAX_MOBILE_WIDTH
               ? <div className="text-center chart-title">Național</div>
-              : (
-                <div>
-                  <h1>PREZENȚĂ LA VOT</h1>
-                  <div>{dotFormat(data.enlistedVoters) + " înscriși pe liste permanente și speciale"}</div>
-                </div>)
+              : null
             }
+            <div className={"info-legend bars bars-spacing"}>
+              <div className={"parent-bar"} style={{ justifyContent: 'flex-end' }}>
+                <p style={{
+                  paddingRight: '20px',
+                  width: 'fit-content',
+                  fontSize: '14px',
+                }}>
+                  {`100% (${dotFormat(data.enlistedVoters)})`}
+                </p>
+              </div>
+              <div className="child-bar" style={{ minWidth: '45px', width: `${calcPercentage(data.totalDiasporaVotes + data.totalNationalVotes)}%` }}>
+                <p style={{ fontSize: '14px', color: 'black', width: 'fit-content', }}>
+                  {`${calcPercentage(data.totalDiasporaVotes + data.totalNationalVotes)}% (${dotFormat(data.totalDiasporaVotes + data.totalNationalVotes)})`}
+                </p>
+              </div>
+              <div style={{ alignSelf: 'flex-start', marginTop: '35px' }}>
+                <LegendDot color="#352245" text="Cetățeni cu drept de vot" />
+                <LegendDot color="#FFCC00" text="Au votat" />
+              </div>
+            </div>
             <div className="chart">
               {windowSize.width > MAX_MOBILE_WIDTH
                 ? (
@@ -111,13 +121,6 @@ export function ElectionChart() {
                 : null
               }
               <div className="chart-container">
-                <StripedBar
-                  orizontal={windowSize.width <= MAX_MOBILE_WIDTH}
-                  color="#FFCC00"
-                  percent={data.turnoutPercentage}
-                  count={data.totalNationalVotes}
-                  text="Prezența la urne"
-                />
                 <StripedBar
                   orizontal={windowSize.width <= MAX_MOBILE_WIDTH}
                   color="#3C8CD2"
@@ -142,12 +145,14 @@ export function ElectionChart() {
               </div>
             </div>
           </div>
+          <div className={"vote-monitoring-numbers"} style={{ flexFlow: 'column' }}>
+            <div className={"vote-monitoring-area"} style={{ width: '80%' }}>
+              <p style={{ fontSize: '22px' }}>{dotFormat(data.totalDiasporaVotes)}</p>
+              <p style={{ fontSize: '14px', textAlign: 'center' }}>{"Votanți în Diaspora"}</p>
+            </div>
+          </div>
           <div>
-            {windowSize.width > MAX_MOBILE_WIDTH
-              ? <div className="text-center chart-title">Diaspora</div>
-              : (<h1>Diaspora</h1>)
-            }
-            <div className="chart diaspora-chart">
+            {/* <div className="chart diaspora-chart">
               <div
                 className="chart-bar"
                 style={{
@@ -165,22 +170,8 @@ export function ElectionChart() {
                     : 'Alegători prezenți la urne'}
                 />
               </div>
-            </div>
+            </div> */}
           </div>
-          {windowSize.width <= MAX_MOBILE_WIDTH
-            ? (
-              <>
-                <hr />
-                <div>
-                  <h2>LEGENDĂ</h2>
-                  <LegendDot color="#FFCC00" text="Prezența la urne" />
-                  <LegendDot color="#3C8CD2" text="Votanți pe liste permanente și speciale" />
-                  <LegendDot color="#443F46" text="Votanți pe liste suplimentare" />
-                  <LegendDot color="#F74B32" text="Votanți cu urnă mobilă" />
-                </div>
-              </>)
-            : null
-          }
         </div>
       </div>
     );

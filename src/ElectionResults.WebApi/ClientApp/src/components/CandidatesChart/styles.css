@@ -7,7 +7,7 @@
   text-align: center;
 }
 
-.votes-container > p {
+.votes-container>p {
   margin-bottom: 30px;
 }
 
@@ -32,7 +32,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  background-color: #110d64;
+  background-color: #352245;
   color: #fff;
 }
 
@@ -54,10 +54,11 @@
   align-items: center;
   justify-content: center;
   height: 90px;
-  background-color: #110d64;
+  background-color: #352245;
   color: #fff;
   font-size: 1.75em;
 }
+
 .question-text {
   text-align: center;
 }
@@ -84,7 +85,7 @@
   background-color: #fff;
   align-items: center;
   justify-content: center;
-  color: #110d64;
+  color: #352245;
   font-weight: bold;
   font-family: "Titillium Web", sans-serif;
   padding-right: 10px;
@@ -133,7 +134,7 @@
 
 .bar-votes-percent {
   font-size: 2em;
-  background-color: #110d64;
+  background-color: #352245;
   padding: 5px;
   margin-left: -8px;
 }
@@ -141,7 +142,7 @@
 .bar-votes-number {
   font-size: 1.5em;
   margin-right: 5px;
-  color: #110d64;
+  color: #352245;
 }
 
 .counties-select.dropdown-button {
@@ -153,11 +154,11 @@
   margin-bottom: 8px;
 }
 
-.counties-select.dropdown-button > span {
+.counties-select.dropdown-button>span {
   width: 100%;
 }
 
-.counties-select.dropdown-button > span span {
+.counties-select.dropdown-button>span span {
   color: #8f8f8f;
   font-size: 22px;
   font-weight: bold;
@@ -169,7 +170,7 @@
 }
 
 .show-all-btn {
-  background-color: #110d64;
+  background-color: #352245;
   color: #fff;
   border-radius: 10px;
   font-weight: bold;
@@ -179,13 +180,13 @@
 
 /* select styles */
 
-.first-option > div {
+.first-option>div {
   padding-left: 12px;
   height: 32px;
   margin-bottom: 5px;
 }
 
-.last-option > div {
+.last-option>div {
   padding-left: 12px;
   height: 32px;
   border-bottom: 1px solid #cfcfcf;
@@ -199,6 +200,7 @@
 }
 
 @media (max-width: 800px) {
+
   .bar-candidate-name,
   .bar-votes-number,
   .bar-votes-percent {
@@ -217,21 +219,22 @@
   .bar-votes-percent {
     width: 64px;
   }
+
   .child-bar {
     min-width: 15%;
   }
+
   .parent-bar {
     padding-left: 17%;
   }
+
   .vote-monitoring-title {
     text-align: center;
-  }
-  .vote-monitoring-message {
-    margin-left: 20px;
   }
 }
 
 @media (min-width: 800px) {
+
   .bar-candidate-name,
   .bar-votes-number,
   .bar-votes-percent {
@@ -250,15 +253,18 @@
   .bar-votes-percent {
     width: 80px;
   }
+
   .child-bar {
     min-width: 7%;
   }
+
   .parent-bar {
     padding-left: 9%;
   }
 }
 
 @media (min-width: 1400px) {
+
   .bar-candidate-name,
   .bar-votes-number,
   .bar-votes-percent {
@@ -277,6 +283,7 @@
   .bar-votes-percent {
     width: 100px;
   }
+
   .child-bar {
     min-width: 5%;
   }

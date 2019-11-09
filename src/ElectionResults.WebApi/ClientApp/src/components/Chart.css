@@ -2,7 +2,7 @@
   padding: 40px 0;
   display: grid;
   grid-template-columns: 4fr 1fr;
-  width: 80%;
+  width: 85%;
   margin: 0 auto;
   margin-top: -120px;
 }
@@ -49,7 +49,7 @@
   width: 100px;
   height: 100%;
   min-height: 2%;
-  background-color: #110d64;
+  background-color: #352245;
   z-index: 10;
 }
 
@@ -104,10 +104,9 @@
   padding: 40px 0;
   font-size: 1.75em;
   text-decoration: underline;
-  padding-left: 10px;
   position: relative;
-  left: -36px;
-  top: -160px;
+  top: -120px;
+  text-align: center;
 }
 
 .vote-monitoring-total {
@@ -117,22 +116,20 @@
   font-size: 1.25em;
   padding-left: 10px;
   font-weight: 700;
+  text-align: center;
 }
 
 .diaspora-chart {
   justify-content: center;
 }
 
+.bars-spacing {
+  margin-bottom: 50px;
+}
+
 @media screen and (max-width: 575px) {
-
-  .vote-monitoring-title-presence,
-  .vote-monitoring-total {
-    text-align: center;
-  }
-
   .vote-monitoring-title-presence {
     left: 0;
-    top: -120px;
   }
 
   .x-container {
@@ -152,8 +149,12 @@
     display: none;
   }
 
+  .legend>.percentage {
+    line-height: 28px;
+  }
+
   .legend>.text {
-    display: none;
+    position: absolute;
   }
 
   .legend {
@@ -178,6 +179,10 @@
 
   .diaspora-chart .legend>.percentage {
     line-height: unset;
+  }
+
+  .bars-spacing {
+    margin-bottom: 10px;
   }
 }
 

@@ -56,11 +56,11 @@ export function Footer() {
             </div>
             <div>
               <a className="link-item" target="_blank" href="https://code4.ro/ro/">
-                Code for România
+                Code for Romania
               </a>
             </div>
             <div>
-              <a className="link-item" href="#">
+              <a className="link-item" href="mailto: contact@code4.ro">
                 Contact
               </a>
             </div>
