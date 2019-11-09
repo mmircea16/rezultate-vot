@@ -8,34 +8,38 @@ html {
   padding: 20px 0px;
 }
 
-.static-paragraph {
+.static-container p {
   margin: 10px 0px;
 }
 
-.static-h1 {
+.static-container h1 {
   margin-bottom: 20px;
   font-size: 2em;
 }
 
-.static-h2 {
+.static-container h2 {
   margin: 20px 0px;
   font-size: 1.7em;
 }
 
-.static-h3 {
+.static-container h3 {
   margin: 10px 0px;
   font-size: 1.4em;
 }
 
-.static-link {
+.static-container a {
   text-decoration: none;
 }
 
-.static-list {
+.static-container ul {
   padding-left: 40px !important;
-  margin: 10px 0px;
+  margin: 20px 0px;
 }
 
-.static-list li {
+.static-container li {
   list-style-type: disc;
+}
+
+.static-container .emphasize {
+  font-weight: 700;
 }
