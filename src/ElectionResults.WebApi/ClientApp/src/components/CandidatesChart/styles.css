@@ -7,7 +7,7 @@
   text-align: center;
 }
 
-.votes-container > p {
+.votes-container>p {
   margin-bottom: 30px;
 }
 
@@ -58,6 +58,7 @@
   color: #fff;
   font-size: 1.75em;
 }
+
 .question-text {
   text-align: center;
 }
@@ -153,11 +154,11 @@
   margin-bottom: 8px;
 }
 
-.counties-select.dropdown-button > span {
+.counties-select.dropdown-button>span {
   width: 100%;
 }
 
-.counties-select.dropdown-button > span span {
+.counties-select.dropdown-button>span span {
   color: #8f8f8f;
   font-size: 22px;
   font-weight: bold;
@@ -179,13 +180,13 @@
 
 /* select styles */
 
-.first-option > div {
+.first-option>div {
   padding-left: 12px;
   height: 32px;
   margin-bottom: 5px;
 }
 
-.last-option > div {
+.last-option>div {
   padding-left: 12px;
   height: 32px;
   border-bottom: 1px solid #cfcfcf;
@@ -199,6 +200,7 @@
 }
 
 @media (max-width: 800px) {
+
   .bar-candidate-name,
   .bar-votes-number,
   .bar-votes-percent {
@@ -217,21 +219,22 @@
   .bar-votes-percent {
     width: 64px;
   }
+
   .child-bar {
     min-width: 15%;
   }
+
   .parent-bar {
     padding-left: 17%;
   }
+
   .vote-monitoring-title {
     text-align: center;
-  }
-  .vote-monitoring-message {
-    margin-left: 20px;
   }
 }
 
 @media (min-width: 800px) {
+
   .bar-candidate-name,
   .bar-votes-number,
   .bar-votes-percent {
@@ -250,15 +253,18 @@
   .bar-votes-percent {
     width: 80px;
   }
+
   .child-bar {
     min-width: 7%;
   }
+
   .parent-bar {
     padding-left: 9%;
   }
 }
 
 @media (min-width: 1400px) {
+
   .bar-candidate-name,
   .bar-votes-number,
   .bar-votes-percent {
@@ -277,6 +283,7 @@
   .bar-votes-percent {
     width: 100px;
   }
+
   .child-bar {
     min-width: 5%;
   }

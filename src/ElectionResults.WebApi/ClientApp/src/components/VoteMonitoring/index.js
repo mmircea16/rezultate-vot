@@ -10,29 +10,26 @@ const NumberArea = ({ bigNumber, text }) => (
   </div>
 );
 export const VoteMonitoring = () => {
-  let messagesNumber;
-  let messagesWithProblems;
-  let percent;
-    const [voteMonitoringData, setVoteMonitoringData] = React.useState(null);
-    const connection = new signalR.HubConnectionBuilder()
+  const [voteMonitoringData, setVoteMonitoringData] = React.useState(null);
+  const connection = new signalR.HubConnectionBuilder()
     .withUrl("/live-results")
     .build();
 
   React.useEffect(() => {
-      fetch("/api/results/monitoring")
-          .then(data => data.json())
-          .then(data => setVoteMonitoringData(data.statistics));
-      connection
-          .start()
-          .then(() => console.log("Connection started!"))
-          .catch(err => console.log("Error while establishing connection :("));
+    fetch("/api/results/monitoring")
+      .then(data => data.json())
+      .then(data => setVoteMonitoringData(data.statistics));
+    connection
+      .start()
+      .then(() => console.log("Connection started!"))
+      .catch(err => console.log("Error while establishing connection :("));
 
-      connection.on("monitoring-updated", data => {
-          console.log("received statistics");
-          setVoteMonitoringData(data.statistics);
-      });
+    connection.on("monitoring-updated", data => {
+      console.log("received statistics");
+      setVoteMonitoringData(data.statistics);
+    });
   }, []);
- 
+
   if (!voteMonitoringData) {
     return null;
   } else {
@@ -46,7 +43,7 @@ export const VoteMonitoring = () => {
             <h1>OBSERVAREA INDEPENDENTĂ A ALEGERILOR</h1>
           </div>
           <div className="vote-monitoring-message">
-            Aceste date sunt colectate prin aplicația Monitorizare Vot, dezvoltată de Code for Romania, de la observatorii independenți acreditați în secțiile de votare.
+            Aceste date sunt colectate prin aplicația Monitorizare Vot, dezvoltată de Code for Romania, de la observatorii independenți acreditați în secțiile de votare acoperite.
           </div>
           <div className={"vote-monitoring-numbers"}>
             {NumberArea({

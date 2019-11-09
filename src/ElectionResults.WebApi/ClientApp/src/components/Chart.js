@@ -1,5 +1,6 @@
 import React from "react";
 import "./Chart.css";
+import useWindowSize from '../hooks/useWindowSize';
 import * as signalR from "@aspnet/signalr";
 
 const Line = ({ percent }) => (
@@ -16,21 +17,39 @@ const Legend = ({ percent, count, text }) => (
   </div>
 );
 
-const StripedBar = ({ color, percent, count, text }) => (
-  <div
-    className="chart-bar"
-    style={{
+const StripedBar = ({ color, percent, count, text, orizontal }) => {
+  const style = { background: `repeating-linear-gradient(-45deg, ${color} 0 10px, #fff 10px 12px)` }
+  if (orizontal) {
+    style.width = `${percent}%`;
+    style.height = '48px';
+  } else {
+    style.height = `${percent}%`;
+  }
+  return (
+    <div className="chart-bar" style={style}>
+      <Legend percent={percent} count={dotFormat(count)} text={text} />
+    </div>
+  )
+}
+
+const LegendDot = ({ color, text }) => (
+  <div style={{ display: 'flex', margin: '5px 0' }}>
+    <div style={{
+      minWidth: '20px',
+      width: '20px',
+      height: '20px',
+      display: 'inline-block',
       background: `repeating-linear-gradient(-45deg, ${color} 0 10px, #fff 10px 12px)`,
-      height: `${percent}%`
-    }}
-  >
-    <Legend percent={percent} count={dotFormat(count)} text={text} />
+    }}></div>
+    <span style={{ paddingLeft: '10px' }}>{text}</span>
   </div>
-);
+)
 
 const dotFormat = value => `${value}`.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
 
 export function ElectionChart() {
+  const MAX_MOBILE_WIDTH = 575;
+  const windowSize = useWindowSize();
   const [data, setData] = React.useState({});
 
   const calcPercentage = val => ((val * 100) / data.enlistedVoters).toFixed(2);
@@ -38,70 +57,86 @@ export function ElectionChart() {
   React.useEffect(() => {
     fetch("/api/results/voter-turnout")
       .then(result => result.json())
-          .then(result => setData(result));
+      .then(result => setData(result));
+
     const connection = new signalR.HubConnectionBuilder()
-        .withUrl("/live-results")
-        .build();
+      .withUrl("/live-results")
+      .build();
 
     connection
-        .start()
-        .then(() => console.log("Connection started!"))
-        .catch(err => console.log("Error while establishing connection :("));
+      .start()
+      .then(() => console.log("Connection started!"))
+      .catch(err => console.log("Error while establishing connection :("));
 
     connection.on("turnout-updated", data => {
-        console.log("received turnout data in chars");
-        console.log(data);
-        setData(data);
+      console.log("received turnout data in chars");
+      setData(data);
     });
   }, []);
+
   if (!data) {
     return null;
   } else {
     return (
       <div className="border-radius">
         <div className={"vote-monitoring-title-presence"}>
-            <h1>PREZENȚĂ LA VOT</h1>
+          <h1>PREZENȚĂ LA VOT</h1>
         </div>
-        <div className="x-container">        
+        <div className="x-container">
           <div>
-          <div className={"info-legend bars"} style={{marginBottom: '50px'}}>
-              <div className={"parent-bar"}>
-                <p style={{ paddingLeft: `${25}%`, fontSize: '14px' }}>
-                100% ({ dotFormat(data.enlistedVoters) } cetățeni cu drept de vot)
+            {windowSize.width > MAX_MOBILE_WIDTH
+              ? <div className="text-center chart-title">Național</div>
+              : null
+            }
+            <div className={"info-legend bars bars-spacing"}>
+              <div className={"parent-bar"} style={{ justifyContent: 'flex-end' }}>
+                <p style={{
+                  paddingRight: '20px',
+                  width: 'fit-content',
+                  fontSize: '14px',
+                }}>
+                  {`100% (${dotFormat(data.enlistedVoters)})`}
                 </p>
               </div>
-              <div
-                style={{
-                  width: `${30}%`
-                }}
-                className={"child-bar"}
-              >
-                <p style={{fontSize: '14px', margin: '0 auto'}}>{(((data.totalDiasporaVotes + data.totalNationalVotes)/data.enlistedVoters) * 100).toFixed(2)}% 
-                ({(dotFormat(data.totalDiasporaVotes + data.totalNationalVotes))} au votat)</p>
+              <div className="child-bar" style={{ minWidth: '45px', width: `${calcPercentage(data.totalDiasporaVotes + data.totalNationalVotes)}%` }}>
+                <p style={{ fontSize: '14px', color: 'black', width: 'fit-content', }}>
+                  {`${calcPercentage(data.totalDiasporaVotes + data.totalNationalVotes)}% (${dotFormat(data.totalDiasporaVotes + data.totalNationalVotes)})`}
+                </p>
+              </div>
+              <div style={{ alignSelf: 'flex-start', marginTop: '35px' }}>
+                <LegendDot color="#352245" text="Cetățeni cu drept de vot" />
+                <LegendDot color="#FFCC00" text="Au votat" />
               </div>
             </div>
             <div className="chart">
-              <div>
-                <Line percent={0} />
-                <Line percent={25} />
-                <Line percent={50} />
-                <Line percent={75} />
-                <Line percent={100} />
-              </div>
+              {windowSize.width > MAX_MOBILE_WIDTH
+                ? (
+                  <div>
+                    <Line percent={0} />
+                    <Line percent={25} />
+                    <Line percent={50} />
+                    <Line percent={75} />
+                    <Line percent={100} />
+                  </div>)
+                : null
+              }
               <div className="chart-container">
                 <StripedBar
+                  orizontal={windowSize.width <= MAX_MOBILE_WIDTH}
                   color="#3C8CD2"
                   percent={calcPercentage(data.permanentLists)}
                   count={data.permanentLists}
                   text="Votanți pe liste permanente și speciale"
                 />
                 <StripedBar
+                  orizontal={windowSize.width <= MAX_MOBILE_WIDTH}
                   color="#443F46"
                   percent={calcPercentage(data.additionalLists)}
                   count={data.additionalLists}
                   text="Votanți pe liste suplimentare"
                 />
                 <StripedBar
+                  orizontal={windowSize.width <= MAX_MOBILE_WIDTH}
                   color="#F74B32"
                   percent={calcPercentage(data.mobileVotes)}
                   count={data.mobileVotes}
@@ -110,25 +145,29 @@ export function ElectionChart() {
               </div>
             </div>
           </div>
-          <div className={"vote-monitoring-numbers"} style={{flexFlow: 'column'}}>
-                <div className={"vote-monitoring-area"} style={{width: '80%', margin: '0 auto'}}>
-                  <p style={{fontSize: '22px'}}>{dotFormat(data.totalDiasporaVotes)}</p>
-                  <p style={{fontSize: '14px'}}>{"Votanți în Diaspora"}</p>
-                </div>
+          <div className={"vote-monitoring-numbers"} style={{ flexFlow: 'column' }}>
+            <div className={"vote-monitoring-area"} style={{ width: '80%' }}>
+              <p style={{ fontSize: '22px' }}>{dotFormat(data.totalDiasporaVotes)}</p>
+              <p style={{ fontSize: '14px', textAlign: 'center' }}>{"Votanți în Diaspora"}</p>
+            </div>
           </div>
           <div>
-            {/* <div className="chart" style={{ justifyContent: "center" }}>
+            {/* <div className="chart diaspora-chart">
               <div
                 className="chart-bar"
                 style={{
                   background: "#FFCC00",
-                  height: "45%",
+                  height: windowSize.width > MAX_MOBILE_WIDTH ? "45%" : "48px",
                   alignSelf: "flex-end"
                 }}
               >
                 <Legend
-                                count={dotFormat(data.totalDiasporaVotes)}
-                                text={"Votanți în Diaspora"}
+                  count={windowSize.width > MAX_MOBILE_WIDTH
+                    ? dotFormat(data.totalDiasporaVotes)
+                    : dotFormat(data.diasporaWithoutMailVotes)}
+                  text={windowSize.width > MAX_MOBILE_WIDTH
+                    ? `Alegători din care ${dotFormat(data.diasporaWithoutMailVotes)} prezenți la urne`
+                    : 'Alegători prezenți la urne'}
                 />
               </div>
             </div> */}
