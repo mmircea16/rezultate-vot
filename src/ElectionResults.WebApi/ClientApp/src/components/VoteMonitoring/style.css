@@ -110,6 +110,7 @@
   display: flex;
   align-items: center;
   font-size: 1.5em;
+  justify-content: flex-end;
 }
 
 .child-bar {

@@ -63,8 +63,7 @@ export const VoteMonitoring = () => {
                             text: "Secții de votare acoperite"
                         })}
                         {NumberArea({
-                            // bigNumber: voteMonitoringData[2].value,
-                            bigNumber: 1,
+                            bigNumber: voteMonitoringData[2].value,
                             text: "Județe acoperite"
                         })}
                         {NumberArea({
@@ -91,7 +90,10 @@ export const VoteMonitoring = () => {
                             </div>
                             <div
                                 style={{
-                                    width: `${percent}%`
+                                    width: `${percent}%`,
+                                    minWidth: '8%',
+                                    fontSize: '20px',
+                                    justifyContent: 'center'
                                 }}
                                 className={"child-bar"}
                             >
@@ -100,7 +102,6 @@ export const VoteMonitoring = () => {
                         </div>
                     </div>
                 </div>
-                <ElectionChart />
             </div>
         );
     }
