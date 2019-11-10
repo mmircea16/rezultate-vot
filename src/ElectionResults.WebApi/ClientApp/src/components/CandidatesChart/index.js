@@ -14,15 +14,12 @@ export const ChartContainer = () => {
         const fetchServerData = async () => {
             try {
                 console.log("candidates fetch");
-                fetch("/api/results/voter-turnout")
-                    .then(data => data.json())
-                    .then(data => setVoterTurnout(data));
-                return;
                 fetch(`/api/results?location=${currentSelection}`)
                     .then(data => data.json())
                     .then(data => {
                         console.log(data);
                         setCandidates(data.candidates);
+                        setVoterTurnout(data);
                         const total = { label: "Total", id: "TOTAL" };
                         const national = { label: "National", id: "RO" };
                         const diaspora = { label: "Diaspora", id: "DSPR" };
@@ -63,7 +60,7 @@ export const ChartContainer = () => {
 
     return (
         <div>
-            {candidates ? (
+            {candidates && voterTurnout ? (
                 <div>
                     <div sm={12} className={"votes-container"}>
                         <p className={"container-text"}>
@@ -74,11 +71,11 @@ export const ChartContainer = () => {
                             <div sm={3} className={"votes-results"}>
                                 <p className={"votes-percent"}>
                                     {" "}
-                                    {voterTurnout.turnoutPercentage}%
+                                    {voterTurnout.percentageCounted}%
                 </p>
                                 <p className={"votes-text"}>
                                     {" "}
-                                    {voterTurnout.totalNationalVotes.toLocaleString(undefined, {
+                                    {voterTurnout.voterTurnout.toLocaleString(undefined, {
                                         maximumFractionDigits: 2
                                     })}
                                 </p>

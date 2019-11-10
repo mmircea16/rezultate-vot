@@ -181,10 +181,12 @@ const Option = props => {
 const MenuList = props => {
   const total = props.children[0];
   const diaspora = props.children[1];
-  const national = props.children[2];
-  props.children.shift();
-  props.children.shift();
-  props.children.shift();
+    const national = props.children[2];
+    if (props.children.length > 2) {
+        props.children.shift();
+        props.children.shift();
+        props.children.shift();
+    }
 
   return (
     <components.MenuList {...props}>

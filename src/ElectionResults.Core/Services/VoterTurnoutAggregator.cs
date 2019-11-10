@@ -49,7 +49,7 @@ namespace ElectionResults.Core.Services
 
             var diasporaVoters = voterTurnoutResponse.Precinct.Sum(c => c.VotersOnSpecialLists);
             var enlistedVoters = voterTurnoutResponse.Counties.Sum(c => c.InitialCount);
-            var totalVoters = permanentLists + mobileVotes + (specialLists - diasporaVoters);
+            var totalVoters = permanentLists + mobileVotes + specialLists + (mailDiasporaVotes - diasporaVoters);
             var voterTurnoutPercentage = totalVoters / (decimal)enlistedVoters;
 
             var voterTurnout = new VoterTurnout

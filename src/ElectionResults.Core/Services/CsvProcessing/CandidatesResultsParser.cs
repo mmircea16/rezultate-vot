@@ -57,19 +57,26 @@ namespace ElectionResults.Core.Services.CsvProcessing
         protected virtual async Task PopulateCandidatesListWithVotes(string csvContent,
             List<CandidateConfig> candidates)
         {
-            var csvParser = new CsvParser(new StringReader(csvContent));
-            var headers = (await csvParser.ReadAsync()).ToList();
-            do
+            try
             {
-                var rowValues = await csvParser.ReadAsync();
-                if (rowValues == null)
-                    break;
-                foreach (var candidate in candidates)
+                var csvParser = new CsvParser(new StringReader(csvContent));
+                var headers = (await csvParser.ReadAsync()).ToList();
+                do
                 {
-                    var votes = int.Parse(rowValues[headers.IndexOf(candidate.Id)]);
-                    candidate.Votes += votes;
-                }
-            } while (true);
+                    var rowValues = await csvParser.ReadAsync();
+                    if (rowValues == null)
+                        break;
+                    foreach (var candidate in candidates)
+                    {
+                        var votes = int.Parse(rowValues[headers.IndexOf(candidate.Id)]);
+                        candidate.Votes += votes;
+                    }
+                } while (true);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }
