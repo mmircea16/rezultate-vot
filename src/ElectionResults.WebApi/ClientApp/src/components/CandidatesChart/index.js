@@ -1,15 +1,15 @@
-﻿import React from "react";
+import React from "react";
 import { ChartBar } from "./ChartBar";
 import CountiesSelect from "./CountiesSelect";
 import { FormGroup, Col, Button } from "reactstrap";
+let currentSelection = '';
 
 export const ChartContainer = () => {
     const [showAll, toggleShowAll] = React.useState(false);
     const [candidates, setCandidates] = React.useState(null);
     const [counties, setCounties] = React.useState(null);
     const [voterTurnout, setVoterTurnout] = React.useState(null);
-    const [displayQuestion, setDisplayQuestion] = React.useState(false);
-
+    const [displayQuestion, setDisplayQuestion] = React.useState(true);
     React.useEffect(() => {
         const fetchServerData = async () => {
             try {
@@ -17,8 +17,7 @@ export const ChartContainer = () => {
                 fetch("/api/results/voter-turnout")
                     .then(data => data.json())
                     .then(data => setVoterTurnout(data));
-                return;
-                fetch("/api/results")
+                fetch(`/api/results?location=${currentSelection}`)
                     .then(data => data.json())
                     .then(data => {
                         console.log(data);
@@ -55,7 +54,8 @@ export const ChartContainer = () => {
     }, []);
 
     const selectionChanged = value => {
-        fetch(`/api/results?location=${value.id}`)
+        currentSelection = value.id;
+        fetch(`/api/results?location=${currentSelection}`)
             .then(data => data.json())
             .then(data => setCandidates(data.candidates));
     };

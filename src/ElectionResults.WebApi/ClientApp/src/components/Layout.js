@@ -7,7 +7,7 @@ import IdleTimer from 'react-idle-timer';
 export function Layout(props) {
 
     const state = {
-        timeout: 1000 * 5,
+        timeout: 1000 * 60,
         showModal: false,
         userLoggedIn: false,
         isTimedOut: false
