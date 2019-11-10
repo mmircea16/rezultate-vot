@@ -17,8 +17,7 @@ export const ChartContainer = () => {
                 fetch("/api/results/voter-turnout")
                     .then(data => data.json())
                     .then(data => setVoterTurnout(data));
-                return;
-                fetch(`/api/results?location=${currentSelection}`)
+                return fetch(`/api/results?location=${currentSelection}`)
                     .then(data => data.json())
                     .then(data => {
                         console.log(data);
@@ -49,8 +48,8 @@ export const ChartContainer = () => {
             console.log("cleaned up");
             clearInterval(timer);
             timer = null;
-            window.removeEventListener()("onIdle", onIdle);
-            window.removeEventListener()("onActive", onActive);
+            window.removeEventListener("onIdle", onIdle);
+            window.removeEventListener("onActive", onActive);
         };
     }, []);
 
