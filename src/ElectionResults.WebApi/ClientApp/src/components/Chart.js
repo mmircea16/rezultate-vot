@@ -3,6 +3,7 @@ import "./Chart.css";
 import useWindowSize from '../hooks/useWindowSize';
 import { Button, Media, Label, Container } from 'reactstrap';
 import code4RoGrey from '../images/code4RoGrey.svg';
+import code4RoTransp from '../images/code4RoTransp.svg';
 
 const Line = ({ percent }) => (
   <div className="chart-line" style={{ top: `calc(100% - ${percent}%)` }}>
