@@ -22,7 +22,6 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace ElectionResults.WebApi
 {
@@ -65,11 +64,6 @@ namespace ElectionResults.WebApi
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/build";
-            });
-            services.AddSignalR();
-            services.AddSignalR().AddJsonProtocol((options) =>
-            {
-                options.PayloadSerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
             services.AddLogging(builder =>
             {
@@ -122,10 +116,6 @@ namespace ElectionResults.WebApi
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<ElectionResultsHub>("/live-results");
-            });
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
