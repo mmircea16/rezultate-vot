@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Services;
@@ -6,6 +7,7 @@ using ElectionResults.Core.Storage;
 using LazyCache;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace ElectionResults.WebApi.Controllers
 {
@@ -14,14 +16,17 @@ namespace ElectionResults.WebApi.Controllers
     {
         private readonly IResultsAggregator _resultsAggregator;
         private readonly ILogger<ResultsController> _logger;
+        private readonly IOptionsSnapshot<AppConfig> _config;
         private readonly IAppCache _appCache;
 
         public ResultsController(IResultsAggregator resultsAggregator,
             ILogger<ResultsController> logger,
+            IOptionsSnapshot<AppConfig> config,
             IAppCache appCache)
         {
             _resultsAggregator = resultsAggregator;
             _logger = logger;
+            _config = config;
             _appCache = appCache;
         }
 
@@ -32,7 +37,8 @@ namespace ElectionResults.WebApi.Controllers
             {
                 var key = $"results-{type.ConvertEnumToString()}{location}";
                 var result = await _appCache.GetOrAddAsync(
-                    key, () => _resultsAggregator.GetResults(type, location), DateTimeOffset.Now.AddMinutes(5));
+                    key, () => _resultsAggregator.GetResults(type, location),
+                    DateTimeOffset.Now.AddSeconds(_config.Value.IntervalInSeconds));
                 if (result.IsFailure)
                 {
                     _appCache.Remove(key);
@@ -54,7 +60,8 @@ namespace ElectionResults.WebApi.Controllers
             try
             {
                 var result = await _appCache.GetOrAddAsync(
-                    Consts.VOTE_TURNOUT_KEY, () => _resultsAggregator.GetVoterTurnout(), DateTimeOffset.Now.AddMinutes(5));
+                    Consts.VOTE_TURNOUT_KEY, () => _resultsAggregator.GetVoterTurnout(),
+                    DateTimeOffset.Now.AddSeconds(_config.Value.TurnoutCacheIntervalInSeconds));
                 if (result.IsFailure)
                 {
                     _appCache.Remove(Consts.VOTE_TURNOUT_KEY);
@@ -76,7 +83,8 @@ namespace ElectionResults.WebApi.Controllers
             try
             {
                 var result = await _appCache.GetOrAddAsync(
-                    Consts.VOTE_MONITORING_KEY, () => _resultsAggregator.GetVoteMonitoringStats(), DateTimeOffset.Now.AddMinutes(5));
+                    Consts.VOTE_MONITORING_KEY, () => _resultsAggregator.GetVoteMonitoringStats(),
+                    DateTimeOffset.Now.AddMinutes(5));
                 if (result.IsFailure)
                 {
                     _appCache.Remove(Consts.VOTE_TURNOUT_KEY);

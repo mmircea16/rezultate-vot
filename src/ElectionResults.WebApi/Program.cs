@@ -4,7 +4,6 @@ using ElectionResults.Core.Storage;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace ElectionResults.WebApi
 {
@@ -19,8 +18,8 @@ namespace ElectionResults.WebApi
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration(builder =>
                 {
-                    builder.AddJsonFile("appsettings.json");
-                    builder.AddSystemsManager($"/{Consts.PARAMETER_STORE_NAME}");
+                    builder.AddJsonFile("appsettings.json", true, true);
+                    builder.AddSystemsManager($"/{Consts.PARAMETER_STORE_NAME}", new AWSOptions(), TimeSpan.FromSeconds(30));
                 })
                 .UseStartup<Startup>();
     }

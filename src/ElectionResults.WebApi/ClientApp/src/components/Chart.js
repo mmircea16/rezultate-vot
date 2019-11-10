@@ -53,25 +53,36 @@ export function ElectionChart() {
   const [data, setData] = React.useState({});
 
   const calcPercentage = val => ((val * 100) / data.enlistedVoters).toFixed(2);
-
   React.useEffect(() => {
-    fetch("/api/results/voter-turnout")
-      .then(result => result.json())
-      .then(result => setData(result));
+      const fetchServerData = async () => {
+          try {
+              console.log("voter turnout component");
+              fetch("/api/results/voter-turnout")
+                  .then(result => result.json())
+                  .then(result => setData(result));
+          } catch (e) {
+              console.log(e);
+          }
+      };
 
-    const connection = new signalR.HubConnectionBuilder()
-      .withUrl("/live-results")
-      .build();
-
-    connection
-      .start()
-      .then(() => console.log("Connection started!"))
-      .catch(err => console.log("Error while establishing connection :("));
-
-    connection.on("turnout-updated", data => {
-      console.log("received turnout data in charts");
-      setData(data);
-    });
+      const onIdle = () => {
+          clearInterval(timer);
+          timer = null;
+      }
+      const onActive = () => {
+          timer = setInterval(() => fetchServerData(), 1000 * 60);
+      }
+      window.addEventListener("onIdle", onIdle);
+      window.addEventListener("onActive", onActive);
+      fetchServerData();
+      let timer = setInterval(() => fetchServerData(), 1000 * 60);
+      return () => {
+          console.log("cleaned up vote monitoring component");
+          clearInterval(timer);
+          timer = null;
+          window.removeEventListener()("onIdle", onIdle);
+          window.removeEventListener()("onActive", onActive);
+      };
   }, []);
 
   if (!data) {
