@@ -70,12 +70,12 @@ export function ElectionChart() {
           timer = null;
       }
       const onActive = () => {
-          timer = setInterval(() => fetchServerData(), 1000 * 60);
+          timer = setInterval(() => fetchServerData(), 1000 * 30);
       }
       window.addEventListener("onIdle", onIdle);
       window.addEventListener("onActive", onActive);
       fetchServerData();
-      let timer = setInterval(() => fetchServerData(), 1000 * 60);
+      let timer = setInterval(() => fetchServerData(), 1000 * 30);
       return () => {
           console.log("cleaned up vote monitoring component");
           clearInterval(timer);

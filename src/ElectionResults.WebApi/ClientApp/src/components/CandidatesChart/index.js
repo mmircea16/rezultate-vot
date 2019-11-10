@@ -9,7 +9,7 @@ export const ChartContainer = () => {
     const [candidates, setCandidates] = React.useState(null);
     const [counties, setCounties] = React.useState(null);
     const [voterTurnout, setVoterTurnout] = React.useState(null);
-    const [displayQuestion, setDisplayQuestion] = React.useState(true);
+    const [displayQuestion, setDisplayQuestion] = React.useState(false);
     React.useEffect(() => {
         const fetchServerData = async () => {
             try {
@@ -17,6 +17,7 @@ export const ChartContainer = () => {
                 fetch("/api/results/voter-turnout")
                     .then(data => data.json())
                     .then(data => setVoterTurnout(data));
+                return;
                 fetch(`/api/results?location=${currentSelection}`)
                     .then(data => data.json())
                     .then(data => {
@@ -38,12 +39,12 @@ export const ChartContainer = () => {
             timer = null;
         }
         const onActive = () => {
-            timer = setInterval(() => fetchServerData(), 1000 * 60);
+            timer = setInterval(() => fetchServerData(), 1000 * 30);
         }
         window.addEventListener("onIdle", onIdle);
         window.addEventListener("onActive", onActive);
         fetchServerData();
-        let timer = setInterval(() => fetchServerData(), 1000 * 60);
+        let timer = setInterval(() => fetchServerData(), 1000 * 30);
         return () => {
             console.log("cleaned up");
             clearInterval(timer);
