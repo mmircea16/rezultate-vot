@@ -34,7 +34,7 @@ export default class App extends Component {
                     </Layout>
                 </Route>
                 <Route path={basWidgetPath}>
-                    <div class="widget-container">
+                    <div className="widget-container">
                         <Route path={`${basWidgetPath}/rezultate-alegeri`} component={ChartContainer}/>
                         <Route path={`${basWidgetPath}/monitorizare-vot`} component={VoteMonitoring}/>
                         <Route path={`${basWidgetPath}/prezenta-alegeri`} component={ElectionChart}/>

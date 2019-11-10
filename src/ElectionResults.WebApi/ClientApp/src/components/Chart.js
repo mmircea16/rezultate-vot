@@ -80,8 +80,8 @@ export function ElectionChart() {
           console.log("cleaned up vote monitoring component");
           clearInterval(timer);
           timer = null;
-          window.removeEventListener()("onIdle", onIdle);
-          window.removeEventListener()("onActive", onActive);
+          window.removeEventListener("onIdle", onIdle);
+          window.removeEventListener("onActive", onActive);
       };
   }, []);
 
