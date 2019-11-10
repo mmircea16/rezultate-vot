@@ -56,7 +56,7 @@ export const VoteMonitoring = () => {
                     </div>
                     <div className="vote-monitoring-message">
                         Aceste date sunt colectate prin aplicația Monitorizare Vot, dezvoltată de Code for Romania, de la observatorii independenți acreditați în secțiile de votare acoperite.
-          </div>
+                    </div>
                     <div className={"vote-monitoring-numbers"}>
                         {NumberArea({
                             bigNumber: voteMonitoringData[1].value,
