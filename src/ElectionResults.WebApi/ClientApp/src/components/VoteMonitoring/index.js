@@ -51,8 +51,7 @@ export const VoteMonitoring = () => {
               text: "Secții de votare acoperite"
             })}
             {NumberArea({
-              // bigNumber: voteMonitoringData[2].value,
-              bigNumber: 1,
+              bigNumber: voteMonitoringData[2].value,
               text: "Județe acoperite"
             })}
             {NumberArea({
