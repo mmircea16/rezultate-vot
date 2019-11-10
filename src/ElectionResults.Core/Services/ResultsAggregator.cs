@@ -7,6 +7,7 @@ using ElectionResults.Core.Infrastructure.CsvModels;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Services.CsvProcessing;
 using ElectionResults.Core.Storage;
+using LazyCache;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -16,6 +17,7 @@ namespace ElectionResults.Core.Services
     {
         private readonly IResultsRepository _resultsRepository;
         private readonly ILogger<ResultsAggregator> _logger;
+        private decimal _totalCounted;
 
         public ResultsAggregator(IResultsRepository resultsRepository, ILogger<ResultsAggregator> logger)
         {
@@ -35,15 +37,23 @@ namespace ElectionResults.Core.Services
                     return Result.Failure<LiveResultsResponse>("Could not load results");
                 var selectedResults = result.Value;
                 var candidates = ConvertCandidates(selectedResults);
+                
                 var counties =
-                    selectedResults.Candidates.FirstOrDefault()?.Counties.Select(c => new County
+                    selectedResults?.Candidates?.FirstOrDefault()?.Counties.Select(c => new County
                     {
                         Label = c.Key,
                         Id = c.Key
                     }).ToList();
                 liveResultsResponse.Candidates = candidates;
                 liveResultsResponse.Counties = counties ?? new List<County>();
-
+                var voterTurnout = await GetVoterTurnout();
+                if (voterTurnout.IsSuccess)
+                {
+                    decimal totalVotes = voterTurnout.Value.TotalNationalVotes;
+                    var percentage = Math.Round(_totalCounted / totalVotes, 2) * 100;
+                    liveResultsResponse.PercentageCounted = percentage;
+                    liveResultsResponse.VoterTurnout = totalVotes;
+                }
                 return Result.Ok(liveResultsResponse);
             }
             catch (Exception e)
@@ -67,6 +77,7 @@ namespace ElectionResults.Core.Services
                 var localResultsData = JsonConvert.DeserializeObject<ElectionResultsData>(localResultsResponse.Value.StatisticsJson);
                 var diasporaResultsData = JsonConvert.DeserializeObject<ElectionResultsData>(diasporaResultsResponse.Value.StatisticsJson);
                 var electionResultsData = StatisticsAggregator.CombineResults(localResultsData, diasporaResultsData);
+                _totalCounted = electionResultsData.Candidates.Sum(c => c.Votes);
                 if (string.IsNullOrWhiteSpace(location) == false)
                 {
                     if (location == "TOTAL")
@@ -97,6 +108,8 @@ namespace ElectionResults.Core.Services
 
         private List<CandidateModel> ConvertCandidates(ElectionResultsData electionResultsData)
         {
+            if(electionResultsData == null)
+                return new List<CandidateModel>();
             electionResultsData.Candidates = StatisticsAggregator.CalculatePercentagesForCandidates(
                 electionResultsData.Candidates,
                 electionResultsData.Candidates.Sum(c => c.Votes));

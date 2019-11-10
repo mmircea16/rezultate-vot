@@ -79,6 +79,10 @@ namespace ElectionResults.Core.Storage
             _logger.LogInformation($"Latest for {type} and {location} is {latest?.Timestamp}");
             if (latest != null)
                 return Result.Ok(latest);
+            return Result.Ok(new ElectionStatistics
+            {
+                StatisticsJson = ""
+            });
             return Result.Failure<ElectionStatistics>("Could not load results");
         }
 

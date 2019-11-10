@@ -42,18 +42,29 @@ namespace ElectionResults.Core.Services.CsvProcessing
 
         public static List<CandidateConfig> CalculatePercentagesForCandidates(List<CandidateConfig> candidates, int sumOfVotes)
         {
-            foreach (var candidate in candidates)
+            try
             {
-                decimal percentage = Math.Round((decimal)candidate.Votes / sumOfVotes * 100, 2);
-                candidate.Percentage = percentage;
+                foreach (var candidate in candidates)
+                {
+                    decimal percentage = Math.Round((decimal)candidate.Votes / sumOfVotes * 100, 2);
+                    candidate.Percentage = percentage;
+                }
+                return candidates.OrderByDescending(c => c.Percentage).ToList();
             }
-            return candidates.OrderByDescending(c => c.Percentage).ToList();
+            catch (Exception e)
+            {
+                return candidates.OrderByDescending(c => c.Percentage).ToList();
+            }
         }
 
 
         public static ElectionResultsData CombineResults(ElectionResultsData localResults, ElectionResultsData diasporaResults)
         {
             var candidates = new List<CandidateConfig>();
+            if (localResults == null)
+                return diasporaResults;
+            if (diasporaResults == null)
+                return localResults;
             for (int i = 0; i < localResults.Candidates.Count; i++)
             {
                 var candidate = localResults.Candidates[i];

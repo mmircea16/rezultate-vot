@@ -112,9 +112,9 @@ export function ElectionChart() {
                   {`100% (${dotFormat(data.enlistedVoters)})`}
                 </p>
               </div>
-              <div className="child-bar" style={{ minWidth: '45px', width: `${calcPercentage(data.totalDiasporaVotes + data.totalNationalVotes)}%` }}>
+                            <div className="child-bar" style={{ minWidth: '45px', width: `${calcPercentage(data.totalNationalVotes)}%` }}>
                 <p style={{ fontSize: '14px', color: 'black', width: 'fit-content', }}>
-                  {`${calcPercentage(data.totalDiasporaVotes + data.totalNationalVotes)}% (${dotFormat(data.totalDiasporaVotes + data.totalNationalVotes)})`}
+                                    {`${calcPercentage(data.totalNationalVotes)}% (${dotFormat(data.totalNationalVotes)})`}
                 </p>
               </div>
               <div style={{ alignSelf: 'flex-start', marginTop: '35px' }}>
