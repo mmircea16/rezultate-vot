@@ -42,24 +42,31 @@ namespace ElectionResults.Core.Services.CsvDownload
 
         public async Task DownloadFiles()
         {
-            _logger.LogInformation("Starting to download csv files");
-            var files = _electionConfigurationSource.GetListOfFilesWithElectionResults();
-            var timestamp = SystemTime.Now.ToUnixTimeSeconds();
-            List<Task> tasks = new List<Task>();
-            await InitializeBucket();
-            await InitializeDb();
-            await DownloadCsvFiles(files, tasks, timestamp);
-            _logger.LogInformation($"Files downloaded");
-            await AddVoterTurnout(timestamp);
-            _logger.LogInformation("Added voter turnout");
-            await AddVoteMonitoringStats(timestamp);
-            _logger.LogInformation("Added vote monitoring stats");
+            try
+            {
+                _logger.LogInformation("Starting to download csv files");
+                var files = _electionConfigurationSource.GetListOfFilesWithElectionResults();
+                var timestamp = SystemTime.Now.ToUnixTimeSeconds();
+                await InitializeBucket();
+                await InitializeDb();
+                await DownloadCsvFiles(files, timestamp);
+                _logger.LogInformation($"Files downloaded");
+                await AddVoterTurnout(timestamp);
+                _logger.LogInformation("Added voter turnout");
+                await AddVoteMonitoringStats(timestamp);
+                _logger.LogInformation("Added vote monitoring stats");
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation(e, "Failed to download files");
+            }
         }
 
-        private async Task DownloadCsvFiles(List<ElectionResultsFile> files, List<Task> tasks, long timestamp)
+        private async Task DownloadCsvFiles(List<ElectionResultsFile> files, long timestamp)
         {
             try
             {
+                List<Task> tasks = new List<Task>();
                 foreach (var file in files.Where(f => f.Active))
                 {
                     _logger.LogInformation($"Downloading file {file.URL}");
