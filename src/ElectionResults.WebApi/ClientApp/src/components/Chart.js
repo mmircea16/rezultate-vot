@@ -1,7 +1,8 @@
 import React from "react";
 import "./Chart.css";
 import useWindowSize from '../hooks/useWindowSize';
-import * as signalR from "@aspnet/signalr";
+import { Button, Media, Label, Container } from 'reactstrap';
+import code4RoGrey from '../images/code4RoGrey.svg';
 
 const Line = ({ percent }) => (
   <div className="chart-line" style={{ top: `calc(100% - ${percent}%)` }}>
@@ -184,10 +185,15 @@ export function ElectionChart() {
               </div>
             </div> */}
           </div>
-            </div> 
-    <p className="becro">Date preluate de la <a href="https://prezenta.bec.ro" target="_blank">prezenta.bec.ro</a></p>
-
-    </div>
+          </div> 
+            <p className="becro">Date preluate de la <a href="https://prezenta.bec.ro" target="_blank">prezenta.bec.ro</a></p>
+          </div>
+          <div>
+            <Container style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+              <Label className="info-label">an app developed by</Label>
+              <Media src={code4RoGrey} />
+            </Container>
+          </div>
         </div>
     );
   }
