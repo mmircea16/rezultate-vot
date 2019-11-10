@@ -189,7 +189,7 @@ export function ElectionChart() {
             <p className="becro">Date preluate de la <a href="https://prezenta.bec.ro" target="_blank">prezenta.bec.ro</a></p>
           </div>
           <div>
-            <Container style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+            <Container style={{ display: 'flex', alignItems: 'left', justifyContent: 'flex-end' }}>
               <Label className="info-label">an app developed by</Label>
               <Media src={code4RoGrey} />
             </Container>
