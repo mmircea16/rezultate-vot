@@ -17,7 +17,8 @@ export const ChartContainer = () => {
                 fetch("/api/results/voter-turnout")
                     .then(data => data.json())
                     .then(data => setVoterTurnout(data));
-                return fetch(`/api/results?location=${currentSelection}`)
+                return;
+                fetch(`/api/results?location=${currentSelection}`)
                     .then(data => data.json())
                     .then(data => {
                         console.log(data);
