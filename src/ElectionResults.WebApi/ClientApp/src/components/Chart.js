@@ -50,7 +50,7 @@ const dotFormat = value => `${value}`.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
 export function ElectionChart() {
   const MAX_MOBILE_WIDTH = 575;
   const windowSize = useWindowSize();
-  const [data, setData] = React.useState({});
+  const [data, setData] = React.useState(null);
 
   const calcPercentage = val => ((val * 100) / data.enlistedVoters).toFixed(2);
   React.useEffect(() => {
