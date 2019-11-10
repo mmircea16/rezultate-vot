@@ -40,12 +40,12 @@ export function Footer() {
           >
             <h4 className="link-title">Linkuri Utile</h4>
             <div>
-              <a className="link-item" href="/termeni-si-conditii">
+              <a className="link-item" href="/web/termeni-si-conditii">
                 Termeni și condiții
               </a>
             </div>
             <div>
-              <a className="link-item" href="/politica-de-confidentialitate">
+              <a className="link-item" href="/web/politica-de-confidentialitate">
                 Politica de confidențialitate
               </a>
             </div>

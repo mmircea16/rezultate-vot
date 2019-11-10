@@ -49,8 +49,8 @@ export const ChartContainer = () => {
             console.log("cleaned up");
             clearInterval(timer);
             timer = null;
-            window.removeEventListener()("onIdle", onIdle);
-            window.removeEventListener()("onActive", onActive);
+            window.removeEventListener("onIdle", onIdle);
+            window.removeEventListener("onActive", onActive);
         };
     }, []);
 

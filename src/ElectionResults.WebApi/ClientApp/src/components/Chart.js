@@ -80,8 +80,8 @@ export function ElectionChart() {
           console.log("cleaned up vote monitoring component");
           clearInterval(timer);
           timer = null;
-          window.removeEventListener()("onIdle", onIdle);
-          window.removeEventListener()("onActive", onActive);
+          window.removeEventListener("onIdle", onIdle);
+          window.removeEventListener("onActive", onActive);
       };
   }, []);
 
@@ -89,6 +89,7 @@ export function ElectionChart() {
     return null;
   } else {
     return (
+        <div className={'full-width-container'}>
       <div className="border-radius">
         <div className={"vote-monitoring-title-presence"}>
           <h1>PREZENȚĂ LA VOT</h1>
@@ -100,7 +101,7 @@ export function ElectionChart() {
               : null
             }
             <div className={"info-legend bars bars-spacing"}>
-              <div className={"parent-bar"} style={{ justifyContent: 'flex-end' }}>
+              <div className={"parent-bar"}>
                 <p style={{
                   paddingRight: '20px',
                   width: 'fit-content',
@@ -187,6 +188,7 @@ export function ElectionChart() {
     <p className="becro">Date preluate de la <a href="https://prezenta.bec.ro" target="_blank">prezenta.bec.ro</a></p>
 
     </div>
+        </div>
     );
   }
 }

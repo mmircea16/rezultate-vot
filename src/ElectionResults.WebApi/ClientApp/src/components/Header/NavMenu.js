@@ -27,17 +27,17 @@ export class NavMenu extends Component {
       <header>
         <Navbar light expand="md">
           <Container>
-            <NavbarBrand tag={Link} to="/">
+            <NavbarBrand tag={Link} to="/web">
               <img src={votLogo} width={90} height={80} alt="Rezultate Vot" />
             </NavbarBrand>
             <NavbarToggler className="mr-2 menu-toggle" onClick={this.toggleNavbar} />
             <Collapse isOpen={!this.state.collapsed} navbar>
               <Nav className="ml-auto" navbar>
                 <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/despre-proiect">DESPRE PROIECT</NavLink>
+                  <NavLink tag={Link} className="text-dark" to="/web/despre-proiect">DESPRE PROIECT</NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/despre-noi">DESPRE NOI</NavLink>
+                  <NavLink tag={Link} className="text-dark" to="/web/despre-noi">DESPRE NOI</NavLink>
                 </NavItem>
               </Nav>
             </Collapse>
