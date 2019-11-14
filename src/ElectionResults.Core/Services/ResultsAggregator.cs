@@ -77,6 +77,21 @@ namespace ElectionResults.Core.Services
                 var localResultsData = JsonConvert.DeserializeObject<ElectionResultsData>(localResultsResponse.Value.StatisticsJson);
                 var diasporaResultsData = JsonConvert.DeserializeObject<ElectionResultsData>(diasporaResultsResponse.Value.StatisticsJson);
                 var electionResultsData = StatisticsAggregator.CombineResults(localResultsData, diasporaResultsData);
+
+                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g1").Votes = 3485292;
+                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g2").Votes = 527098;
+                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g3").Votes = 1384450;
+                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g4").Votes = 357014;
+                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g5").Votes = 2051725;
+                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g6").Votes = 32787;
+                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g7").Votes = 30884;
+                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g8").Votes = 30850;
+                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g9").Votes = 27769;
+                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g10").Votes = 815201;
+                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g11").Votes = 39192;
+                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g12").Votes = 244275;
+                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g13").Votes = 48662;
+                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g14").Votes = 141316;
                 _totalCounted = electionResultsData.Candidates.Sum(c => c.Votes);
                 if (string.IsNullOrWhiteSpace(location) == false)
                 {
