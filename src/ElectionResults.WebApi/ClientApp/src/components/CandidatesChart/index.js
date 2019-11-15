@@ -67,11 +67,11 @@ export const ChartContainer = () => {
                             Rezultate Vot, transparentizează întreg procesul electoral furnizând în timp real, într-o formă grafică intuitivă, ușor de înțeles, datele oficiale furnizate de către AEP și Birourile Electorale cât și datele preluate prin aplicația Monitorizare Vot dezvoltată de Code for Romania, despre alegerile din România.
       </p>
                         <div sm={3} className={"votes-numbers"}>
-                            <h3 className={"votes-title"}>Voturi numarate</h3>
+                            <h3 className={"votes-title"}>Voturi numărate</h3>
                             <div sm={3} className={"votes-results"}>
                                 <p className={"votes-percent"}>
                                     {" "}
-                                    {voterTurnout.percentageCounted}%
+                                    100%
                 </p>
                                 <p className={"votes-text"}>
                                     {" "}
