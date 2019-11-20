@@ -15,7 +15,7 @@ export default class App extends Component {
 
     render() {
         const baseNonWidgetPath = '/web';
-        const basWidgetPath = '/widgets';
+        const baseWidgetPath = '/widgets';
         return (
             <div>
                 <Route exact path="/" render={() => (
@@ -33,11 +33,11 @@ export default class App extends Component {
                         <Route path={`${baseNonWidgetPath}/rezultate-alegeri`} component={ElectionChart}/>
                     </Layout>
                 </Route>
-                <Route path={basWidgetPath}>
+                <Route path={baseWidgetPath}>
                     <div className="widget-container">
-                        <Route path={`${basWidgetPath}/rezultate-alegeri`} component={ChartContainer}/>
-                        <Route path={`${basWidgetPath}/monitorizare-vot`} component={VoteMonitoring}/>
-                        <Route path={`${basWidgetPath}/prezenta-alegeri`} component={ElectionChart}/>
+                        <Route path={`${baseWidgetPath}/rezultate-alegeri`} component={ChartContainer}/>
+                        <Route path={`${baseWidgetPath}/monitorizare-vot`} component={VoteMonitoring}/>
+                        <Route path={`${baseWidgetPath}/prezenta-alegeri`} component={ElectionChart}/>
                     </div>
                 </Route>
             </div>

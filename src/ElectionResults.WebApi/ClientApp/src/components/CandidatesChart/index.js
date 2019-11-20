@@ -1,7 +1,8 @@
 import React from "react";
 import { ChartBar } from "./ChartBar";
 import CountiesSelect from "./CountiesSelect";
-import { FormGroup, Col, Button } from "reactstrap";
+import { FormGroup, Col, Button, Media, Label, Container } from "reactstrap";
+import code4RoGrey from '../../images/code4RoGrey.svg';
 let currentSelection = '';
 
 export const ChartContainer = () => {
@@ -120,6 +121,14 @@ export const ChartContainer = () => {
                         }
                     </div>
                 )}
+
+            <div style={{ display: 'flex' }}>
+                <p style={{ position: 'relative', display: 'inline' }} className="becro">Date preluate de la <a href="https://prezenta.bec.ro" target="_blank">prezenta.bec.ro</a></p>
+                <Container style={{ display: 'flex', alignItems: 'left', justifyContent: 'flex-end', padding: '0px' }}>
+                    <Label className="info-label">an app developed by</Label>
+                    <Media src={code4RoGrey} />
+                </Container>
+            </div>
         </div>
     );
 };

@@ -99,7 +99,7 @@ export function ElectionChart() {
         <div className="x-container">
           <div>
             {windowSize.width > MAX_MOBILE_WIDTH
-              ? <div className="text-center chart-title">Național</div>
+              ? <div className="text-center chart-title">Total alegatori</div>
               : null
             }
             <div className={"info-legend bars bars-spacing"}>
@@ -164,37 +164,17 @@ export function ElectionChart() {
               <p style={{ fontSize: '22px' }}>{dotFormat(data.totalDiasporaVotes)}</p>
               <p style={{ fontSize: '14px', textAlign: 'center' }}>{"Votanți în Diaspora"}</p>
             </div>
-          </div>
-          <div>
-            {/* <div className="chart diaspora-chart">
-              <div
-                className="chart-bar"
-                style={{
-                  background: "#FFCC00",
-                  height: windowSize.width > MAX_MOBILE_WIDTH ? "45%" : "48px",
-                  alignSelf: "flex-end"
-                }}
-              >
-                <Legend
-                  count={windowSize.width > MAX_MOBILE_WIDTH
-                    ? dotFormat(data.totalDiasporaVotes)
-                    : dotFormat(data.diasporaWithoutMailVotes)}
-                  text={windowSize.width > MAX_MOBILE_WIDTH
-                    ? `Alegători din care ${dotFormat(data.diasporaWithoutMailVotes)} prezenți la urne`
-                    : 'Alegători prezenți la urne'}
-                />
-              </div>
-            </div> */}
-          </div>
-          </div> 
+                    </div>
+    <div>
+    <Container style={{ display: 'flex', alignItems: 'left', justifyContent: 'flex-end', paddingTop: '40px' }}>
+<Label className="info-label">an app developed by</Label>
+    <Media src={code4RoGrey} />
+    </Container>
+    </div>
+        </div> 
             <p className="becro">Date preluate de la <a href="https://prezenta.bec.ro" target="_blank">prezenta.bec.ro</a></p>
-          </div>
-          <div>
-            <Container style={{ display: 'flex', alignItems: 'left', justifyContent: 'flex-end', paddingTop: '40px' }}>
-              <Label className="info-label">an app developed by</Label>
-              <Media src={code4RoGrey} />
-            </Container>
-          </div>
+        </div>
+         
         </div>
     );
   }
