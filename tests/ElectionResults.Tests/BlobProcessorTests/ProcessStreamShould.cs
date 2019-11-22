@@ -29,7 +29,7 @@ namespace ElectionResults.Tests.BlobProcessorTests
             var blobProcessor = CreateTestableBlobProcessor();
             MapStatisticsAggregatorToSuccessfulResult();
 
-            await blobProcessor.ProcessStream(new MemoryStream(), _fileName);
+            await blobProcessor.ProcessStream(new MemoryStream(), new ElectionResultsFile());
 
             blobProcessor.CsvWasReadAsString.Should().BeTrue();
         }
@@ -40,9 +40,9 @@ namespace ElectionResults.Tests.BlobProcessorTests
             var blobProcessor = CreateTestableBlobProcessor();
             MapStatisticsAggregatorToSuccessfulResult();
 
-            await blobProcessor.ProcessStream(new MemoryStream(), _fileName);
+            await blobProcessor.ProcessStream(new MemoryStream(), new ElectionResultsFile());
 
-            await _statisticsAggregator.ReceivedWithAnyArgs(1).RetrieveElectionData("");
+            await _statisticsAggregator.ReceivedWithAnyArgs(1).RetrieveElectionData("", new ElectionResultsFile());
         }
 
         [Fact]
@@ -51,7 +51,7 @@ namespace ElectionResults.Tests.BlobProcessorTests
             var blobProcessor = CreateTestableBlobProcessor();
             MapStatisticsAggregatorToSuccessfulResult();
 
-            await blobProcessor.ProcessStream(new MemoryStream(), _fileName);
+            await blobProcessor.ProcessStream(new MemoryStream(), new ElectionResultsFile());
 
             _statisticsAggregator.CsvParsers.Should().NotBeEmpty();
         }
@@ -62,7 +62,7 @@ namespace ElectionResults.Tests.BlobProcessorTests
             var blobProcessor = CreateTestableBlobProcessor();
             MapStatisticsAggregatorToSuccessfulResult();
 
-            await blobProcessor.ProcessStream(new MemoryStream(), _fileName);
+            await blobProcessor.ProcessStream(new MemoryStream(), new ElectionResultsFile());
 
             await _resultsRepository.ReceivedWithAnyArgs(1).InsertResults(null);
         }
@@ -74,7 +74,7 @@ namespace ElectionResults.Tests.BlobProcessorTests
 
         private void MapStatisticsAggregatorToSuccessfulResult()
         {
-            _statisticsAggregator.RetrieveElectionData("")
+            _statisticsAggregator.RetrieveElectionData("", new ElectionResultsFile())
                 .ReturnsForAnyArgs(Task.FromResult(Result.Ok(new ElectionResultsData())));
         }
     }

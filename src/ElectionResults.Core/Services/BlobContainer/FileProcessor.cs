@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using ElectionResults.Core.Models;
 using ElectionResults.Core.Services.CsvProcessing;
 using ElectionResults.Core.Storage;
 using Microsoft.Extensions.Logging;
@@ -31,15 +31,15 @@ namespace ElectionResults.Core.Services.BlobContainer
             };
         }
 
-        public async Task ProcessStream(Stream csvStream, string fileName)
+        public async Task ProcessStream(Stream csvStream, ElectionResultsFile file)
         {
             _logger.LogInformation($"Processing csv with stream of {csvStream.Length} bytes");
             var csvContent = await ReadCsvContent(csvStream);
-            var aggregationResult = await _statisticsAggregator.RetrieveElectionData(csvContent);
+            var aggregationResult = await _statisticsAggregator.RetrieveElectionData(csvContent, file);
             if (aggregationResult.IsSuccess)
             {
-                var electionStatistics = FileNameParser.BuildElectionStatistics(fileName, aggregationResult.Value);
-                _logger.LogInformation($"Inserting results from {fileName} with timestamp {electionStatistics.Timestamp}");
+                var electionStatistics = FileNameParser.BuildElectionStatistics(file, aggregationResult.Value);
+                _logger.LogInformation($"Inserting results from {file.Name} with timestamp {electionStatistics.Timestamp}");
                 
                 await _resultsRepository.InsertResults(electionStatistics);
             }

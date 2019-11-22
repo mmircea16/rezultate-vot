@@ -6,6 +6,7 @@ using Amazon.SimpleSystemsManagement.Model;
 using CSharpFunctionalExtensions;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Storage;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
@@ -13,20 +14,26 @@ namespace ElectionResults.Core.Infrastructure
 {
     public class ElectionConfigurationSource : IElectionConfigurationSource
     {
+        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly AppConfig _config;
         private readonly AmazonSimpleSystemsManagementClient _amazonSettingsClient;
+        private string _parameterStoreName;
 
-        public ElectionConfigurationSource(IOptions<AppConfig> config)
+        public ElectionConfigurationSource(IOptions<AppConfig> config, IHostingEnvironment hostingEnvironment)
         {
+            _hostingEnvironment = hostingEnvironment;
             _config = config.Value;
             _amazonSettingsClient = new AmazonSimpleSystemsManagementClient();
+            _parameterStoreName = Consts.PARAMETER_STORE_NAME;
+            if (hostingEnvironment.IsDevelopment())
+                _parameterStoreName += "-dev";
         }
 
         public async Task<Result> UpdateInterval(int seconds)
         {
             var putParameterRequest = new PutParameterRequest
             {
-                Name = $"/{Consts.PARAMETER_STORE_NAME}/settings/intervalInSeconds",
+                Name = $"/{_parameterStoreName}/settings/intervalInSeconds",
                 Value = seconds.ToString(),
                 Type = ParameterType.String,
                 Overwrite = true
@@ -41,7 +48,7 @@ namespace ElectionResults.Core.Infrastructure
         {
             var getParameterRequest = new GetParameterRequest
             {
-                Name = $"/{Consts.PARAMETER_STORE_NAME}/settings/intervalInSeconds",
+                Name = $"/{_parameterStoreName}/settings/intervalInSeconds",
             };
             var response = await _amazonSettingsClient.GetParameterAsync(getParameterRequest);
             if (response.HttpStatusCode == HttpStatusCode.OK)
@@ -53,7 +60,7 @@ namespace ElectionResults.Core.Infrastructure
         {
             var putParameterRequest = new PutParameterRequest
             {
-                Name = $"/{Consts.PARAMETER_STORE_NAME}/settings/electionsConfig",
+                Name = $"/{_parameterStoreName}/settings/electionsConfig",
                 Value = JsonConvert.SerializeObject(config),
                 Type = ParameterType.String,
                 Overwrite = true
@@ -68,7 +75,7 @@ namespace ElectionResults.Core.Infrastructure
         {
             var getParameterRequest = new GetParameterRequest
             {
-                Name = $"/{Consts.PARAMETER_STORE_NAME}/settings/electionsConfig",
+                Name = $"/{_parameterStoreName}/settings/electionsConfig",
             };
             var response = await _amazonSettingsClient.GetParameterAsync(getParameterRequest);
             if (response.HttpStatusCode == HttpStatusCode.OK)
@@ -79,7 +86,20 @@ namespace ElectionResults.Core.Infrastructure
         public List<ElectionResultsFile> GetListOfFilesWithElectionResults()
         {
             var electionsConfig = JsonConvert.DeserializeObject<ElectionsConfig>(_config.ElectionsConfig);
-            return electionsConfig.Files;
+            var files = electionsConfig.Files;
+            /*files[0].Name = "national";
+            files[0].FileType = FileType.Results;
+            files[0].ResultsSource = "national";
+            files[1].Name = "diaspora";
+            files[1].FileType = FileType.Results;
+            files[1].ResultsSource = "diaspora";
+            files[2].Name = "mail";
+            files[2].FileType = FileType.Results;
+            files[2].ResultsSource = "mail";*/
+            files[0].Active = true;
+            files[1].Active = true;
+            files[2].Active = true;
+            return files;
         }
     }
 }

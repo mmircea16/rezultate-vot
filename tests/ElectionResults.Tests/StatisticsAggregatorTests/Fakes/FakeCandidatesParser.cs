@@ -9,7 +9,8 @@ namespace ElectionResults.Tests.StatisticsAggregatorTests.Fakes
 {
     public class FakeCandidatesParser : ICsvParser
     {
-        public Task<Result<ElectionResultsData>> Parse(ElectionResultsData electionResultsData, string csvContent)
+        public Task<Result<ElectionResultsData>> Parse(ElectionResultsData electionResultsData, string csvContent,
+            ElectionResultsFile file)
         {
             WasInvoked = true;
             electionResultsData.Candidates = new List<CandidateConfig>();

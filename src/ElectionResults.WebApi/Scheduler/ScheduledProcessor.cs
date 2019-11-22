@@ -22,7 +22,7 @@ namespace ElectionResults.WebApi.Scheduler
             _electionConfigurationSource = electionConfigurationSource;
             _logger = logger;
             _intervalInSeconds = config.Value.IntervalInSeconds;
-            _nextRun = DateTime.Now.AddSeconds(_intervalInSeconds);
+            _nextRun = DateTime.Now.AddSeconds(1);
             _logger.LogInformation($"Next run will be at {_nextRun:F}");
         }
 

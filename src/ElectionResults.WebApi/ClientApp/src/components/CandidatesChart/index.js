@@ -14,17 +14,17 @@ export const ChartContainer = () => {
     React.useEffect(() => {
         const fetchServerData = async () => {
             try {
-                console.log("candidates fetch");
-                fetch(`/api/results?location=${currentSelection}`)
+                fetch(`/api/results?electionId=${window.electionId}`)
                     .then(data => data.json())
                     .then(data => {
                         console.log(data);
                         setCandidates(data.candidates);
                         setVoterTurnout(data);
-                        const total = { label: "Total", id: "TOTAL" };
-                        const national = { label: "National", id: "RO" };
-                        const diaspora = { label: "Diaspora", id: "DSPR" };
-                        data.counties.unshift(total, diaspora, national);
+                        const total = { label: "Total", id: "" };
+                        const national = { label: "National", id: "national" };
+                        const diaspora = { label: "Diaspora", id: "diaspora" };
+                        const mail = { label: "Corespondență", id: "mail" };
+                        data.counties.unshift(total, diaspora, national, mail);
                         setCounties(data.counties);
                     });
             } catch (e) {
@@ -54,7 +54,7 @@ export const ChartContainer = () => {
 
     const selectionChanged = value => {
         currentSelection = value.id;
-        fetch(`/api/results?location=${currentSelection}`)
+        fetch(`/api/results/?electionId=${window.electionId}&source=${value.id}&county=${value.countyName || ''}`)
             .then(data => data.json())
             .then(data => setCandidates(data.candidates));
     };

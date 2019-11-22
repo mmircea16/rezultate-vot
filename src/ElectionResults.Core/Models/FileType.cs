@@ -2,14 +2,10 @@
 
 namespace ElectionResults.Core.Models
 {
-    public enum ResultsType
+    public enum FileType
     {
-        [Description("PROV")]
-        Provisional,
-        [Description("PART")]
-        Partial,
-        [Description("FINAL")]
-        Final,
+        [Description("RESULTS")]
+        Results,
         [Description("TURNOUT")]
         VoterTurnout,
         [Description("MONITORING")]

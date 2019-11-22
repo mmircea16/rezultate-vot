@@ -59,7 +59,7 @@ export function ElectionChart() {
       const fetchServerData = async () => {
           try {
               console.log("voter turnout component");
-              fetch("/api/results/voter-turnout")
+              fetch(`/api/results/voter-turnout?electionId=${window.electionId}`)
                   .then(result => result.json())
                   .then(result => setData(result));
           } catch (e) {

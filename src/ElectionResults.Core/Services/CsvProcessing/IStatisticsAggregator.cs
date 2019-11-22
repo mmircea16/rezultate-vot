@@ -7,7 +7,7 @@ namespace ElectionResults.Core.Services.CsvProcessing
 {
     public interface IStatisticsAggregator
     {
-        Task<Result<ElectionResultsData>> RetrieveElectionData(string csvContent);
+        Task<Result<ElectionResultsData>> RetrieveElectionData(string csvContent, ElectionResultsFile file);
 
         List<ICsvParser> CsvParsers { get; set; }
     }

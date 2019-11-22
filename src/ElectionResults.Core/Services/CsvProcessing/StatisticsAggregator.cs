@@ -18,7 +18,7 @@ namespace ElectionResults.Core.Services.CsvProcessing
         {
             _logger = logger;
         }
-        public async Task<Result<ElectionResultsData>> RetrieveElectionData(string csvContent)
+        public async Task<Result<ElectionResultsData>> RetrieveElectionData(string csvContent, ElectionResultsFile file)
         {
             _logger.LogInformation($"Retrieving data from csv");
             try
@@ -26,7 +26,7 @@ namespace ElectionResults.Core.Services.CsvProcessing
                 var electionResults = new ElectionResultsData();
                 foreach (var csvParser in CsvParsers)
                 {
-                    await csvParser.Parse(electionResults, csvContent);
+                    await csvParser.Parse(electionResults, csvContent, file);
                 }
 
                 return Result.Ok(electionResults);
@@ -58,23 +58,22 @@ namespace ElectionResults.Core.Services.CsvProcessing
         }
 
 
-        public static ElectionResultsData CombineResults(ElectionResultsData localResults, ElectionResultsData diasporaResults)
+        public static ElectionResultsData CombineResults(ElectionResultsData firstResultsSet, ElectionResultsData secondResultsSet)
         {
             var candidates = new List<CandidateConfig>();
-            if (localResults == null)
-                return diasporaResults;
-            if (diasporaResults == null)
-                return localResults;
-            for (int i = 0; i < localResults.Candidates.Count; i++)
+            if (firstResultsSet?.Candidates == null)
+                return secondResultsSet;
+            if (secondResultsSet?.Candidates == null)
+                return firstResultsSet;
+            foreach (var candidate in firstResultsSet.Candidates)
             {
-                var candidate = localResults.Candidates[i];
                 candidates.Add(new CandidateConfig
                 {
                     Id = candidate.Id,
                     CsvId = candidate.CsvId,
                     ImageUrl = candidate.ImageUrl,
                     Name = candidate.Name,
-                    Votes = candidate.Votes + diasporaResults.Candidates.FirstOrDefault(c => c.Id == candidate.Id).Votes,
+                    Votes = candidate.Votes + secondResultsSet.Candidates.FirstOrDefault(c => c.Id == candidate.Id)?.Votes ?? 0,
                     Percentage = candidate.Percentage,
                     Counties = candidate.Counties
                 });

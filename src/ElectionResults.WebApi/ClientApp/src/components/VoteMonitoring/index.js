@@ -14,7 +14,7 @@ export const VoteMonitoring = () => {
         const fetchServerData = async () => {
             try {
                 console.log("monitoring data");
-                fetch("/api/results/monitoring")
+                fetch(`/api/results/monitoring?electionId=${window.electionId}`)
                     .then(data => data.json())
                     .then(data => setVoteMonitoringData(data.statistics));
             } catch (e) {

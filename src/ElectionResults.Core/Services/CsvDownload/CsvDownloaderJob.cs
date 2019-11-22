@@ -46,6 +46,7 @@ namespace ElectionResults.Core.Services.CsvDownload
             {
                 _logger.LogInformation("Starting to download csv files");
                 var files = _electionConfigurationSource.GetListOfFilesWithElectionResults();
+
                 var timestamp = SystemTime.Now.ToUnixTimeSeconds();
                 await InitializeBucket();
                 await InitializeDb();
@@ -67,10 +68,14 @@ namespace ElectionResults.Core.Services.CsvDownload
             try
             {
                 List<Task> tasks = new List<Task>();
-                foreach (var file in files.Where(f => f.Active))
+                
+                foreach (var file in files.Where(f => f.Active && f.FileType == FileType.Results))
                 {
                     _logger.LogInformation($"Downloading file {file.URL}");
-                    tasks.Add(ProcessCsv(file, timestamp));
+                    file.Name =
+                        $"{file.FileType.ConvertEnumToString()}_{file.ResultsSource}_{timestamp}.csv";
+                    file.Timestamp = timestamp;
+                    tasks.Add(_bucketUploader.ProcessFile(file));
                 }
 
                 await Task.WhenAll(tasks);
@@ -127,13 +132,6 @@ namespace ElectionResults.Core.Services.CsvDownload
             {
                 _logger.LogError(e, $"Failed to create bucket {_config.BucketName}");
             }
-        }
-
-        private async Task ProcessCsv(ElectionResultsFile file, long timestamp)
-        {
-            file.Name =
-                $"{file.ResultsType.ConvertEnumToString()}_{file.ResultsLocation.ConvertEnumToString()}_{timestamp}.csv";
-            await _bucketUploader.UploadFromUrl(file);
         }
     }
 }

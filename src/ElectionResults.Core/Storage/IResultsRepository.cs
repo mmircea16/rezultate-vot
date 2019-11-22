@@ -9,12 +9,14 @@ namespace ElectionResults.Core.Storage
     {
         Task InsertResults(ElectionStatistics electionStatistics);
 
-        Task<Result<ElectionStatistics>> GetLatestResults(string location, string type);
+        Task<Result<ElectionStatistics>> Get(string source, string type);
         
         Task InitializeDb();
         
         Task InsertCurrentVoterTurnout(VoterTurnout voterTurnout);
 
         Task InsertVoteMonitoringStats(VoteMonitoringStats voteMonitoringInfo);
+        
+        Task<Result<ElectionStatistics>> Get(string electionId, string source, string type);
     }
 }

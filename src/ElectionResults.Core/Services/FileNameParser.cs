@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using ElectionResults.Core.Models;
 using Newtonsoft.Json;
 
@@ -7,16 +6,15 @@ namespace ElectionResults.Core.Services
 {
     public class FileNameParser
     {
-        public static ElectionStatistics BuildElectionStatistics(string fileName, ElectionResultsData electionResultsData)
+        public static ElectionStatistics BuildElectionStatistics(ElectionResultsFile file, ElectionResultsData electionResultsData)
         {
             var electionStatistics = new ElectionStatistics();
-            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
             electionStatistics.Id = $"{DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks:D19}";
-            var attributes = fileNameWithoutExtension.Split('_');
-            electionStatistics.Type = attributes[0];
-            electionStatistics.Location = attributes[1];
-            electionStatistics.Timestamp = long.Parse(attributes[2]);
+            electionStatistics.Type = file.FileType.ConvertEnumToString();
+            electionStatistics.Source = file.ResultsSource;
+            electionStatistics.Timestamp = file.Timestamp;
             electionStatistics.StatisticsJson = JsonConvert.SerializeObject(electionResultsData);
+            electionStatistics.ElectionId = file.ElectionId;
             return electionStatistics;
         }
     }

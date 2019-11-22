@@ -25,10 +25,11 @@ namespace ElectionResults.Core.Services
             {
                 var httpClient = new HttpClient();
                 var files = _electionConfigurationSource.GetListOfFilesWithElectionResults();
-                var turnoutJson = files.FirstOrDefault(f => f.ResultsType == ResultsType.VoterTurnout);
+                var turnoutJson = files.FirstOrDefault(f => f.FileType == FileType.VoterTurnout);
                 if (turnoutJson == null)
                     return Result.Failure<VoterTurnout>("File not available");
                 var voterTurnout = await GetVoterTurnoutByUrl(httpClient, turnoutJson.URL);
+                voterTurnout.ElectionId = turnoutJson.ElectionId;
                 return Result.Ok(voterTurnout);
             }
             catch (Exception e)
@@ -70,12 +71,13 @@ namespace ElectionResults.Core.Services
         {
             var httpClient = new HttpClient();
             var files = _electionConfigurationSource.GetListOfFilesWithElectionResults();
-            var voteMonitoringJson = files.FirstOrDefault(f => f.ResultsType == ResultsType.VoteMonitoring);
+            var voteMonitoringJson = files.FirstOrDefault(f => f.FileType == FileType.VoteMonitoring);
             var json = await httpClient.GetStringAsync(voteMonitoringJson.URL);
             var response = JsonConvert.DeserializeObject<List<MonitoringInfo>>(json);
             return Result.Ok(new VoteMonitoringStats
             {
-                Statistics = response
+                Statistics = response,
+                ElectionId = voteMonitoringJson.ElectionId
             });
         }
     }
