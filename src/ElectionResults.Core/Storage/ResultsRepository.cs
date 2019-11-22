@@ -37,8 +37,9 @@ namespace ElectionResults.Core.Storage
 
                 Dictionary<string, AttributeValue> item = new Dictionary<string, AttributeValue>();
                 item["id"] = new AttributeValue { S = electionStatistics.Id };
-                item["csvType"] = new AttributeValue { S = electionStatistics.Type };
-                item["csvLocation"] = new AttributeValue { S = electionStatistics.Location };
+                item["fileType"] = new AttributeValue { S = electionStatistics.Type };
+                item["fileSource"] = new AttributeValue { S = electionStatistics.Source };
+                item["electionId"] = new AttributeValue { S = electionStatistics.ElectionId };
                 item["statisticsJson"] = new AttributeValue { S = electionStatistics.StatisticsJson };
                 item["csvTimestamp"] = new AttributeValue { N = electionStatistics.Timestamp.ToString() };
                 List<WriteRequest> items = new List<WriteRequest>
@@ -62,30 +63,6 @@ namespace ElectionResults.Core.Storage
             }
         }
 
-        public async Task<Result<ElectionStatistics>> GetLatestResults(string location, string type)
-        {
-            var queryRequest = new QueryRequest(_config.TableName);
-            queryRequest.ExpressionAttributeValues = new Dictionary<string, AttributeValue>
-            {
-                {":csvType", new AttributeValue(type)},
-                {":csvLocation", new AttributeValue(location) }
-            };
-            queryRequest.IndexName = "latest-result";
-            queryRequest.KeyConditionExpression = "csvType = :csvType and csvLocation = :csvLocation";
-            var queryResponse = await _dynamoDb.QueryAsync(queryRequest);
-
-            var results = GetResults(queryResponse.Items);
-            var latest = results.OrderByDescending(r => r.Timestamp).FirstOrDefault();
-            _logger.LogInformation($"Latest for {type} and {location} is {latest?.Timestamp}");
-            if (latest != null)
-                return Result.Ok(latest);
-            return Result.Ok(new ElectionStatistics
-            {
-                StatisticsJson = ""
-            });
-            return Result.Failure<ElectionStatistics>("Could not load results");
-        }
-
         public virtual async Task InitializeDb()
         {
             var tableExists = await TableExists();
@@ -101,9 +78,10 @@ namespace ElectionResults.Core.Storage
             var electionStatistics = new ElectionStatistics
             {
                 Id = $"{DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks:D19}",
-                Type = ResultsType.VoterTurnout.ConvertEnumToString(),
-                Location = ResultsLocation.All.ConvertEnumToString(),
+                Type = FileType.VoterTurnout.ConvertEnumToString(),
+                Source = Consts.VOTE_TURNOUT_KEY,
                 Timestamp = voterTurnout.Timestamp,
+                ElectionId = voterTurnout.ElectionId,
                 StatisticsJson = JsonConvert.SerializeObject(voterTurnout)
             };
             await InsertResults(electionStatistics);
@@ -114,12 +92,38 @@ namespace ElectionResults.Core.Storage
             var electionStatistics = new ElectionStatistics
             {
                 Id = $"{DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks:D19}",
-                Type = ResultsType.VoteMonitoring.ConvertEnumToString(),
-                Location = ResultsLocation.All.ConvertEnumToString(),
+                Type = FileType.VoteMonitoring.ConvertEnumToString(),
+                Source = Consts.VOTE_MONITORING_KEY,
                 Timestamp = voteMonitoringInfo.Timestamp,
+                ElectionId = voteMonitoringInfo.ElectionId,
                 StatisticsJson = JsonConvert.SerializeObject(voteMonitoringInfo)
             };
             await InsertResults(electionStatistics);
+        }
+
+        public async Task<Result<ElectionStatistics>> Get(string electionId, string source, string type)
+        {
+            var queryRequest = new QueryRequest(_config.TableName)
+            {
+                ExpressionAttributeValues = new Dictionary<string, AttributeValue>
+                {
+                    {":fileSource", new AttributeValue(source)},
+                    {":electionId", new AttributeValue(electionId)}
+                },
+                IndexName = "latest-result",
+                KeyConditionExpression = "fileSource = :fileSource and electionId = :electionId"
+            };
+            var queryResponse = await _dynamoDb.QueryAsync(queryRequest);
+
+            var results = GetResults(queryResponse.Items);
+            var latest = results.Where(r => r.Type == type).OrderByDescending(r => r.Timestamp).FirstOrDefault();
+            _logger.LogInformation($"Latest for {type} and {source} is {latest?.Timestamp}");
+            if (latest != null)
+                return Result.Ok(latest);
+            return Result.Ok(new ElectionStatistics
+            {
+                StatisticsJson = ""
+            });
         }
 
         private async Task WaitUntilTableReady(string tableName)
@@ -170,8 +174,8 @@ namespace ElectionResults.Core.Storage
                 Id = item["id"].S,
                 Timestamp = Convert.ToInt64(item["csvTimestamp"].N),
                 StatisticsJson = item["statisticsJson"].S,
-                Location = item["csvLocation"].S,
-                Type = item["csvType"].S
+                Source = item["fileSource"].S,
+                Type = item["fileType"].S
 
             }).ToList();
         }
@@ -193,12 +197,12 @@ namespace ElectionResults.Core.Storage
                         },
                         new AttributeDefinition
                         {
-                            AttributeName = "csvType",
+                            AttributeName = "fileSource",
                             AttributeType = ScalarAttributeType.S
                         },
                         new AttributeDefinition
                         {
-                            AttributeName = "csvLocation",
+                            AttributeName = "electionId",
                             AttributeType = ScalarAttributeType.S
                         }
                     },
@@ -211,7 +215,7 @@ namespace ElectionResults.Core.Storage
                         },
                         new KeySchemaElement
                         {
-                            AttributeName = "csvType",
+                            AttributeName = "electionId",
                             KeyType = KeyType.RANGE
                         }
                     },
@@ -228,8 +232,8 @@ namespace ElectionResults.Core.Storage
                             IndexName = "latest-result",
                             KeySchema = new List<KeySchemaElement>
                             {
-                                new KeySchemaElement("csvLocation", KeyType.HASH),
-                                new KeySchemaElement("csvType", KeyType.RANGE)
+                                new KeySchemaElement("fileSource", KeyType.HASH),
+                                new KeySchemaElement("electionId", KeyType.RANGE)
                             },
                             Projection = new Projection{ProjectionType = ProjectionType.ALL},
                             ProvisionedThroughput = new ProvisionedThroughput(5, 5)

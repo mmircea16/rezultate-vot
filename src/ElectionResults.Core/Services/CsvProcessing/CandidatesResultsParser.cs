@@ -22,7 +22,7 @@ namespace ElectionResults.Core.Services.CsvProcessing
             _config = config;
         }
 
-        public async Task<Result<ElectionResultsData>> Parse(ElectionResultsData electionResultsData, string csvContent)
+        public async Task<Result<ElectionResultsData>> Parse(ElectionResultsData electionResultsData, string csvContent, ElectionResultsFile file)
         {
             if (electionResultsData == null)
                 electionResultsData = new ElectionResultsData();
@@ -35,27 +35,27 @@ namespace ElectionResults.Core.Services.CsvProcessing
                 Name = c.Name
             }).ToList();
             
-            await PopulateCandidatesListWithVotes(csvContent, electionResultsData.Candidates);
+            await PopulateCandidatesListWithVotes(csvContent, electionResultsData.Candidates, file);
             var sumOfVotes = electionResultsData.Candidates.Sum(c => c.Votes);
             electionResultsData.Candidates = StatisticsAggregator.CalculatePercentagesForCandidates(electionResultsData.Candidates, sumOfVotes);
 
             return Result.Ok(electionResultsData);
         }
 
-        private ElectionsConfig DeserializeElectionsConfig()
+        private Election DeserializeElectionsConfig()
         {
             try
             {
-                return JsonConvert.DeserializeObject<ElectionsConfig>(_config.Value.ElectionsConfig);
+                return JsonConvert.DeserializeObject<Election>(_config.Value.ElectionsConfig);
             }
             catch (Exception)
             {
-                return ElectionsConfig.Default;
+                return Election.Default;
             }
         }
 
         protected virtual async Task PopulateCandidatesListWithVotes(string csvContent,
-            List<CandidateConfig> candidates)
+            List<CandidateConfig> candidates, ElectionResultsFile file)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace ElectionResults.Core.Services.CsvProcessing
                         break;
                     foreach (var candidate in candidates)
                     {
-                        var votes = int.Parse(rowValues[headers.IndexOf(candidate.Id)]);
+                        var votes = int.Parse(rowValues[headers.IndexOf(file.Prefix + candidate.Id)]);
                         candidate.Votes += votes;
                     }
                 } while (true);

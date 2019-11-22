@@ -5,6 +5,6 @@ namespace ElectionResults.Core.Services.BlobContainer
 {
     public interface IBucketUploader
     {
-        Task UploadFromUrl(ElectionResultsFile file);
+        Task ProcessFile(ElectionResultsFile file);
     }
 }

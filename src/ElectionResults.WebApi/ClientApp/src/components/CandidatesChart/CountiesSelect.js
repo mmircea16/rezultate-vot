@@ -59,7 +59,7 @@ export default class CountiesSelect extends Component {
   };
   getHeader = value => {
     if (!value) return "Total";
-    if (value.id === "DSPR" || value.id === "RO" || value.id === "TOTAL")
+    if (value.id === "diaspora" || value.id === "national" || value.id === "" || value.id === "mail")
       return value.label;
     return `Județ: ${value.label}`;
   };
@@ -169,6 +169,12 @@ const Option = props => {
         <components.Option {...props}>{props.children}</components.Option>
       </div>
     );
+  } else if (props.data.label === "Corespondență") {
+    return (
+        <div className={"last-option"}>
+            <components.Option {...props}>{props.children}</components.Option>
+        </div>
+    );
   } else {
     return (
       <components.Option className={"menu-option"} {...props}>
@@ -181,8 +187,10 @@ const Option = props => {
 const MenuList = props => {
   const total = props.children[0];
   const diaspora = props.children[1];
-    const national = props.children[2];
-    if (props.children.length > 2) {
+  const national = props.children[2];
+  const mail = props.children[3];
+    if (props.children.length > 3) {
+        props.children.shift();
         props.children.shift();
         props.children.shift();
         props.children.shift();
@@ -193,6 +201,7 @@ const MenuList = props => {
       {total}
       {diaspora}
       {national}
+      {mail}
       <div className={"county-text"}>Județ</div>
       {props.children}
     </components.MenuList>

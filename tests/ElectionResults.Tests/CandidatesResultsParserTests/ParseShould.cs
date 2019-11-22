@@ -17,7 +17,7 @@ namespace ElectionResults.Tests.CandidatesResultsParserTests
             var candidatesResultsParser = new TestableCandidatesResultsParser(null);
             candidatesResultsParser.ParsedCandidates = new List<CandidateConfig>();
 
-            var result = await candidatesResultsParser.Parse(null, "");
+            var result = await candidatesResultsParser.Parse(null, "", new ElectionResultsFile());
 
             result.Value.Candidates.Should().NotBeNull();
         }

@@ -3,7 +3,7 @@ using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Amazon.Runtime.Internal.Util;
+using CSharpFunctionalExtensions;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Repositories;
 using ElectionResults.Core.Storage;
@@ -29,10 +29,22 @@ namespace ElectionResults.Core.Services.BlobContainer
             _config = config.Value;
         }
 
-        public async Task UploadFromUrl(ElectionResultsFile file)
+        public async Task ProcessFile(ElectionResultsFile file)
         {
-            var stream = await DownloadFile(file.URL);
-            await UploadFileToStorage(stream, file.Name);
+            try
+            {
+                var stream = await DownloadFile(file.URL);
+                var uploadResponse = await UploadFileToStorage(stream, file.Name);
+                if (uploadResponse.IsSuccess)
+                {
+                    stream.Seek(0, SeekOrigin.Begin);
+                    await _fileProcessor.ProcessStream(stream, file);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         private async Task<Stream> DownloadFile(string url)
@@ -49,18 +61,13 @@ namespace ElectionResults.Core.Services.BlobContainer
             }
         }
 
-        private async Task UploadFileToStorage(Stream fileStream, string fileName)
+        private async Task<Result> UploadFileToStorage(Stream fileStream, string fileName)
         {
             try
             {
                 var fileData = new FileData { FileName = fileName, Stream = new MemoryStream() };
                 fileStream.CopyTo(fileData.Stream);
-                var uploadResponse = await _fileRepository.UploadFiles(_config.BucketName, fileData);
-                if (uploadResponse.IsSuccess)
-                {
-                    fileStream.Seek(0, SeekOrigin.Begin);
-                    await _fileProcessor.ProcessStream(fileStream, fileName);
-                }
+                return await _fileRepository.UploadFiles(_config.BucketName, fileData);
             }
             catch (Exception e)
             {

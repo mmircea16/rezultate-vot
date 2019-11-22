@@ -16,10 +16,17 @@ namespace ElectionResults.WebApi
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration(builder =>
+                .ConfigureAppConfiguration((hostingContext, builder) =>
                 {
-                    builder.AddJsonFile("appsettings.json", true, true);
-                    builder.AddSystemsManager($"/{Consts.PARAMETER_STORE_NAME}", new AWSOptions(), TimeSpan.FromSeconds(30));
+                    var env = hostingContext.HostingEnvironment;
+                    builder.AddJsonFile("appsettings.json", true, true)
+                        .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+                    if (env.EnvironmentName == "Development")
+                    {
+                        builder.AddSystemsManager($"/{Consts.PARAMETER_STORE_NAME}-dev", new AWSOptions(), TimeSpan.FromSeconds(30));
+                    }
+                    else
+                        builder.AddSystemsManager($"/{Consts.PARAMETER_STORE_NAME}", new AWSOptions(), TimeSpan.FromSeconds(30));
                 })
                 .UseStartup<Startup>();
     }

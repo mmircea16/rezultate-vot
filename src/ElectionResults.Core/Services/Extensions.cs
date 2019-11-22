@@ -19,15 +19,15 @@ namespace ElectionResults.Core.Services
                        ?.Description ?? type.ToString();
         }
 
-        public static ElectionsConfig ParseConfig(this string configJson)
+        public static Election ParseConfig(this string configJson)
         {
             try
             {
-                return JsonConvert.DeserializeObject<ElectionsConfig>(configJson);
+                return JsonConvert.DeserializeObject<Election>(configJson);
             }
             catch (Exception e)
             {
-                return new ElectionsConfig();
+                return new Election();
             }
         }
     }

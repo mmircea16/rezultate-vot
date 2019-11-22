@@ -9,12 +9,22 @@ const NumberArea = ({ bigNumber, text }) => (
     </div>
 );
 export const VoteMonitoring = () => {
+
+    if (!window.electionId) {
+        let search = window.location.search;
+        let params = new URLSearchParams(search);
+        var electionId = params.get('electionId');
+        if (electionId != 'PREZ2019TUR2')
+            window.electionId = 'PREZ2019TUR1';
+        else
+            window.electionId = electionId;
+    }
     const [voteMonitoringData, setVoteMonitoringData] = React.useState(null);
     React.useEffect(() => {
         const fetchServerData = async () => {
             try {
-                console.log("monitoring data");
-                fetch("/api/results/monitoring")
+                console.log("Loaded vote monitoring for " + window.electionId);
+                fetch(`/api/results/monitoring?electionId=${window.electionId}`)
                     .then(data => data.json())
                     .then(data => setVoteMonitoringData(data.statistics));
             } catch (e) {

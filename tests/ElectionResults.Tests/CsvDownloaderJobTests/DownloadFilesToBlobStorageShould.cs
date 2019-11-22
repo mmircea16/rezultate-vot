@@ -44,7 +44,7 @@ namespace ElectionResults.Tests.CsvDownloaderJobTests
 
             await _bucketUploader
                 .Received(1)
-                .UploadFromUrl(Arg.Any<ElectionResultsFile>());
+                .ProcessFile(Arg.Any<ElectionResultsFile>());
         }
 
         [Fact]
@@ -57,7 +57,7 @@ namespace ElectionResults.Tests.CsvDownloaderJobTests
 
             await _bucketUploader
                 .Received(2)
-                .UploadFromUrl(Arg.Any<ElectionResultsFile>());
+                .ProcessFile(Arg.Any<ElectionResultsFile>());
         }
 
         [Fact]
@@ -72,14 +72,14 @@ namespace ElectionResults.Tests.CsvDownloaderJobTests
 
             await _bucketUploader
                 .Received(2)
-                .UploadFromUrl(Arg.Is<ElectionResultsFile>(f => f.Name.Contains(timestamp.ToString())));
+                .ProcessFile(Arg.Is<ElectionResultsFile>(f => f.Name.Contains(timestamp.ToString())));
         }
 
         [Fact]
         public async Task BuildNameOfUploadedFiles()
         {
             var csvDownloaderJob = CreateFakeJob();
-            CreateResultsSourceMock(new ElectionResultsFile { ResultsType = ResultsType.Final, ResultsLocation = ResultsLocation.Romania, Active = true });
+            CreateResultsSourceMock(new ElectionResultsFile { FileType = FileType.Results, ResultsSource = "", Active = true });
             SystemTime.Now = DateTimeOffset.UtcNow;
             var timestamp = SystemTime.Now.ToUnixTimeSeconds();
 
@@ -87,7 +87,7 @@ namespace ElectionResults.Tests.CsvDownloaderJobTests
 
             await _bucketUploader
                 .Received(1)
-                .UploadFromUrl(Arg.Is<ElectionResultsFile>(f => f.Name == $"FINAL_RO_{timestamp}.csv"));
+                .ProcessFile(Arg.Is<ElectionResultsFile>(f => f.Name == $"FINAL_RO_{timestamp}.csv"));
         }
 
         private CsvDownloaderJob CreateFakeJob()
@@ -98,8 +98,8 @@ namespace ElectionResults.Tests.CsvDownloaderJobTests
             var appConfig = new AppConfig { BucketName = "test", TableName = "test" };
             var fakeConfig = new OptionsWrapper<AppConfig>(appConfig);
             var voterTurnoutAggregator = Substitute.For<IVoterTurnoutAggregator>();
-            voterTurnoutAggregator.GetVoterTurnoutFromBEC().ReturnsForAnyArgs(Result.Failure<VoterTurnout>("err"));
-            voterTurnoutAggregator.GetVoteMonitoringStats().ReturnsForAnyArgs(Result.Failure<VoteMonitoringStats>("err"));
+            voterTurnoutAggregator.GetVoterTurnoutFromBEC(null).ReturnsForAnyArgs(Result.Failure<VoterTurnout>("err"));
+            voterTurnoutAggregator.GetVoteMonitoringStats(null).ReturnsForAnyArgs(Result.Failure<VoteMonitoringStats>("err"));
             var csvDownloaderJob = new CsvDownloaderJob(_bucketUploader, _electionConfigurationSource, new FakeResultsRepository(fakeConfig), new FakeBucketRepository(), voterTurnoutAggregator, null, fakeConfig);
             return csvDownloaderJob;
         }

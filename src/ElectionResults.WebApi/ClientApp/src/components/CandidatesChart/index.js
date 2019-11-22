@@ -1,7 +1,8 @@
 import React from "react";
 import { ChartBar } from "./ChartBar";
 import CountiesSelect from "./CountiesSelect";
-import { FormGroup, Col, Button } from "reactstrap";
+import { FormGroup, Col, Button, Media, Label, Container } from "reactstrap";
+import code4RoGrey from '../../images/code4RoGrey.svg';
 let currentSelection = '';
 
 export const ChartContainer = () => {
@@ -9,28 +10,38 @@ export const ChartContainer = () => {
     const [candidates, setCandidates] = React.useState(null);
     const [counties, setCounties] = React.useState(null);
     const [voterTurnout, setVoterTurnout] = React.useState(null);
-    const [displayQuestion, setDisplayQuestion] = React.useState(false);
+    const [displayQuestion, setDisplayQuestion] = React.useState(true);
     React.useEffect(() => {
+        if (!window.electionId) {
+            let search = window.location.search;
+            let params = new URLSearchParams(search);
+            var electionId = params.get('electionId');
+            if (electionId != 'PREZ2019TUR2')
+                window.electionId = 'PREZ2019TUR1';
+            else
+                window.electionId = electionId;
+        }
+        console.log("Loaded results component for " + window.electionId);
         const fetchServerData = async () => {
-            try {
-                console.log("candidates fetch");
-                fetch(`/api/results?location=${currentSelection}`)
+            /*try {
+                fetch(`/api/results?electionId=${window.electionId}`)
                     .then(data => data.json())
                     .then(data => {
                         console.log(data);
                         setCandidates(data.candidates);
                         setVoterTurnout(data);
-                        const total = { label: "Total", id: "TOTAL" };
-                        const national = { label: "National", id: "RO" };
-                        const diaspora = { label: "Diaspora", id: "DSPR" };
-                        data.counties.unshift(total, diaspora, national);
+                        const total = { label: "Total", id: "" };
+                        const national = { label: "National", id: "national" };
+                        const diaspora = { label: "Diaspora", id: "diaspora" };
+                        const mail = { label: "Corespondență", id: "mail" };
+                        data.counties.unshift(total, diaspora, national, mail);
                         setCounties(data.counties);
                     });
             } catch (e) {
                 console.log(e);
-            }
+            }*/
         };
-
+        setDisplayQuestion(true);
         const onIdle = () => {
             clearInterval(timer);
             timer = null;
@@ -53,7 +64,7 @@ export const ChartContainer = () => {
 
     const selectionChanged = value => {
         currentSelection = value.id;
-        fetch(`/api/results?location=${currentSelection}`)
+        fetch(`/api/results/?electionId=${window.electionId}&source=${value.id}&county=${value.countyName || ''}`)
             .then(data => data.json())
             .then(data => setCandidates(data.candidates));
     };
@@ -114,12 +125,20 @@ export const ChartContainer = () => {
                         {
                             displayQuestion ? <div className={"question"}>
                                 <p className={"question-text"}>
-                                    Cine sunt candidatii care merg in turul 2?
+                                    Cine va câștiga turul 2 de alegeri prezidențiale?
               </p>
                             </div> : ""
                         }
                     </div>
                 )}
+
+            <div style={{ display: 'none' }}>
+                <p style={{ position: 'relative', display: 'inline' }} className="becro">Date preluate de la <a href="https://prezenta.bec.ro" target="_blank">prezenta.bec.ro</a></p>
+                <Container style={{ display: 'flex', alignItems: 'left', justifyContent: 'flex-end', padding: '0px' }}>
+                    <Label className="info-label">an app developed by</Label>
+                    <Media src={code4RoGrey} />
+                </Container>
+            </div>
         </div>
     );
 };

@@ -8,8 +8,14 @@ namespace ElectionResults.Core.Models
 
         public string Name { get; set; }
 
-        public ResultsType ResultsType { get; set; }
+        public string ElectionId { get; set; }
 
-        public ResultsLocation ResultsLocation { get; set; }
+        public FileType FileType { get; set; }
+
+        public string ResultsSource { get; set; }
+
+        public long Timestamp { get; set; }
+
+        public string Prefix { get; set; }
     }
 }

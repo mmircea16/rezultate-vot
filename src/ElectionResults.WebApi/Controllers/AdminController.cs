@@ -35,7 +35,7 @@ namespace ElectionResults.WebApi.Controllers
         }
 
         [HttpPut("election-config")]
-        public async Task<ActionResult> UpdateSettings([FromBody] ElectionsConfig config)
+        public async Task<ActionResult> UpdateSettings([FromBody] Election config)
         {
             await _electionConfigurationSource.UpdateElectionConfig(config);
             return Ok();

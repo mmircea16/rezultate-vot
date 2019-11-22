@@ -19,5 +19,7 @@
         public int MobileVotes { get; set; }
 
         public int DiasporaWithoutMailVotes { get; set; }
+        
+        public string ElectionId { get; set; }
     }
 }

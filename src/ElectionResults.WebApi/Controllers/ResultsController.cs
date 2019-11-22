@@ -1,5 +1,4 @@
-using System;
-using System.Diagnostics;
+﻿using System;
 using System.Threading.Tasks;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Services;
@@ -31,13 +30,14 @@ namespace ElectionResults.WebApi.Controllers
         }
 
         [HttpGet("")]
-        public async Task<ActionResult<LiveResultsResponse>> GetLatestResults([FromQuery] ResultsType type, string location)
+        public async Task<ActionResult<LiveResultsResponse>> GetResults([FromQuery] string electionId,  string source = null, string county = null, FileType fileType = FileType.Results)
         {
             try
             {
-                var key = $"results-{type.ConvertEnumToString()}{location}";
+                var resultsQuery = new ResultsQuery(fileType, source, county, electionId);
+                var key = resultsQuery.ToString();
                 var result = await _appCache.GetOrAddAsync(
-                    key, () => _resultsAggregator.GetResults(type, location),
+                    key, () => _resultsAggregator.GetElectionResults(resultsQuery),
                     DateTimeOffset.Now.AddSeconds(_config.Value.IntervalInSeconds));
                 if (result.IsFailure)
                 {
@@ -55,12 +55,12 @@ namespace ElectionResults.WebApi.Controllers
         }
 
         [HttpGet("voter-turnout")]
-        public async Task<ActionResult<VoterTurnout>> GetVoterTurnout()
+        public async Task<ActionResult<VoterTurnout>> GetVoterTurnout([FromQuery] string electionId)
         {
             try
             {
                 var result = await _appCache.GetOrAddAsync(
-                    Consts.VOTE_TURNOUT_KEY, () => _resultsAggregator.GetVoterTurnout(),
+                    Consts.VOTE_TURNOUT_KEY, () => _resultsAggregator.GetVoterTurnout(electionId),
                     DateTimeOffset.Now.AddSeconds(_config.Value.TurnoutCacheIntervalInSeconds));
                 if (result.IsFailure)
                 {
@@ -78,12 +78,12 @@ namespace ElectionResults.WebApi.Controllers
         }
 
         [HttpGet("monitoring")]
-        public async Task<ActionResult<VoteMonitoringStats>> GetVoteMonitoringStats()
+        public async Task<ActionResult<VoteMonitoringStats>> GetVoteMonitoringStats([FromQuery] string electionId)
         {
             try
             {
                 var result = await _appCache.GetOrAddAsync(
-                    Consts.VOTE_MONITORING_KEY, () => _resultsAggregator.GetVoteMonitoringStats(),
+                    Consts.VOTE_MONITORING_KEY, () => _resultsAggregator.GetVoteMonitoringStats(electionId),
                     DateTimeOffset.Now.AddMinutes(5));
                 if (result.IsFailure)
                 {

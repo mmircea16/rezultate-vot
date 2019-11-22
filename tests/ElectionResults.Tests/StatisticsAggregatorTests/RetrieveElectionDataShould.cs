@@ -22,7 +22,7 @@ namespace ElectionResults.Tests.StatisticsAggregatorTests
                 secondParser
             };
             var statisticsAggregator = new StatisticsAggregator(null) { CsvParsers = csvParsers };
-            await statisticsAggregator.RetrieveElectionData("");
+            await statisticsAggregator.RetrieveElectionData("", new ElectionResultsFile());
 
             firstParser.WasInvoked.Should().BeTrue();
             secondParser.WasInvoked.Should().BeTrue();
@@ -38,7 +38,7 @@ namespace ElectionResults.Tests.StatisticsAggregatorTests
             };
             var statisticsAggregator = new StatisticsAggregator(null) { CsvParsers = csvParsers };
 
-            var aggregationResult = await statisticsAggregator.RetrieveElectionData("");
+            var aggregationResult = await statisticsAggregator.RetrieveElectionData("", new ElectionResultsFile());
 
             aggregationResult.Value.Candidates.Should().NotBeNull();
         }

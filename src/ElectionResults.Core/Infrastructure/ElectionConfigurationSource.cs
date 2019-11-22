@@ -6,6 +6,7 @@ using Amazon.SimpleSystemsManagement.Model;
 using CSharpFunctionalExtensions;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Storage;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
@@ -13,20 +14,26 @@ namespace ElectionResults.Core.Infrastructure
 {
     public class ElectionConfigurationSource : IElectionConfigurationSource
     {
+        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly AppConfig _config;
         private readonly AmazonSimpleSystemsManagementClient _amazonSettingsClient;
+        private string _parameterStoreName;
 
-        public ElectionConfigurationSource(IOptions<AppConfig> config)
+        public ElectionConfigurationSource(IOptions<AppConfig> config, IHostingEnvironment hostingEnvironment)
         {
+            _hostingEnvironment = hostingEnvironment;
             _config = config.Value;
             _amazonSettingsClient = new AmazonSimpleSystemsManagementClient();
+            _parameterStoreName = Consts.PARAMETER_STORE_NAME;
+            if (hostingEnvironment.IsDevelopment())
+                _parameterStoreName += "-dev";
         }
 
         public async Task<Result> UpdateInterval(int seconds)
         {
             var putParameterRequest = new PutParameterRequest
             {
-                Name = $"/{Consts.PARAMETER_STORE_NAME}/settings/intervalInSeconds",
+                Name = $"/{_parameterStoreName}/settings/intervalInSeconds",
                 Value = seconds.ToString(),
                 Type = ParameterType.String,
                 Overwrite = true
@@ -41,7 +48,7 @@ namespace ElectionResults.Core.Infrastructure
         {
             var getParameterRequest = new GetParameterRequest
             {
-                Name = $"/{Consts.PARAMETER_STORE_NAME}/settings/intervalInSeconds",
+                Name = $"/{_parameterStoreName}/settings/intervalInSeconds",
             };
             var response = await _amazonSettingsClient.GetParameterAsync(getParameterRequest);
             if (response.HttpStatusCode == HttpStatusCode.OK)
@@ -49,11 +56,11 @@ namespace ElectionResults.Core.Infrastructure
             return Result.Failure<int>("Couldn't retrieve the job timer");
         }
 
-        public async Task<Result> UpdateElectionConfig(ElectionsConfig config)
+        public async Task<Result> UpdateElectionConfig(Election config)
         {
             var putParameterRequest = new PutParameterRequest
             {
-                Name = $"/{Consts.PARAMETER_STORE_NAME}/settings/electionsConfig",
+                Name = $"/{_parameterStoreName}/settings/electionsConfig",
                 Value = JsonConvert.SerializeObject(config),
                 Type = ParameterType.String,
                 Overwrite = true
@@ -68,7 +75,7 @@ namespace ElectionResults.Core.Infrastructure
         {
             var getParameterRequest = new GetParameterRequest
             {
-                Name = $"/{Consts.PARAMETER_STORE_NAME}/settings/electionsConfig",
+                Name = $"/{_parameterStoreName}/settings/electionsConfig",
             };
             var response = await _amazonSettingsClient.GetParameterAsync(getParameterRequest);
             if (response.HttpStatusCode == HttpStatusCode.OK)
@@ -78,7 +85,7 @@ namespace ElectionResults.Core.Infrastructure
 
         public List<ElectionResultsFile> GetListOfFilesWithElectionResults()
         {
-            var electionsConfig = JsonConvert.DeserializeObject<ElectionsConfig>(_config.ElectionsConfig);
+            var electionsConfig = JsonConvert.DeserializeObject<Election>(_config.ElectionsConfig);
             return electionsConfig.Files;
         }
     }

@@ -7,5 +7,7 @@ namespace ElectionResults.Core.Models
         public long Timestamp { get; set; }
 
         public List<MonitoringInfo> Statistics { get; set; }
+
+        public string ElectionId { get; set; }
     }
 }
