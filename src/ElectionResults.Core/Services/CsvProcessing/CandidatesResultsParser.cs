@@ -42,15 +42,15 @@ namespace ElectionResults.Core.Services.CsvProcessing
             return Result.Ok(electionResultsData);
         }
 
-        private ElectionsConfig DeserializeElectionsConfig()
+        private Election DeserializeElectionsConfig()
         {
             try
             {
-                return JsonConvert.DeserializeObject<ElectionsConfig>(_config.Value.ElectionsConfig);
+                return JsonConvert.DeserializeObject<Election>(_config.Value.ElectionsConfig);
             }
             catch (Exception)
             {
-                return ElectionsConfig.Default;
+                return Election.Default;
             }
         }
 

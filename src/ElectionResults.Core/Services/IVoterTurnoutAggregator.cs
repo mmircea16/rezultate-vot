@@ -8,8 +8,8 @@ namespace ElectionResults.Core.Services
 {
     public interface IVoterTurnoutAggregator
     {
-        Task<Result<VoterTurnout>> GetVoterTurnoutFromBEC();
+        Task<Result<VoterTurnout>> GetVoterTurnoutFromBEC(ElectionResultsFile turnoutJson);
 
-        Task<Result<VoteMonitoringStats>> GetVoteMonitoringStats();
+        Task<Result<VoteMonitoringStats>> GetVoteMonitoringStats(ElectionResultsFile monitoringJson);
     }
 }

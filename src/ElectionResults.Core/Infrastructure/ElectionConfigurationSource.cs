@@ -56,7 +56,7 @@ namespace ElectionResults.Core.Infrastructure
             return Result.Failure<int>("Couldn't retrieve the job timer");
         }
 
-        public async Task<Result> UpdateElectionConfig(ElectionsConfig config)
+        public async Task<Result> UpdateElectionConfig(Election config)
         {
             var putParameterRequest = new PutParameterRequest
             {
@@ -85,7 +85,7 @@ namespace ElectionResults.Core.Infrastructure
 
         public List<ElectionResultsFile> GetListOfFilesWithElectionResults()
         {
-            var electionsConfig = JsonConvert.DeserializeObject<ElectionsConfig>(_config.ElectionsConfig);
+            var electionsConfig = JsonConvert.DeserializeObject<Election>(_config.ElectionsConfig);
             var files = electionsConfig.Files;
             /*files[0].Name = "national";
             files[0].FileType = FileType.Results;

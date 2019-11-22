@@ -98,8 +98,8 @@ namespace ElectionResults.Tests.CsvDownloaderJobTests
             var appConfig = new AppConfig { BucketName = "test", TableName = "test" };
             var fakeConfig = new OptionsWrapper<AppConfig>(appConfig);
             var voterTurnoutAggregator = Substitute.For<IVoterTurnoutAggregator>();
-            voterTurnoutAggregator.GetVoterTurnoutFromBEC().ReturnsForAnyArgs(Result.Failure<VoterTurnout>("err"));
-            voterTurnoutAggregator.GetVoteMonitoringStats().ReturnsForAnyArgs(Result.Failure<VoteMonitoringStats>("err"));
+            voterTurnoutAggregator.GetVoterTurnoutFromBEC(null).ReturnsForAnyArgs(Result.Failure<VoterTurnout>("err"));
+            voterTurnoutAggregator.GetVoteMonitoringStats(null).ReturnsForAnyArgs(Result.Failure<VoteMonitoringStats>("err"));
             var csvDownloaderJob = new CsvDownloaderJob(_bucketUploader, _electionConfigurationSource, new FakeResultsRepository(fakeConfig), new FakeBucketRepository(), voterTurnoutAggregator, null, fakeConfig);
             return csvDownloaderJob;
         }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Services;
@@ -10,16 +10,16 @@ using Microsoft.Extensions.Options;
 
 namespace ElectionResults.WebApi.Controllers
 {
-    [Route("api/stats")]
-    public class StatsController : Controller
+    [Route("api/results")]
+    public class ResultsController : Controller
     {
         private readonly IResultsAggregator _resultsAggregator;
-        private readonly ILogger<StatsController> _logger;
+        private readonly ILogger<ResultsController> _logger;
         private readonly IOptionsSnapshot<AppConfig> _config;
         private readonly IAppCache _appCache;
 
-        public StatsController(IResultsAggregator resultsAggregator,
-            ILogger<StatsController> logger,
+        public ResultsController(IResultsAggregator resultsAggregator,
+            ILogger<ResultsController> logger,
             IOptionsSnapshot<AppConfig> config,
             IAppCache appCache)
         {
@@ -29,13 +29,38 @@ namespace ElectionResults.WebApi.Controllers
             _appCache = appCache;
         }
 
-        /*[HttpGet("voter-turnout")]
-        public async Task<ActionResult<VoterTurnout>> GetVoterTurnout()
+        [HttpGet("")]
+        public async Task<ActionResult<LiveResultsResponse>> GetResults([FromQuery] string electionId,  string source = null, string county = null, FileType fileType = FileType.Results)
+        {
+            try
+            {
+                var resultsQuery = new ResultsQuery(fileType, source, county, electionId);
+                var key = resultsQuery.ToString();
+                var result = await _appCache.GetOrAddAsync(
+                    key, () => _resultsAggregator.GetElectionResults(resultsQuery),
+                    DateTimeOffset.Now.AddSeconds(_config.Value.IntervalInSeconds));
+                if (result.IsFailure)
+                {
+                    _appCache.Remove(key);
+                    _logger.LogError(result.Error);
+                    return BadRequest(result.Error);
+                }
+                return result.Value;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Exception encountered while retrieving results");
+                throw;
+            }
+        }
+
+        [HttpGet("voter-turnout")]
+        public async Task<ActionResult<VoterTurnout>> GetVoterTurnout([FromQuery] string electionId)
         {
             try
             {
                 var result = await _appCache.GetOrAddAsync(
-                    Consts.VOTE_TURNOUT_KEY, () => _resultsAggregator.GetVoterTurnout(),
+                    Consts.VOTE_TURNOUT_KEY, () => _resultsAggregator.GetVoterTurnout(electionId),
                     DateTimeOffset.Now.AddSeconds(_config.Value.TurnoutCacheIntervalInSeconds));
                 if (result.IsFailure)
                 {
@@ -53,12 +78,12 @@ namespace ElectionResults.WebApi.Controllers
         }
 
         [HttpGet("monitoring")]
-        public async Task<ActionResult<VoteMonitoringStats>> GetVoteMonitoringStats()
+        public async Task<ActionResult<VoteMonitoringStats>> GetVoteMonitoringStats([FromQuery] string electionId)
         {
             try
             {
                 var result = await _appCache.GetOrAddAsync(
-                    Consts.VOTE_MONITORING_KEY, () => _resultsAggregator.GetVoteMonitoringStats(),
+                    Consts.VOTE_MONITORING_KEY, () => _resultsAggregator.GetVoteMonitoringStats(electionId),
                     DateTimeOffset.Now.AddMinutes(5));
                 if (result.IsFailure)
                 {
@@ -73,7 +98,6 @@ namespace ElectionResults.WebApi.Controllers
                 _logger.LogError(e, "Exception encountered while retrieving vote monitoring stats");
                 return StatusCode(500, e);
             }
-        }*/
+        }
     }
-
 }

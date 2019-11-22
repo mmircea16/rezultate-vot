@@ -54,20 +54,20 @@ namespace ElectionResults.Core.Services.CsvProcessing
             }
         }
 
-        private ElectionsConfig DeserializeElectionsConfig()
+        private Election DeserializeElectionsConfig()
         {
             try
             {
-                return JsonConvert.DeserializeObject<ElectionsConfig>(_config.Value.ElectionsConfig);
+                return JsonConvert.DeserializeObject<Election>(_config.Value.ElectionsConfig);
             }
             catch (Exception)
             {
-                return ElectionsConfig.Default;
+                return Election.Default;
             }
         }
 
         protected virtual async Task<List<PollingStation>> CalculateVotesByCounty(string csvContent,
-            ElectionsConfig electionsConfig, ElectionResultsFile file)
+            Election election, ElectionResultsFile file)
         {
             var csvParser = new CsvParser(new StringReader(csvContent));
             var pollingStations = new List<PollingStation>();
@@ -80,7 +80,7 @@ namespace ElectionResults.Core.Services.CsvProcessing
                 var pollingStation = new PollingStation();
                 pollingStation.County = rowValues[1].StartsWith("SECTOR") ? "BUCUREȘTI" : rowValues[1];
                 pollingStation.Name = rowValues[4];
-                foreach (var candidate in electionsConfig.Candidates)
+                foreach (var candidate in election.Candidates)
                 {
                     var votes = int.Parse(rowValues[headers.IndexOf(file.Prefix + candidate.CsvId)]);
                     pollingStation.Candidates.Add(new CandidateConfig

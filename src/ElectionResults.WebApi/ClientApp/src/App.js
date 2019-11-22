@@ -12,7 +12,6 @@ import {ElectionChart} from "./components/Chart";
 
 export default class App extends Component {
     static displayName = App.name;
-
     render() {
         const baseNonWidgetPath = '/web';
         const baseWidgetPath = '/widgets';

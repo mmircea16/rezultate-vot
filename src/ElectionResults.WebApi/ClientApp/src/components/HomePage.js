@@ -11,7 +11,7 @@ ReactGA.initialize(trackingId);
 ReactGA.pageview('/home');
 export const HomePage = () => {
 
-  window.electionId = "PREZ2019TUR1";
+  window.electionId = "PREZ2019TUR2";
   return (
     <div>
       <ChartContainer />

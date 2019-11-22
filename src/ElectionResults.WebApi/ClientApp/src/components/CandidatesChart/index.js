@@ -10,10 +10,18 @@ export const ChartContainer = () => {
     const [candidates, setCandidates] = React.useState(null);
     const [counties, setCounties] = React.useState(null);
     const [voterTurnout, setVoterTurnout] = React.useState(null);
-    const [displayQuestion, setDisplayQuestion] = React.useState(false);
+    const [displayQuestion, setDisplayQuestion] = React.useState(true);
     React.useEffect(() => {
+        let search = window.location.search;
+        let params = new URLSearchParams(search);
+        var electionId = params.get('electionId');
+        if (electionId != 'PREZ2019TUR2')
+            window.electionId = 'PREZ2019TUR1';
+        else
+            window.electionId = electionId;
+        console.log("Loaded results component for " + window.electionId);
         const fetchServerData = async () => {
-            try {
+            /*try {
                 fetch(`/api/results?electionId=${window.electionId}`)
                     .then(data => data.json())
                     .then(data => {
@@ -29,9 +37,9 @@ export const ChartContainer = () => {
                     });
             } catch (e) {
                 console.log(e);
-            }
+            }*/
         };
-
+        setDisplayQuestion(true);
         const onIdle = () => {
             clearInterval(timer);
             timer = null;
