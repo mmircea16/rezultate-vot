@@ -12,13 +12,15 @@ export const ChartContainer = () => {
     const [voterTurnout, setVoterTurnout] = React.useState(null);
     const [displayQuestion, setDisplayQuestion] = React.useState(true);
     React.useEffect(() => {
-        let search = window.location.search;
-        let params = new URLSearchParams(search);
-        var electionId = params.get('electionId');
-        if (electionId != 'PREZ2019TUR2')
-            window.electionId = 'PREZ2019TUR1';
-        else
-            window.electionId = electionId;
+        if (!window.electionId) {
+            let search = window.location.search;
+            let params = new URLSearchParams(search);
+            var electionId = params.get('electionId');
+            if (electionId != 'PREZ2019TUR2')
+                window.electionId = 'PREZ2019TUR1';
+            else
+                window.electionId = electionId;
+        }
         console.log("Loaded results component for " + window.electionId);
         const fetchServerData = async () => {
             /*try {
@@ -123,14 +125,14 @@ export const ChartContainer = () => {
                         {
                             displayQuestion ? <div className={"question"}>
                                 <p className={"question-text"}>
-                                    Cine sunt candidatii care merg in turul 2?
+                                    Cine va câștiga turul 2 de alegeri prezidențiale?
               </p>
                             </div> : ""
                         }
                     </div>
                 )}
 
-            <div style={{ display: 'flex' }}>
+            <div style={{ display: 'none' }}>
                 <p style={{ position: 'relative', display: 'inline' }} className="becro">Date preluate de la <a href="https://prezenta.bec.ro" target="_blank">prezenta.bec.ro</a></p>
                 <Container style={{ display: 'flex', alignItems: 'left', justifyContent: 'flex-end', padding: '0px' }}>
                     <Label className="info-label">an app developed by</Label>

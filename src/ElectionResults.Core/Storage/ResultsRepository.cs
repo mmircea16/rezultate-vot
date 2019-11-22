@@ -63,30 +63,6 @@ namespace ElectionResults.Core.Storage
             }
         }
 
-        public async Task<Result<ElectionStatistics>> Get(string source, string type)
-        {
-            /*var queryRequest = new QueryRequest(_config.TableName);
-            queryRequest.ExpressionAttributeValues = new Dictionary<string, AttributeValue>
-            {
-                {":fileType", new AttributeValue(type)},
-                {":fileSource", new AttributeValue(source) },
-                {":electionId", new AttributeValue("PREZ2019TUR1") }
-            };
-            queryRequest.IndexName = "latest-result";
-            queryRequest.KeyConditionExpression = "fileType = :fileType and fileSource = :fileSource and electionId = :electionId";
-            var queryResponse = await _dynamoDb.QueryAsync(queryRequest);
-
-            var results = GetResults(queryResponse.Items);
-            var latest = results.OrderByDescending(r => r.Timestamp).FirstOrDefault();
-            _logger.LogInformation($"Latest for {type} and {source} is {latest?.Timestamp}");
-            if (latest != null)
-                return Result.Ok(latest);*/
-            return Result.Ok(new ElectionStatistics
-            {
-                StatisticsJson = ""
-            });
-        }
-
         public virtual async Task InitializeDb()
         {
             var tableExists = await TableExists();

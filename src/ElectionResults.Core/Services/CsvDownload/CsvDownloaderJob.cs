@@ -62,6 +62,8 @@ namespace ElectionResults.Core.Services.CsvDownload
                     await AddVoteMonitoringStats(files, timestamp);
                     _logger.LogInformation("Added vote monitoring stats");
                 }
+
+                Console.WriteLine($"Finished downloading files");
             }
             catch (Exception e)
             {

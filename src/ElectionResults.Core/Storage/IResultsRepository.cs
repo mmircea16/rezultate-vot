@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using ElectionResults.Core.Models;
-using ElectionResults.Core.Services;
 
 namespace ElectionResults.Core.Storage
 {
@@ -9,8 +8,6 @@ namespace ElectionResults.Core.Storage
     {
         Task InsertResults(ElectionStatistics electionStatistics);
 
-        Task<Result<ElectionStatistics>> Get(string source, string type);
-        
         Task InitializeDb();
         
         Task InsertCurrentVoterTurnout(VoterTurnout voterTurnout);

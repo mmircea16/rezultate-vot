@@ -19,109 +19,12 @@ namespace ElectionResults.Core.Services
         private readonly IResultsRepository _resultsRepository;
         private readonly ILogger<ResultsAggregator> _logger;
         private readonly IElectionConfigurationSource _electionConfigurationSource;
-        private decimal _totalCounted;
 
         public ResultsAggregator(IResultsRepository resultsRepository, ILogger<ResultsAggregator> logger, IElectionConfigurationSource electionConfigurationSource)
         {
             _resultsRepository = resultsRepository;
             _logger = logger;
             _electionConfigurationSource = electionConfigurationSource;
-        }
-
-        public async Task<Result<LiveResultsResponse>> GetResults(FileType type, string location = null, string electionId = null)
-        {
-            try
-            {
-                var liveResultsResponse = new LiveResultsResponse();
-
-                var result = await GetResultsByType(type, location);
-
-                if (result.IsFailure)
-                    return Result.Failure<LiveResultsResponse>("Could not load results");
-                var selectedResults = result.Value;
-                var candidates = ConvertCandidates(selectedResults);
-
-                var counties =
-                    selectedResults?.Candidates?.FirstOrDefault()?.Counties.Select(c => new County
-                    {
-                        Label = c.Key,
-                        Id = c.Key
-                    }).ToList();
-                liveResultsResponse.Candidates = candidates;
-                liveResultsResponse.Counties = counties ?? new List<County>();
-                var voterTurnout = await GetVoterTurnout(electionId);
-                if (voterTurnout.IsSuccess)
-                {
-                    decimal totalVotes = voterTurnout.Value.TotalNationalVotes;
-                    var percentage = Math.Round(_totalCounted / totalVotes, 2) * 100;
-                    liveResultsResponse.PercentageCounted = percentage;
-                    liveResultsResponse.VoterTurnout = totalVotes;
-                }
-                return Result.Ok(liveResultsResponse);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Encountered exception while retrieving results");
-                throw;
-            }
-        }
-
-        private async Task<Result<ElectionResultsData>> GetResultsByType(FileType type, string location)
-        {
-            try
-            {
-                string resultsType = type.ConvertEnumToString();
-                var localResultsResponse = await _resultsRepository.Get(Consts.LOCAL, resultsType);
-                var diasporaResultsResponse = await _resultsRepository.Get(Consts.DIASPORA, resultsType);
-                if (localResultsResponse.IsFailure || diasporaResultsResponse.IsFailure)
-                {
-                    return Result.Failure<ElectionResultsData>("Failed to retrieve data");
-                }
-                var localResultsData = JsonConvert.DeserializeObject<ElectionResultsData>(localResultsResponse.Value.StatisticsJson);
-                var diasporaResultsData = JsonConvert.DeserializeObject<ElectionResultsData>(diasporaResultsResponse.Value.StatisticsJson);
-                var electionResultsData = StatisticsAggregator.CombineResults(localResultsData, diasporaResultsData);
-
-                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g1").Votes = 3485292;
-                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g2").Votes = 527098;
-                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g3").Votes = 1384450;
-                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g4").Votes = 357014;
-                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g5").Votes = 2051725;
-                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g6").Votes = 32787;
-                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g7").Votes = 30884;
-                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g8").Votes = 30850;
-                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g9").Votes = 27769;
-                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g10").Votes = 815201;
-                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g11").Votes = 39192;
-                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g12").Votes = 244275;
-                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g13").Votes = 48662;
-                electionResultsData.Candidates.FirstOrDefault(c => c.Id == "g14").Votes = 141316;
-                _totalCounted = electionResultsData.Candidates.Sum(c => c.Votes);
-                if (string.IsNullOrWhiteSpace(location) == false)
-                {
-                    if (location == "TOTAL")
-                    {
-                        return Result.Ok(electionResultsData);
-                    }
-                    if (location == "DSPR")
-                    {
-                        return Result.Ok(diasporaResultsData);
-                    }
-                    if (location == "RO")
-                    {
-                        return Result.Ok(localResultsData);
-                    }
-                    foreach (var candidate in electionResultsData.Candidates)
-                    {
-                        candidate.Votes = candidate.Counties[location];
-                    }
-                }
-                return Result.Ok(electionResultsData);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, $"Failed to retrieve results for type {type} and location {location}");
-                return Result.Failure<ElectionResultsData>(e.Message);
-            }
         }
 
         private List<CandidateModel> ConvertCandidates(ElectionResultsData electionResultsData)

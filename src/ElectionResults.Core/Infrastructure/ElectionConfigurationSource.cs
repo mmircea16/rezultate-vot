@@ -86,20 +86,7 @@ namespace ElectionResults.Core.Infrastructure
         public List<ElectionResultsFile> GetListOfFilesWithElectionResults()
         {
             var electionsConfig = JsonConvert.DeserializeObject<Election>(_config.ElectionsConfig);
-            var files = electionsConfig.Files;
-            /*files[0].Name = "national";
-            files[0].FileType = FileType.Results;
-            files[0].ResultsSource = "national";
-            files[1].Name = "diaspora";
-            files[1].FileType = FileType.Results;
-            files[1].ResultsSource = "diaspora";
-            files[2].Name = "mail";
-            files[2].FileType = FileType.Results;
-            files[2].ResultsSource = "mail";*/
-            files[0].Active = true;
-            files[1].Active = true;
-            files[2].Active = true;
-            return files;
+            return electionsConfig.Files;
         }
     }
 }

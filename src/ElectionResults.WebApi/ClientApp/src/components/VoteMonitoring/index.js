@@ -10,13 +10,15 @@ const NumberArea = ({ bigNumber, text }) => (
 );
 export const VoteMonitoring = () => {
 
-    let search = window.location.search;
-    let params = new URLSearchParams(search);
-    var electionId = params.get('electionId');
-    if (electionId != 'PREZ2019TUR2')
-        window.electionId = 'PREZ2019TUR1';
-    else
-        window.electionId = electionId;
+    if (!window.electionId) {
+        let search = window.location.search;
+        let params = new URLSearchParams(search);
+        var electionId = params.get('electionId');
+        if (electionId != 'PREZ2019TUR2')
+            window.electionId = 'PREZ2019TUR1';
+        else
+            window.electionId = electionId;
+    }
     const [voteMonitoringData, setVoteMonitoringData] = React.useState(null);
     React.useEffect(() => {
         const fetchServerData = async () => {

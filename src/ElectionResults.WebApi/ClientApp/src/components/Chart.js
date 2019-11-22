@@ -58,14 +58,15 @@ export function ElectionChart() {
     React.useEffect(() => {
         const fetchServerData = async () => {
             try {
-
-                let search = window.location.search;
-                let params = new URLSearchParams(search);
-                var electionId = params.get('electionId');
-                if (electionId != 'PREZ2019TUR2')
-                    window.electionId = 'PREZ2019TUR1';
-                else
-                    window.electionId = electionId;
+                if (!window.electionId) {
+                    let search = window.location.search;
+                    let params = new URLSearchParams(search);
+                    var electionId = params.get('electionId');
+                    if (electionId != 'PREZ2019TUR2')
+                        window.electionId = 'PREZ2019TUR1';
+                    else
+                        window.electionId = electionId;
+                }
                 console.log("voter turnout component for " + window.electionId);
                 fetch(`/api/results/voter-turnout?electionId=${window.electionId}`)
                     .then(result => result.json())
