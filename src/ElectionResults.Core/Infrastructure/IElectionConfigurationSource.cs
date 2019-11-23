@@ -13,7 +13,7 @@ namespace ElectionResults.Core.Infrastructure
 
         List<ElectionResultsFile> GetListOfFilesWithElectionResults();
 
-        Task<Result> UpdateElectionConfig(Election config);
+        Task<Result> UpdateElectionConfig(ElectionsConfig config);
 
         Task<Result<string>> GetConfigAsync();
     }

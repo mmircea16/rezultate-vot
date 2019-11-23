@@ -3,20 +3,18 @@ using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Model;
 using CSharpFunctionalExtensions;
+using ElectionResults.Core.Infrastructure;
 using ElectionResults.Core.Models;
-using Microsoft.Extensions.Logging;
 
 namespace ElectionResults.Core.Repositories
 {
     public class BucketRepository : IBucketRepository
     {
         private readonly IAmazonS3 _s3Client;
-        private readonly ILogger _logger;
 
-        public BucketRepository(IAmazonS3 s3Client, ILogger<BucketRepository> logger)
+        public BucketRepository(IAmazonS3 s3Client)
         {
             _s3Client = s3Client;
-            _logger = logger;
         }
 
         public virtual async Task<bool> DoesS3BucketExist(string bucketName)
@@ -44,7 +42,7 @@ namespace ElectionResults.Core.Repositories
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Failed to upload");
+                Log.LogError(e, "Failed to upload");
                 throw;
             }
         }

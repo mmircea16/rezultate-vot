@@ -27,6 +27,8 @@ namespace ElectionResults.Core.Infrastructure
             _parameterStoreName = Consts.PARAMETER_STORE_NAME;
             if (hostingEnvironment.IsDevelopment())
                 _parameterStoreName += "-dev";
+            if (hostingEnvironment.IsStaging())
+                _parameterStoreName += "-stag";
         }
 
         public async Task<Result> UpdateInterval(int seconds)
@@ -56,7 +58,7 @@ namespace ElectionResults.Core.Infrastructure
             return Result.Failure<int>("Couldn't retrieve the job timer");
         }
 
-        public async Task<Result> UpdateElectionConfig(Election config)
+        public async Task<Result> UpdateElectionConfig(ElectionsConfig config)
         {
             var putParameterRequest = new PutParameterRequest
             {

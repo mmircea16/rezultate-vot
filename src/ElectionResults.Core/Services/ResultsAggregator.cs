@@ -4,12 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using ElectionResults.Core.Infrastructure;
-using ElectionResults.Core.Infrastructure.CsvModels;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Services.CsvProcessing;
 using ElectionResults.Core.Storage;
-using LazyCache;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace ElectionResults.Core.Services
@@ -17,13 +14,11 @@ namespace ElectionResults.Core.Services
     public class ResultsAggregator : IResultsAggregator
     {
         private readonly IResultsRepository _resultsRepository;
-        private readonly ILogger<ResultsAggregator> _logger;
         private readonly IElectionConfigurationSource _electionConfigurationSource;
 
-        public ResultsAggregator(IResultsRepository resultsRepository, ILogger<ResultsAggregator> logger, IElectionConfigurationSource electionConfigurationSource)
+        public ResultsAggregator(IResultsRepository resultsRepository, IElectionConfigurationSource electionConfigurationSource)
         {
             _resultsRepository = resultsRepository;
-            _logger = logger;
             _electionConfigurationSource = electionConfigurationSource;
         }
 

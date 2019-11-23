@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
+using ElectionResults.Core.Infrastructure;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Services;
 using ElectionResults.Core.Storage;
 using LazyCache;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace ElectionResults.WebApi.Controllers
@@ -14,17 +14,14 @@ namespace ElectionResults.WebApi.Controllers
     public class ResultsController : Controller
     {
         private readonly IResultsAggregator _resultsAggregator;
-        private readonly ILogger<ResultsController> _logger;
         private readonly IOptionsSnapshot<AppConfig> _config;
         private readonly IAppCache _appCache;
 
         public ResultsController(IResultsAggregator resultsAggregator,
-            ILogger<ResultsController> logger,
             IOptionsSnapshot<AppConfig> config,
             IAppCache appCache)
         {
             _resultsAggregator = resultsAggregator;
-            _logger = logger;
             _config = config;
             _appCache = appCache;
         }
@@ -42,14 +39,14 @@ namespace ElectionResults.WebApi.Controllers
                 if (result.IsFailure)
                 {
                     _appCache.Remove(key);
-                    _logger.LogError(result.Error);
+                    Log.LogWarning(result.Error);
                     return BadRequest(result.Error);
                 }
                 return result.Value;
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Exception encountered while retrieving results");
+                Log.LogError(e, "Exception encountered while retrieving results");
                 throw;
             }
         }
@@ -65,14 +62,14 @@ namespace ElectionResults.WebApi.Controllers
                 if (result.IsFailure)
                 {
                     _appCache.Remove(Consts.VOTE_TURNOUT_KEY);
-                    _logger.LogError(result.Error);
+                    Log.LogWarning(result.Error);
                     return BadRequest(result.Error);
                 }
                 return result.Value;
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Exception encountered while retrieving voter turnout stats");
+                Log.LogError(e, "Exception encountered while retrieving voter turnout stats");
                 return StatusCode(500, e);
             }
         }
@@ -88,14 +85,14 @@ namespace ElectionResults.WebApi.Controllers
                 if (result.IsFailure)
                 {
                     _appCache.Remove(Consts.VOTE_TURNOUT_KEY);
-                    _logger.LogError(result.Error);
+                    Log.LogWarning(result.Error);
                     return BadRequest(result.Error);
                 }
                 return result.Value;
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Exception encountered while retrieving vote monitoring stats");
+                Log.LogError(e, "Exception encountered while retrieving vote monitoring stats");
                 return StatusCode(500, e);
             }
         }

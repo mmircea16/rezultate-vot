@@ -7,7 +7,6 @@ using ElectionResults.Core.Models;
 using ElectionResults.Core.Repositories;
 using ElectionResults.Core.Services.BlobContainer;
 using ElectionResults.Core.Storage;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
@@ -20,7 +19,6 @@ namespace ElectionResults.Core.Services.CsvDownload
         private readonly IResultsRepository _resultsRepository;
         private readonly IBucketRepository _bucketRepository;
         private readonly IVoterTurnoutAggregator _voterTurnoutAggregator;
-        private readonly ILogger<CsvDownloaderJob> _logger;
         private readonly AppConfig _config;
 
         public CsvDownloaderJob(IBucketUploader bucketUploader,
@@ -28,7 +26,6 @@ namespace ElectionResults.Core.Services.CsvDownload
             IResultsRepository resultsRepository,
             IBucketRepository bucketRepository,
             IVoterTurnoutAggregator voterTurnoutAggregator,
-            ILogger<CsvDownloaderJob> logger,
             IOptions<AppConfig> config)
         {
             _bucketUploader = bucketUploader;
@@ -36,16 +33,14 @@ namespace ElectionResults.Core.Services.CsvDownload
             _resultsRepository = resultsRepository;
             _bucketRepository = bucketRepository;
             _voterTurnoutAggregator = voterTurnoutAggregator;
-            _logger = logger;
             _config = config.Value;
-            _logger.LogInformation($"Interval is set to: {_config.IntervalInSeconds} seconds");
+            Log.LogInformation($"Interval is set to: {_config.IntervalInSeconds} seconds");
         }
 
         public async Task DownloadFiles()
         {
             try
             {
-                _logger.LogInformation("Starting to download csv files");
                 await InitializeBucket();
                 await InitializeDb();
                 var electionsConfigJson = await _electionConfigurationSource.GetConfigAsync();
@@ -56,18 +51,18 @@ namespace ElectionResults.Core.Services.CsvDownload
 
                     var timestamp = SystemTime.Now.ToUnixTimeSeconds();
                     await DownloadCsvFiles(files, timestamp);
-                    _logger.LogInformation($"Files downloaded");
+                    Log.LogInformation($"Files downloaded");
                     await AddVoterTurnout(files, timestamp);
-                    _logger.LogInformation("Added voter turnout");
+                    Log.LogInformation("Added voter turnout");
                     await AddVoteMonitoringStats(files, timestamp);
-                    _logger.LogInformation("Added vote monitoring stats");
+                    Log.LogInformation("Added vote monitoring stats");
                 }
 
                 Console.WriteLine($"Finished downloading files");
             }
             catch (Exception e)
             {
-                _logger.LogInformation(e, "Failed to download files");
+                Log.LogError(e, "Failed to download files");
             }
         }
 
@@ -79,7 +74,7 @@ namespace ElectionResults.Core.Services.CsvDownload
                 
                 foreach (var file in files.Where(f => f.Active && f.FileType == FileType.Results))
                 {
-                    _logger.LogInformation($"Downloading file {file.URL}");
+                    Log.LogInformation($"Downloading file {file.URL}");
                     file.Name =
                         $"{file.FileType.ConvertEnumToString()}_{file.ResultsSource}_{timestamp}.csv";
                     file.Timestamp = timestamp;
@@ -90,7 +85,7 @@ namespace ElectionResults.Core.Services.CsvDownload
             }
             catch (Exception e)
             {
-                _logger.LogError(e, $"Failed to download csv files");
+                Log.LogError(e, $"Failed to download csv files");
             }
         }
 
@@ -130,21 +125,21 @@ namespace ElectionResults.Core.Services.CsvDownload
             try
             {
                 var bucketName = _config.BucketName;
-                _logger.LogInformation($"Initializing bucket {bucketName}");
+                Log.LogInformation($"Initializing bucket {bucketName}");
                 var bucketExists = await _bucketRepository.DoesS3BucketExist(bucketName);
                 if (bucketExists == false)
                 {
-                    _logger.LogInformation($"Bucket {bucketName} doesn't exist");
+                    Log.LogInformation($"Bucket {bucketName} doesn't exist");
                     var response = await _bucketRepository.CreateBucket(bucketName);
                     if (response.IsFailure)
                     {
-                        _logger.LogError($"Failed to create bucket: {response.Error}");
+                        Log.LogWarning($"Failed to create bucket: {response.Error}");
                     }
                 }
             }
             catch (Exception e)
             {
-                _logger.LogError(e, $"Failed to create bucket {_config.BucketName}");
+                Log.LogError(e, $"Failed to create bucket {_config.BucketName}");
             }
         }
     }

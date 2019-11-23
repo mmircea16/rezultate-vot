@@ -21,7 +21,7 @@ namespace ElectionResults.Tests.StatisticsAggregatorTests
                 firstParser,
                 secondParser
             };
-            var statisticsAggregator = new StatisticsAggregator(null) { CsvParsers = csvParsers };
+            var statisticsAggregator = new StatisticsAggregator() { CsvParsers = csvParsers };
             await statisticsAggregator.RetrieveElectionData("", new ElectionResultsFile());
 
             firstParser.WasInvoked.Should().BeTrue();
@@ -36,7 +36,7 @@ namespace ElectionResults.Tests.StatisticsAggregatorTests
                 new FakeCandidatesParser(),
                 new FakePollingStationsParser()
             };
-            var statisticsAggregator = new StatisticsAggregator(null) { CsvParsers = csvParsers };
+            var statisticsAggregator = new StatisticsAggregator() { CsvParsers = csvParsers };
 
             var aggregationResult = await statisticsAggregator.RetrieveElectionData("", new ElectionResultsFile());
 

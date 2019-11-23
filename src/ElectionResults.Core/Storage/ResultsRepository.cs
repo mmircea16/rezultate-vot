@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 using CSharpFunctionalExtensions;
+using ElectionResults.Core.Infrastructure;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Services;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
@@ -17,15 +17,11 @@ namespace ElectionResults.Core.Storage
     public class ResultsRepository : IResultsRepository
     {
         private readonly IAmazonDynamoDB _dynamoDb;
-        private readonly ILogger<ResultsRepository> _logger;
-        private readonly IMemoryCache _memoryCache;
         private readonly AppConfig _config;
 
-        public ResultsRepository(IOptions<AppConfig> config, IAmazonDynamoDB dynamoDb, ILogger<ResultsRepository> logger, IMemoryCache memoryCache)
+        public ResultsRepository(IOptions<AppConfig> config, IAmazonDynamoDB dynamoDb, IMemoryCache memoryCache)
         {
             _dynamoDb = dynamoDb;
-            _logger = logger;
-            _memoryCache = memoryCache;
             _config = config.Value;
         }
 
@@ -33,7 +29,7 @@ namespace ElectionResults.Core.Storage
         {
             try
             {
-                _logger.LogInformation($"Inserting results");
+                Log.LogInformation($"Inserting results");
 
                 Dictionary<string, AttributeValue> item = new Dictionary<string, AttributeValue>();
                 item["id"] = new AttributeValue { S = electionStatistics.Id };
@@ -59,7 +55,7 @@ namespace ElectionResults.Core.Storage
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Couldn't insert results");
+                Log.LogError(e, "Couldn't insert results");
             }
         }
 
@@ -68,7 +64,7 @@ namespace ElectionResults.Core.Storage
             var tableExists = await TableExists();
             if (!tableExists)
             {
-                _logger.LogInformation($"Creating table {_config.TableName}");
+                Log.LogInformation($"Creating table {_config.TableName}");
                 await CreateTable();
             }
         }
@@ -117,7 +113,6 @@ namespace ElectionResults.Core.Storage
 
             var results = GetResults(queryResponse.Items);
             var latest = results.Where(r => r.Type == type).OrderByDescending(r => r.Timestamp).FirstOrDefault();
-            _logger.LogInformation($"Latest for {type} and {source} is {latest?.Timestamp}");
             if (latest != null)
                 return Result.Ok(latest);
             return Result.Ok(new ElectionStatistics
@@ -162,7 +157,7 @@ namespace ElectionResults.Core.Storage
             }
             catch (Exception e)
             {
-                _logger.LogError(e, $"Table {_config.TableName} isn't ready'");
+                Log.LogError(e, $"Table {_config.TableName} isn't ready'");
                 return false;
             }
         }
@@ -182,7 +177,7 @@ namespace ElectionResults.Core.Storage
 
         private async Task CreateTable()
         {
-            _logger.LogInformation("Creating Table");
+            Log.LogInformation("Creating Table");
 
             try
             {
@@ -246,7 +241,7 @@ namespace ElectionResults.Core.Storage
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Create table error");
+                Log.LogError(e, "Create table error");
             }
         }
     }

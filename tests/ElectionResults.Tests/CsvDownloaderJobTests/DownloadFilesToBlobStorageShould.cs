@@ -11,7 +11,6 @@ using ElectionResults.Core.Services;
 using ElectionResults.Core.Services.BlobContainer;
 using ElectionResults.Core.Services.CsvDownload;
 using ElectionResults.Core.Storage;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;
 using Xunit;
@@ -100,7 +99,7 @@ namespace ElectionResults.Tests.CsvDownloaderJobTests
             var voterTurnoutAggregator = Substitute.For<IVoterTurnoutAggregator>();
             voterTurnoutAggregator.GetVoterTurnoutFromBEC(null).ReturnsForAnyArgs(Result.Failure<VoterTurnout>("err"));
             voterTurnoutAggregator.GetVoteMonitoringStats(null).ReturnsForAnyArgs(Result.Failure<VoteMonitoringStats>("err"));
-            var csvDownloaderJob = new CsvDownloaderJob(_bucketUploader, _electionConfigurationSource, new FakeResultsRepository(fakeConfig), new FakeBucketRepository(), voterTurnoutAggregator, null, fakeConfig);
+            var csvDownloaderJob = new CsvDownloaderJob(_bucketUploader, _electionConfigurationSource, new FakeResultsRepository(fakeConfig), new FakeBucketRepository(), voterTurnoutAggregator, fakeConfig);
             return csvDownloaderJob;
         }
 
@@ -113,12 +112,12 @@ namespace ElectionResults.Tests.CsvDownloaderJobTests
 
     internal class FakeBucketRepository : BucketRepository
     {
-        public FakeBucketRepository() : base(null, null)
+        public FakeBucketRepository() : base(null)
         {
 
         }
 
-        public FakeBucketRepository(IAmazonS3 s3Client) : base(s3Client, null)
+        public FakeBucketRepository(IAmazonS3 s3Client) : base(s3Client)
         {
         }
 
@@ -130,12 +129,12 @@ namespace ElectionResults.Tests.CsvDownloaderJobTests
 
     internal class FakeResultsRepository : ResultsRepository
     {
-        public FakeResultsRepository(IOptions<AppConfig> config) : base(config, null, null, null)
+        public FakeResultsRepository(IOptions<AppConfig> config) : base(config, null, null)
         {
 
         }
 
-        public FakeResultsRepository(IOptions<AppConfig> config, IAmazonDynamoDB dynamoDb, ILogger<ResultsRepository> logger) : base(config, dynamoDb, logger, null)
+        public FakeResultsRepository(IOptions<AppConfig> config, IAmazonDynamoDB dynamoDb) : base(config, dynamoDb, null)
         {
         }
 

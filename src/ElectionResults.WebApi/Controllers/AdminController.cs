@@ -25,7 +25,7 @@ namespace ElectionResults.WebApi.Controllers
             return BadRequest(result.Error);
         }
 
-        [HttpGet("election-config")]
+        [HttpGet("elections-config")]
         public async Task<ActionResult> GetSettings()
         {
             var result = await _electionConfigurationSource.GetConfigAsync();
@@ -34,10 +34,10 @@ namespace ElectionResults.WebApi.Controllers
             return BadRequest(result.Error);
         }
 
-        [HttpPut("election-config")]
-        public async Task<ActionResult> UpdateSettings([FromBody] Election config)
+        [HttpPut("elections-config")]
+        public async Task<ActionResult> UpdateSettings([FromBody] ElectionsConfig electionsConfig)
         {
-            await _electionConfigurationSource.UpdateElectionConfig(config);
+            await _electionConfigurationSource.UpdateElectionConfig(electionsConfig);
             return Ok();
         }
     }
