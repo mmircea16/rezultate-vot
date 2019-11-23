@@ -75,7 +75,7 @@ export const ChartContainer = () => {
                 <div>
                     <div sm={12} className={"votes-container"}>
                         <p className={"container-text"}>
-                            Rezultate Vot, transparentizează întreg procesul electoral furnizând în timp real, într-o formă grafică intuitivă, ușor de înțeles, datele oficiale furnizate de către AEP și Birourile Electorale cât și datele preluate prin aplicația Monitorizare Vot dezvoltată de Code for Romania, despre alegerile din România.
+                            Rezultate Vot transparentizează întreg procesul electoral furnizând în timp real, într-o formă grafică intuitivă, ușor de înțeles, datele oficiale furnizate de către AEP și Birourile Electorale cât și datele preluate prin aplicația Monitorizare Vot dezvoltată de Code for Romania, despre alegerile din România.
       </p>
                         <div sm={3} className={"votes-numbers"}>
                             <h3 className={"votes-title"}>Voturi numărate</h3>
@@ -119,7 +119,7 @@ export const ChartContainer = () => {
                     <div className={"default-container"}>
                         <div className={"votes-container"}>
                             <p className={"container-text"}>
-                                Rezultate Vot, transparentizează întreg procesul electoral furnizând în timp real, într-o formă grafică intuitivă, ușor de înțeles, datele oficiale furnizate de către AEP și Birourile Electorale cât și datele preluate prin aplicația Monitorizare Vot dezvoltată de Code for Romania, despre alegerile din România.
+                                Rezultate Vot transparentizează întreg procesul electoral furnizând în timp real, într-o formă grafică intuitivă, ușor de înțeles, datele oficiale furnizate de către AEP și Birourile Electorale cât și datele preluate prin aplicația Monitorizare Vot dezvoltată de Code for Romania, despre alegerile din România.
             </p>
                         </div>
                         {
