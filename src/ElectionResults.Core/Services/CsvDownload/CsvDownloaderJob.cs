@@ -88,8 +88,7 @@ namespace ElectionResults.Core.Services.CsvDownload
                 var voteCountStats = new VoteCountStats();
                 voteCountStats.TotalCountedVotes = result.Value.Candidates.Sum(c => c.Votes);
                 var voterTurnout = await _resultsAggregator.GetVoterTurnout(election.ElectionId);
-                voteCountStats.Percentage =
-                    Math.Round(voteCountStats.TotalCountedVotes / (double) voterTurnout.Value.TotalNationalVotes, 4) * 100;
+                voteCountStats.Percentage = Math.Round(voteCountStats.TotalCountedVotes / (double)voterTurnout.Value.TotalNationalVotes * 100, 2);
                 _appCache.Add(Consts.RESULTS_COUNT_KEY + election.ElectionId, voteCountStats);
             }
         }
