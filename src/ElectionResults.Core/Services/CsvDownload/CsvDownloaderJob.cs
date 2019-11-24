@@ -8,6 +8,7 @@ using ElectionResults.Core.Repositories;
 using ElectionResults.Core.Services.BlobContainer;
 using ElectionResults.Core.Storage;
 using LazyCache;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
@@ -88,8 +89,22 @@ namespace ElectionResults.Core.Services.CsvDownload
                 var voteCountStats = new VoteCountStats();
                 voteCountStats.TotalCountedVotes = result.Value.Candidates.Sum(c => c.Votes);
                 var voterTurnout = await _resultsAggregator.GetVoterTurnout(election.ElectionId);
+                if (voterTurnout.IsFailure)
+                {
+                    Log.LogWarning($"Failed to retrieve voter turnout when gathering statistics: {voterTurnout.Error}");
+                    return;
+                }
                 voteCountStats.Percentage = Math.Round(voteCountStats.TotalCountedVotes / (double)voterTurnout.Value.TotalNationalVotes * 100, 2);
-                _appCache.Add(Consts.RESULTS_COUNT_KEY + election.ElectionId, voteCountStats);
+                if (voteCountStats.TotalCountedVotes == 0)
+                {
+                    Log.LogWarning($"Total counted votes is 0");
+                    Log.LogWarning($"Percentage: {voteCountStats.Percentage}");
+                    return;
+                }
+                _appCache.Add(Consts.RESULTS_COUNT_KEY + election.ElectionId, voteCountStats, new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1)
+                });
             }
         }
 
@@ -98,7 +113,7 @@ namespace ElectionResults.Core.Services.CsvDownload
             try
             {
                 List<Task> tasks = new List<Task>();
-                
+
                 foreach (var file in files.Where(f => f.Active && f.FileType == FileType.Results))
                 {
                     file.Name =
@@ -106,7 +121,7 @@ namespace ElectionResults.Core.Services.CsvDownload
                     file.Timestamp = timestamp;
                     tasks.Add(_bucketUploader.ProcessFile(file));
                 }
-                
+
                 await Task.WhenAll(tasks);
             }
             catch (Exception e)

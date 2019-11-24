@@ -63,6 +63,8 @@ namespace ElectionResults.WebApi.Controllers
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(electionId))
+                    electionId = Consts.FirstElectionRound;
                 var key = Consts.VOTE_TURNOUT_KEY + electionId;
                 var result = await _appCache.GetOrAddAsync(
                     key, () => _resultsAggregator.GetVoterTurnout(electionId),
@@ -87,6 +89,8 @@ namespace ElectionResults.WebApi.Controllers
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(electionId))
+                    electionId = Consts.FirstElectionRound;
                 var key = Consts.VOTE_MONITORING_KEY + electionId;
                 var result = await _appCache.GetOrAddAsync(
                     key, () => _resultsAggregator.GetVoteMonitoringStats(electionId),
