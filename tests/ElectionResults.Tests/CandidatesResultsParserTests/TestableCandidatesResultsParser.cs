@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using ElectionResults.Core.Infrastructure.CsvModels;
 using ElectionResults.Core.Models;
@@ -11,7 +10,7 @@ namespace ElectionResults.Tests.CandidatesResultsParserTests
 {
     public class TestableCandidatesResultsParser: CandidatesResultsParser
     {
-        public TestableCandidatesResultsParser(IOptions<AppConfig> config) : base(config)
+        public TestableCandidatesResultsParser(IOptions<AppConfig> config) : base(config, null)
         {
 
         }

@@ -4,10 +4,10 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
+using ElectionResults.Core.Infrastructure;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Repositories;
 using ElectionResults.Core.Storage;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace ElectionResults.Core.Services.BlobContainer
@@ -16,15 +16,13 @@ namespace ElectionResults.Core.Services.BlobContainer
     {
         private readonly IFileRepository _fileRepository;
         private readonly IFileProcessor _fileProcessor;
-        private readonly ILogger<BucketUploader> _logger;
         private static HttpClient _httpClient;
         private readonly AppConfig _config;
 
-        public BucketUploader(IOptions<AppConfig> config, IFileRepository fileRepository, IFileProcessor fileProcessor, ILogger<BucketUploader> logger)
+        public BucketUploader(IOptions<AppConfig> config, IFileRepository fileRepository, IFileProcessor fileProcessor)
         {
             _fileRepository = fileRepository;
             _fileProcessor = fileProcessor;
-            _logger = logger;
             _httpClient = new HttpClient();
             _config = config.Value;
         }
@@ -56,7 +54,7 @@ namespace ElectionResults.Core.Services.BlobContainer
             }
             catch (Exception e)
             {
-                _logger.LogError(e, $"Failed to download file: {url}");
+                Log.LogError(e, $"Failed to download file: {url}");
                 throw;
             }
         }
@@ -71,7 +69,7 @@ namespace ElectionResults.Core.Services.BlobContainer
             }
             catch (Exception e)
             {
-                _logger.LogError(e, $"Failed to process stream for filename: {fileName}");
+                Log.LogError(e, $"Failed to process stream for filename: {fileName}");
                 throw;
             }
         }

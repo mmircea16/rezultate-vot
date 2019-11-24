@@ -3,24 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
+using ElectionResults.Core.Infrastructure;
 using ElectionResults.Core.Infrastructure.CsvModels;
 using ElectionResults.Core.Models;
-using Microsoft.Extensions.Logging;
 
 namespace ElectionResults.Core.Services.CsvProcessing
 {
     public class StatisticsAggregator : IStatisticsAggregator
     {
-        private readonly ILogger _logger;
         public List<ICsvParser> CsvParsers { get; set;  } = new List<ICsvParser>();
 
-        public StatisticsAggregator(ILogger<StatisticsAggregator> logger)
-        {
-            _logger = logger;
-        }
         public async Task<Result<ElectionResultsData>> RetrieveElectionData(string csvContent, ElectionResultsFile file)
         {
-            _logger.LogInformation($"Retrieving data from csv");
+            Log.LogInformation($"Retrieving data for electionId {file.ElectionId} and url {file.URL}");
             try
             {
                 var electionResults = new ElectionResultsData();
@@ -33,8 +28,8 @@ namespace ElectionResults.Core.Services.CsvProcessing
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Failed to process data from csv");
-                _logger.LogInformation(csvContent.Substring(0, 1000));
+                Log.LogError(e, "Failed to process data from csv");
+                Log.LogInformation(csvContent.Substring(0, 1000));
                 return Result.Failure<ElectionResultsData>(e.Message);
             }
         }

@@ -4,12 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using ElectionResults.Core.Infrastructure;
-using ElectionResults.Core.Infrastructure.CsvModels;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Services.CsvProcessing;
 using ElectionResults.Core.Storage;
-using LazyCache;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace ElectionResults.Core.Services
@@ -17,20 +14,18 @@ namespace ElectionResults.Core.Services
     public class ResultsAggregator : IResultsAggregator
     {
         private readonly IResultsRepository _resultsRepository;
-        private readonly ILogger<ResultsAggregator> _logger;
         private readonly IElectionConfigurationSource _electionConfigurationSource;
 
-        public ResultsAggregator(IResultsRepository resultsRepository, ILogger<ResultsAggregator> logger, IElectionConfigurationSource electionConfigurationSource)
+        public ResultsAggregator(IResultsRepository resultsRepository, IElectionConfigurationSource electionConfigurationSource)
         {
             _resultsRepository = resultsRepository;
-            _logger = logger;
             _electionConfigurationSource = electionConfigurationSource;
         }
 
         private List<CandidateModel> ConvertCandidates(ElectionResultsData electionResultsData)
         {
-            if (electionResultsData == null)
-                return new List<CandidateModel>();
+            if (electionResultsData?.Candidates == null)
+                return CreateListWithEmptyCandidates();
             electionResultsData.Candidates = StatisticsAggregator.CalculatePercentagesForCandidates(
                 electionResultsData.Candidates,
                 electionResultsData.Candidates.Sum(c => c.Votes));
@@ -43,6 +38,11 @@ namespace ElectionResults.Core.Services
                 Votes = c.Votes
             }).ToList();
             return candidates;
+        }
+
+        private List<CandidateModel> CreateListWithEmptyCandidates()
+        {
+            return new List<CandidateModel>();
         }
 
         public async Task<Result<VoteMonitoringStats>> GetVoteMonitoringStats(string electionId)
@@ -75,6 +75,11 @@ namespace ElectionResults.Core.Services
                 if (string.IsNullOrWhiteSpace(resultsQuery.Source))
                 {
                     var data = await CombineAllSources(resultsQuery);
+                    if (data.Candidates == null)
+                    {
+                        Log.LogWarning($"No data found for {resultsQuery}");
+                        return Result.Ok(CreateLiveResultsResponse(data));
+                    }
                     return Result.Ok(CreateLiveResultsResponse(data));
                 }
 
@@ -101,9 +106,18 @@ namespace ElectionResults.Core.Services
 
         private async Task<ElectionResultsData> CombineAllSources(ResultsQuery resultsQuery)
         {
-            var files = _electionConfigurationSource.GetListOfFilesWithElectionResults();
-            var availableSources = files.Where(f => f.Active && f.FileType == FileType.Results).Select(f => f.Name);
+            var electionGetResult = _electionConfigurationSource.GetElectionById(resultsQuery.ElectionId);
+            if (electionGetResult.IsFailure)
+            {
+                Log.LogWarning($"Could not retrieve election with id {resultsQuery.ElectionId} due to error {electionGetResult.Error}");
+                return ElectionResultsData.Default;
+            }
+            var availableSources = electionGetResult.Value.Files.Where(f => f.Active && f.FileType == FileType.Results).Select(f => f.Name).ToList();
             var data = new ElectionResultsData();
+            if (availableSources.Count == 0)
+            {
+                return CreateEmptyElectionResultsData(resultsQuery, data);
+            }
             foreach (var source in availableSources)
             {
                 var resultsResponse =
@@ -115,7 +129,27 @@ namespace ElectionResults.Core.Services
                     data = StatisticsAggregator.CombineResults(data, deserializedData);
                 }
             }
+
+            if (data?.Candidates?.Count == 0)
+            {
+                return CreateEmptyElectionResultsData(resultsQuery, data);
+            }
             return data;
+        }
+
+        private ElectionResultsData CreateEmptyElectionResultsData(ResultsQuery resultsQuery, ElectionResultsData data)
+        {
+            var currentElectionResult = _electionConfigurationSource.GetElectionById(resultsQuery.ElectionId);
+            if (currentElectionResult.IsSuccess)
+            {
+                data.Candidates = currentElectionResult.Value.Candidates;
+                return data;
+            }
+            else
+            {
+                Log.LogWarning(currentElectionResult.Error);
+                return ElectionResultsData.Default;
+            }
         }
 
         private LiveResultsResponse CreateLiveResultsResponse(ElectionResultsData electionResultsData)
@@ -130,9 +164,9 @@ namespace ElectionResults.Core.Services
                 }).ToList();
             var liveResultsResponse = new LiveResultsResponse
             {
-                Candidates = candidates
+                Candidates = candidates,
+                Counties = counties ?? new List<County>()
             };
-            liveResultsResponse.Counties = counties ?? new List<County>();
             return liveResultsResponse;
         }
     }

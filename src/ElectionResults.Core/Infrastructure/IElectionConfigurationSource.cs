@@ -11,10 +11,9 @@ namespace ElectionResults.Core.Infrastructure
 
         Task<Result<int>> GetInterval();
 
-        List<ElectionResultsFile> GetListOfFilesWithElectionResults();
-
-        Task<Result> UpdateElectionConfig(Election config);
+        Task<Result> UpdateElectionConfig(List<Election> elections);
 
         Task<Result<string>> GetConfigAsync();
+        Result<Election> GetElectionById(string electionId);
     }
 }

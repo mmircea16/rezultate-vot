@@ -3,11 +3,6 @@ using ElectionResults.Core.Infrastructure.CsvModels;
 
 namespace ElectionResults.Core.Models
 {
-    public class ElectionsConfig
-    {
-        public List<Election> Elections { get; set; }
-    }
-
     public class Election
     {
         public string ElectionId { get; set; }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using CsvHelper;
+using ElectionResults.Core.Infrastructure;
 using ElectionResults.Core.Infrastructure.CsvModels;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Storage;
@@ -16,17 +17,25 @@ namespace ElectionResults.Core.Services.CsvProcessing
     public class CandidatesResultsParser : ICsvParser
     {
         private readonly IOptions<AppConfig> _config;
+        private readonly IElectionConfigurationSource _electionConfigurationSource;
 
-        public CandidatesResultsParser(IOptions<AppConfig> config)
+        public CandidatesResultsParser(IOptions<AppConfig> config, IElectionConfigurationSource electionConfigurationSource)
         {
             _config = config;
+            _electionConfigurationSource = electionConfigurationSource;
         }
 
         public async Task<Result<ElectionResultsData>> Parse(ElectionResultsData electionResultsData, string csvContent, ElectionResultsFile file)
         {
             if (electionResultsData == null)
                 electionResultsData = new ElectionResultsData();
-            var electionsConfig = DeserializeElectionsConfig();
+            var electionsConfigResponse = _electionConfigurationSource.GetElectionById(file.ElectionId);
+            if (electionsConfigResponse.IsFailure)
+            {
+                return Result.Failure<ElectionResultsData>(electionsConfigResponse.Error);
+            }
+
+            var electionsConfig = electionsConfigResponse.Value;
 
             electionResultsData.Candidates = electionsConfig.Candidates.Select(c => new CandidateConfig
             {
@@ -42,17 +51,6 @@ namespace ElectionResults.Core.Services.CsvProcessing
             return Result.Ok(electionResultsData);
         }
 
-        private Election DeserializeElectionsConfig()
-        {
-            try
-            {
-                return JsonConvert.DeserializeObject<Election>(_config.Value.ElectionsConfig);
-            }
-            catch (Exception)
-            {
-                return Election.Default;
-            }
-        }
 
         protected virtual async Task PopulateCandidatesListWithVotes(string csvContent,
             List<CandidateConfig> candidates, ElectionResultsFile file)
@@ -75,7 +73,7 @@ namespace ElectionResults.Core.Services.CsvProcessing
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Log.LogError(e, $"Couldn't populate list with votes for file {file.URL} and election {file.ElectionId}");
             }
         }
     }

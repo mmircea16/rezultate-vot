@@ -4,6 +4,7 @@ import useWindowSize from '../hooks/useWindowSize';
 import { Button, Media, Label, Container } from 'reactstrap';
 import code4RoGrey from '../images/code4RoGrey.svg';
 import code4RoTransp from '../images/code4RoTransp.svg';
+import ElectionPicker from '../services/electionPicker';
 
 const Line = ({ percent }) => (
     <div className="chart-line" style={{ top: `calc(100% - ${percent}%)` }}>
@@ -58,19 +59,12 @@ export function ElectionChart() {
     React.useEffect(() => {
         const fetchServerData = async () => {
             try {
-                if (!window.electionId) {
-                    let search = window.location.search;
-                    let params = new URLSearchParams(search);
-                    var electionId = params.get('electionId');
-                    if (electionId != 'PREZ2019TUR2')
-                        window.electionId = 'PREZ2019TUR1';
-                    else
-                        window.electionId = electionId;
-                }
-                console.log("voter turnout component for " + window.electionId);
-                fetch(`/api/results/voter-turnout?electionId=${window.electionId}`)
+                console.log("voter turnout component for " + ElectionPicker.getSelection());
+                fetch(`/api/results/voter-turnout?electionId=${ElectionPicker.getSelection()}`)
                     .then(result => result.json())
-                    .then(result => setData(result));
+                    .then(result => {
+                        setData(result);
+                    });
             } catch (e) {
                 console.log(e);
             }
@@ -81,8 +75,12 @@ export function ElectionChart() {
             timer = null;
         }
         const onActive = () => {
-            timer = setInterval(() => fetchServerData(), 1000 * 30);
+            timer = setInterval(() => fetchServerData(), 1000 * 320);
         }
+        const onSelectedElectionsChanged = () => {
+            fetchServerData();
+        }
+        window.addEventListener("selectedElectionsChanged", onSelectedElectionsChanged);
         window.addEventListener("onIdle", onIdle);
         window.addEventListener("onActive", onActive);
         fetchServerData();
@@ -181,7 +179,7 @@ export function ElectionChart() {
                             </Container>
                         </div>
                     </div>
-                    <p className="becro">Date preluate de la <a href="https://prezenta.bec.ro" target="_blank">prezenta.bec.ro</a></p>
+                    <p className="becro">Date preluate de la <a href="https://prezenta.bec.ro" target="_blank" rel="noopener noreferrer">prezenta.bec.ro</a></p>
                 </div>
 
             </div>

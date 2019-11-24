@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Amazon.SimpleSystemsManagement;
@@ -27,6 +28,8 @@ namespace ElectionResults.Core.Infrastructure
             _parameterStoreName = Consts.PARAMETER_STORE_NAME;
             if (hostingEnvironment.IsDevelopment())
                 _parameterStoreName += "-dev";
+            if (hostingEnvironment.IsStaging())
+                _parameterStoreName += "-stag";
         }
 
         public async Task<Result> UpdateInterval(int seconds)
@@ -56,12 +59,12 @@ namespace ElectionResults.Core.Infrastructure
             return Result.Failure<int>("Couldn't retrieve the job timer");
         }
 
-        public async Task<Result> UpdateElectionConfig(Election config)
+        public async Task<Result> UpdateElectionConfig(List<Election> elections)
         {
             var putParameterRequest = new PutParameterRequest
             {
                 Name = $"/{_parameterStoreName}/settings/electionsConfig",
-                Value = JsonConvert.SerializeObject(config),
+                Value = JsonConvert.SerializeObject(elections),
                 Type = ParameterType.String,
                 Overwrite = true
             };
@@ -83,10 +86,13 @@ namespace ElectionResults.Core.Infrastructure
             return Result.Failure<string>("Couldn't update the job timer");
         }
 
-        public List<ElectionResultsFile> GetListOfFilesWithElectionResults()
+        public Result<Election> GetElectionById(string electionId)
         {
-            var electionsConfig = JsonConvert.DeserializeObject<Election>(_config.ElectionsConfig);
-            return electionsConfig.Files;
+            var electionsConfig = JsonConvert.DeserializeObject<List<Election>>(_config.ElectionsConfig);
+            var foundElection = electionsConfig.SingleOrDefault(e => e.ElectionId == electionId);
+            if (foundElection == null)
+                return Result.Failure<Election>($"Could not find election with id {electionId}");
+            return Result.Ok(foundElection);
         }
     }
 }
