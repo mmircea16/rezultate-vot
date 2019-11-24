@@ -232,9 +232,22 @@
     text-align: center;
   }
 }
-
+@media (min-width: 300px) {
+    .bar-votes-text {
+        display: grid;
+    }
+    .bar-votes-result {
+        margin-top: 35px;
+    }
+}
 @media (min-width: 800px) {
 
+    .bar-votes-result {
+        margin-top: 0px;
+    }
+    .bar-votes-text {
+        display: flex;
+    }
   .bar-candidate-name,
   .bar-votes-number,
   .bar-votes-percent {

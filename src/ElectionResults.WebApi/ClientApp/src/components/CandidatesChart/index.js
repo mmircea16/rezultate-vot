@@ -75,8 +75,19 @@ export const ChartContainer = () => {
         currentSelection = value.id;
         fetch(`/api/results/?electionId=${ElectionPicker.getSelection()}&source=${value.id}&county=${value.countyName || ''}`)
             .then(data => data.json())
-            .then(data => setCandidates(data.candidates));
-    };
+            .then(data => {
+                console.log(data);
+                setCandidates(data.candidates);
+                if (data.candidates.length <= 5) {
+                    toggleShowAll(true);
+                }
+                data.candidates.forEach((c) => {
+                    c.displayPercentage = c.percentage * 0.8 - 5;
+                });
+                totalCountedVotes = data.totalCountedVotes;
+                percentageCounted = data.percentageCounted;
+                setVoterTurnout(data);
+            })};
 
     return (
         <div>
