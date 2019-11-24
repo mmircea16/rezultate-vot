@@ -1,7 +1,7 @@
 import React from "react";
 import "./styles.css";
 
-export const ChartBar = ({ percent, imgUrl, candidateName, votesNumber }) => {
+export const ChartBar = ({ percent, displayPercentage, imgUrl, candidateName, votesNumber }) => {
     return (
         <div className={"bar-container"}>
             <div className={"bar-candidate"}>
@@ -12,7 +12,7 @@ export const ChartBar = ({ percent, imgUrl, candidateName, votesNumber }) => {
             </div>
 
             <div className={"bar-results"}>
-                <div className={"bar-votes"} style={{ width: `${percent}%` }}></div>
+                <div className={"bar-votes"} style={{ width: `${displayPercentage}%` }}></div>
                 <div className={"bar-votes-text"}>
                     <p className={"bar-votes-percent"}>{`${percent}%`}</p>
                 </div>

@@ -26,6 +26,9 @@ export const ChartContainer = () => {
                         if (data.candidates.length <= 5) {
                             toggleShowAll(true);
                         }
+                        data.candidates.forEach((c) => {
+                            c.displayPercentage = c.percentage * 0.8 - 5;
+                        });
                         totalCountedVotes = data.totalCountedVotes;
                         percentageCounted = data.percentageCounted;
                         setVoterTurnout(data);
@@ -108,6 +111,7 @@ export const ChartContainer = () => {
                         <ChartBar
                             key={candidate.id}
                             percent={candidate.percentage}
+                            displayPercentage={candidate.displayPercentage}
                             imgUrl={candidate.imageUrl}
                             candidateName={candidate.name}
                             votesNumber={candidate.votes}
