@@ -75,6 +75,7 @@ export function ElectionChart() {
             timer = null;
         }
         const onActive = () => {
+            fetchServerData();
             timer = setInterval(() => fetchServerData(), 1000 * 320);
         }
         const onSelectedElectionsChanged = () => {

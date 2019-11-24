@@ -43,10 +43,12 @@ namespace ElectionResults.WebApi.Controllers
                     Log.LogWarning(result.Error);
                     return BadRequest(result.Error);
                 }
-
                 var resultsCount = _appCache.Get<VoteCountStats>(Consts.RESULTS_COUNT_KEY + electionId);
-                result.Value.TotalCountedVotes = resultsCount.TotalCountedVotes;
-                result.Value.PercentageCounted = resultsCount.Percentage;
+                if (resultsCount != null)
+                {
+                    result.Value.TotalCountedVotes = resultsCount.TotalCountedVotes;
+                    result.Value.PercentageCounted = resultsCount.Percentage;
+                }
                 return result.Value;
             }
             catch (Exception e)
