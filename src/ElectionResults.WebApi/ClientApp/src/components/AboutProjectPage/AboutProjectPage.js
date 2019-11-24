@@ -11,7 +11,7 @@ export const AboutProjectPage = () => {
 
         <p>2019.</p>
 
-        <p className="emphasize">Rezultate Vot, transparentizează întreg procesul electoral furnizând în timp real, într-o formă grafică intuitivă, ușor de înțeles, datele oficiale furnizate de către AEP și Birourile Electorale cât și parte din datele preluate prin aplicația Monitorizare Vot dezvoltată de Code for Romania, despre alegerile din România.</p>
+        <p className="emphasize">Rezultate Vot transparentizează întreg procesul electoral furnizând în timp real, într-o formă grafică intuitivă, ușor de înțeles, datele oficiale furnizate de către AEP și Birourile Electorale cât și parte din datele preluate prin aplicația Monitorizare Vot dezvoltată de Code for Romania, despre alegerile din România.</p>
 
         <p>Informații furnizate:</p>
 
