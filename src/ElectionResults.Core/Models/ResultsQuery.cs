@@ -27,7 +27,7 @@ namespace ElectionResults.Core.Models
 
         public override string ToString()
         {
-            return $"results-{FileType.ConvertEnumToString()}-{Source}-{ElectionId}";
+            return $"results-{FileType.ConvertEnumToString()}-{Source}-{County}-{ElectionId}";
         }
     }
 }
