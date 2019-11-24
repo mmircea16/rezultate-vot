@@ -7,6 +7,7 @@ using ElectionResults.Core.Models;
 using ElectionResults.Core.Repositories;
 using ElectionResults.Core.Services.BlobContainer;
 using ElectionResults.Core.Storage;
+using LazyCache;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
@@ -19,6 +20,8 @@ namespace ElectionResults.Core.Services.CsvDownload
         private readonly IResultsRepository _resultsRepository;
         private readonly IBucketRepository _bucketRepository;
         private readonly IVoterTurnoutAggregator _voterTurnoutAggregator;
+        private readonly IResultsAggregator _resultsAggregator;
+        private readonly IAppCache _appCache;
         private readonly AppConfig _config;
 
         public CsvDownloaderJob(IBucketUploader bucketUploader,
@@ -26,6 +29,8 @@ namespace ElectionResults.Core.Services.CsvDownload
             IResultsRepository resultsRepository,
             IBucketRepository bucketRepository,
             IVoterTurnoutAggregator voterTurnoutAggregator,
+            IResultsAggregator resultsAggregator,
+            IAppCache appCache,
             IOptions<AppConfig> config)
         {
             _bucketUploader = bucketUploader;
@@ -33,6 +38,8 @@ namespace ElectionResults.Core.Services.CsvDownload
             _resultsRepository = resultsRepository;
             _bucketRepository = bucketRepository;
             _voterTurnoutAggregator = voterTurnoutAggregator;
+            _resultsAggregator = resultsAggregator;
+            _appCache = appCache;
             _config = config.Value;
             Log.LogInformation($"Interval is set to: {_config.IntervalInSeconds} seconds");
         }
@@ -48,21 +55,42 @@ namespace ElectionResults.Core.Services.CsvDownload
                 foreach (var election in elections)
                 {
                     var files = election.Files;
-
                     var timestamp = SystemTime.Now.ToUnixTimeSeconds();
                     await DownloadCsvFiles(files, timestamp);
-                    Log.LogInformation($"Files downloaded");
                     await AddVoterTurnout(files, timestamp);
-                    Log.LogInformation("Added voter turnout");
                     await AddVoteMonitoringStats(files, timestamp);
-                    Log.LogInformation("Added vote monitoring stats");
+                    await AddVoteCountStatistics(election);
                 }
-
-                Console.WriteLine($"Finished downloading files");
             }
             catch (Exception e)
             {
                 Log.LogError(e, "Failed to download files");
+            }
+        }
+
+        private async Task AddVoteCountStatistics(Election election)
+        {
+            if (election.ElectionId == Consts.FirstElectionRound)
+            {
+                _appCache.Add(Consts.RESULTS_COUNT_KEY + election.ElectionId, new VoteCountStats
+                {
+                    Percentage = 100,
+                    TotalCountedVotes = 9216515
+                });
+                return;
+            }
+            var result = await _resultsAggregator.GetElectionResults(new ResultsQuery
+            {
+                ElectionId = election.ElectionId
+            });
+            if (result.IsSuccess)
+            {
+                var voteCountStats = new VoteCountStats();
+                voteCountStats.TotalCountedVotes = result.Value.Candidates.Sum(c => c.Votes);
+                var voterTurnout = await _resultsAggregator.GetVoterTurnout(election.ElectionId);
+                voteCountStats.Percentage =
+                    Math.Round(voteCountStats.TotalCountedVotes / (double) voterTurnout.Value.TotalNationalVotes, 4) * 100;
+                _appCache.Add(Consts.RESULTS_COUNT_KEY + election.ElectionId, voteCountStats);
             }
         }
 
@@ -74,13 +102,12 @@ namespace ElectionResults.Core.Services.CsvDownload
                 
                 foreach (var file in files.Where(f => f.Active && f.FileType == FileType.Results))
                 {
-                    Log.LogInformation($"Downloading file {file.URL}");
                     file.Name =
-                        $"{file.FileType.ConvertEnumToString()}_{file.ResultsSource}_{timestamp}.csv";
+                        $"{file.ElectionId}_{file.FileType.ConvertEnumToString()}_{file.ResultsSource}_{timestamp}.csv";
                     file.Timestamp = timestamp;
                     tasks.Add(_bucketUploader.ProcessFile(file));
                 }
-
+                
                 await Task.WhenAll(tasks);
             }
             catch (Exception e)
@@ -142,5 +169,12 @@ namespace ElectionResults.Core.Services.CsvDownload
                 Log.LogError(e, $"Failed to create bucket {_config.BucketName}");
             }
         }
+    }
+
+    public class VoteCountStats
+    {
+        public int TotalCountedVotes { get; set; }
+
+        public double Percentage { get; set; }
     }
 }

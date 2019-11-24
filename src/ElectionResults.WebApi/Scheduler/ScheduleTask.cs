@@ -24,7 +24,6 @@ namespace ElectionResults.WebApi.Scheduler
         {
             Console.WriteLine($"Processing starts here at {DateTime.UtcNow:F}");
             await _csvDownloaderJob.DownloadFiles();
-            Log.LogInformation("Sending live results");
         }
     }
 }

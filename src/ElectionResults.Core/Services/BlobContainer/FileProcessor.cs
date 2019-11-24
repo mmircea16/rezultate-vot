@@ -17,27 +17,26 @@ namespace ElectionResults.Core.Services.BlobContainer
 
         public FileProcessor(IResultsRepository resultsRepository,
             IStatisticsAggregator statisticsAggregator,
+            IElectionConfigurationSource electionConfigurationSource,
             IOptions<AppConfig> config)
         {
             _resultsRepository = resultsRepository;
             _statisticsAggregator = statisticsAggregator;
             _statisticsAggregator.CsvParsers = new List<ICsvParser>
             {
-                new CandidatesResultsParser(config),
+                new CandidatesResultsParser(config, electionConfigurationSource),
                 new CountyParser(config)
             };
         }
 
         public async Task ProcessStream(Stream csvStream, ElectionResultsFile file)
         {
-            Log.LogInformation($"Processing csv with stream of {csvStream.Length} bytes");
             var csvContent = await ReadCsvContent(csvStream);
             var aggregationResult = await _statisticsAggregator.RetrieveElectionData(csvContent, file);
             if (aggregationResult.IsSuccess)
             {
                 var electionStatistics = FileNameParser.BuildElectionStatistics(file, aggregationResult.Value);
                 Log.LogInformation($"Inserting results from {file.Name} with timestamp {electionStatistics.Timestamp}");
-                
                 await _resultsRepository.InsertResults(electionStatistics);
             }
         }

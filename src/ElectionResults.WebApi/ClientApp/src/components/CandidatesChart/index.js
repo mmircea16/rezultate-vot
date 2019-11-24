@@ -3,7 +3,10 @@ import { ChartBar } from "./ChartBar";
 import CountiesSelect from "./CountiesSelect";
 import { FormGroup, Col, Button, Media, Label, Container } from "reactstrap";
 import code4RoGrey from '../../images/code4RoGrey.svg';
+import ElectionPicker from '../../services/electionPicker';
 let currentSelection = '';
+let totalCountedVotes = 0;
+let percentageCounted = 0;
 
 export const ChartContainer = () => {
     const [showAll, toggleShowAll] = React.useState(false);
@@ -12,23 +15,26 @@ export const ChartContainer = () => {
     const [voterTurnout, setVoterTurnout] = React.useState(null);
     const [displayQuestion, setDisplayQuestion] = React.useState(true);
     React.useEffect(() => {
-        if (!window.electionId) {
-            let search = window.location.search;
-            let params = new URLSearchParams(search);
-            var electionId = params.get('electionId');
-            if (electionId != 'PREZ2019TUR2')
-                window.electionId = 'PREZ2019TUR1';
-            else
-                window.electionId = electionId;
-        }
-        console.log("Loaded results component for " + window.electionId);
+
+        console.log("Loading results component for " + ElectionPicker.getSelection());
         const fetchServerData = async () => {
-            /*try {
-                fetch(`/api/results?electionId=${window.electionId}`)
+            try {
+                if (ElectionPicker.getSelection() == 'prezidentiale24112019') {
+                    setDisplayQuestion(true);
+                    return;
+                } else {
+                    setDisplayQuestion(false);
+                }
+                fetch(`/api/results?electionId=${ElectionPicker.getSelection()}`)
                     .then(data => data.json())
                     .then(data => {
                         console.log(data);
                         setCandidates(data.candidates);
+                        if (data.candidates.length <= 5) {
+                            toggleShowAll(true);
+                        }
+                        totalCountedVotes = data.totalCountedVotes;
+                        percentageCounted = data.percentageCounted;
                         setVoterTurnout(data);
                         const total = { label: "Total", id: "" };
                         const national = { label: "National", id: "national" };
@@ -39,9 +45,8 @@ export const ChartContainer = () => {
                     });
             } catch (e) {
                 console.log(e);
-            }*/
+            }
         };
-        setDisplayQuestion(true);
         const onIdle = () => {
             clearInterval(timer);
             timer = null;
@@ -49,6 +54,11 @@ export const ChartContainer = () => {
         const onActive = () => {
             timer = setInterval(() => fetchServerData(), 1000 * 30);
         }
+        const onSelectedElectionsChanged = () => {
+            toggleShowAll(false);
+            fetchServerData();
+        }
+        window.addEventListener("selectedElectionsChanged", onSelectedElectionsChanged);
         window.addEventListener("onIdle", onIdle);
         window.addEventListener("onActive", onActive);
         fetchServerData();
@@ -64,7 +74,7 @@ export const ChartContainer = () => {
 
     const selectionChanged = value => {
         currentSelection = value.id;
-        fetch(`/api/results/?electionId=${window.electionId}&source=${value.id}&county=${value.countyName || ''}`)
+        fetch(`/api/results/?electionId=${ElectionPicker.getSelection()}&source=${value.id}&county=${value.countyName || ''}`)
             .then(data => data.json())
             .then(data => setCandidates(data.candidates));
     };
@@ -82,11 +92,11 @@ export const ChartContainer = () => {
                             <div sm={3} className={"votes-results"}>
                                 <p className={"votes-percent"}>
                                     {" "}
-                                    100%
+                                    {percentageCounted}%
                 </p>
                                 <p className={"votes-text"}>
                                     {" "}
-                                    {voterTurnout.voterTurnout.toLocaleString(undefined, {
+                                    {totalCountedVotes.toLocaleString(undefined, {
                                         maximumFractionDigits: 2
                                     })}
                                 </p>
@@ -131,14 +141,17 @@ export const ChartContainer = () => {
                         }
                     </div>
                 )}
+            {
+                displayQuestion ? "" :
+                    <div style={{ display: 'flex', marginBottom: '50px' }}>
+                        <p style={{ position: 'relative', display: 'inline' }} className="becro">Date preluate de la <a href="https://prezenta.bec.ro" target="_blank" rel="noopener noreferrer">prezenta.bec.ro</a></p>
+                        <Container style={{ display: 'flex', alignItems: 'left', justifyContent: 'flex-end', padding: '0px' }}>
+                            <Label style={{ lineHeight: '18px' }} className="info-label">an app developed by</Label>
+                            <Media src={code4RoGrey} />
+                        </Container>
+                    </div>
+            }
 
-            <div style={{ display: 'none' }}>
-                <p style={{ position: 'relative', display: 'inline' }} className="becro">Date preluate de la <a href="https://prezenta.bec.ro" target="_blank">prezenta.bec.ro</a></p>
-                <Container style={{ display: 'flex', alignItems: 'left', justifyContent: 'flex-end', padding: '0px' }}>
-                    <Label className="info-label">an app developed by</Label>
-                    <Media src={code4RoGrey} />
-                </Container>
-            </div>
         </div>
     );
 };

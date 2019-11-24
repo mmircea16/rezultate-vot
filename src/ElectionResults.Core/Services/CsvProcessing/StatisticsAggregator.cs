@@ -15,7 +15,7 @@ namespace ElectionResults.Core.Services.CsvProcessing
 
         public async Task<Result<ElectionResultsData>> RetrieveElectionData(string csvContent, ElectionResultsFile file)
         {
-            Log.LogInformation($"Retrieving data from csv");
+            Log.LogInformation($"Retrieving data for electionId {file.ElectionId} and url {file.URL}");
             try
             {
                 var electionResults = new ElectionResultsData();

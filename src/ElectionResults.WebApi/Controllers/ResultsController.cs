@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using ElectionResults.Core.Infrastructure;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Services;
+using ElectionResults.Core.Services.CsvDownload;
 using ElectionResults.Core.Storage;
 using LazyCache;
 using Microsoft.AspNetCore.Mvc;
@@ -42,6 +43,10 @@ namespace ElectionResults.WebApi.Controllers
                     Log.LogWarning(result.Error);
                     return BadRequest(result.Error);
                 }
+
+                var resultsCount = _appCache.Get<VoteCountStats>(Consts.RESULTS_COUNT_KEY + electionId);
+                result.Value.TotalCountedVotes = resultsCount.TotalCountedVotes;
+                result.Value.PercentageCounted = resultsCount.Percentage;
                 return result.Value;
             }
             catch (Exception e)
@@ -56,12 +61,13 @@ namespace ElectionResults.WebApi.Controllers
         {
             try
             {
+                var key = Consts.VOTE_TURNOUT_KEY + electionId;
                 var result = await _appCache.GetOrAddAsync(
-                    Consts.VOTE_TURNOUT_KEY, () => _resultsAggregator.GetVoterTurnout(electionId),
+                    key, () => _resultsAggregator.GetVoterTurnout(electionId),
                     DateTimeOffset.Now.AddSeconds(_config.Value.TurnoutCacheIntervalInSeconds));
                 if (result.IsFailure)
                 {
-                    _appCache.Remove(Consts.VOTE_TURNOUT_KEY);
+                    _appCache.Remove(key);
                     Log.LogWarning(result.Error);
                     return BadRequest(result.Error);
                 }
@@ -79,12 +85,13 @@ namespace ElectionResults.WebApi.Controllers
         {
             try
             {
+                var key = Consts.VOTE_MONITORING_KEY + electionId;
                 var result = await _appCache.GetOrAddAsync(
-                    Consts.VOTE_MONITORING_KEY, () => _resultsAggregator.GetVoteMonitoringStats(electionId),
+                    key, () => _resultsAggregator.GetVoteMonitoringStats(electionId),
                     DateTimeOffset.Now.AddMinutes(5));
                 if (result.IsFailure)
                 {
-                    _appCache.Remove(Consts.VOTE_TURNOUT_KEY);
+                    _appCache.Remove(key);
                     Log.LogWarning(result.Error);
                     return BadRequest(result.Error);
                 }

@@ -15,19 +15,19 @@ export function Footer() {
         <Col
           className="social-media-container"
         >
-          <a className="social-link-item" href="https://www.facebook.com/code4romania" target="_blank">
+          <a className="social-link-item" href="https://www.facebook.com/code4romania" target="_blank" rel="noopener noreferrer" >
             <img src={facebookLogo} width={48} height={48} alt="Facebook" />
           </a>
-          <a className="social-link-item" href="https://www.instagram.com/code4romania" target="_blank">
+          <a className="social-link-item" href="https://www.instagram.com/code4romania" target="_blank" rel="noopener noreferrer" >
             <img src={instagramLogo} width={48} height={48} alt="Instagram" />
           </a>
-          <a className="social-link-item" href="https://www.linkedin.com/company/code4romania" target="_blank">
+          <a className="social-link-item" href="https://www.linkedin.com/company/code4romania" target="_blank" rel="noopener noreferrer" >
             <img src={linkedinLogo} width={48} height={48} alt="LinkedIn" />
           </a>
-          <a className="social-link-item" href="https://twitter.com/Code4Romania" target="_blank">
+          <a className="social-link-item" href="https://twitter.com/Code4Romania" target="_blank" rel="noopener noreferrer" >
             <img src={twitterLogo} width={48} height={48} alt="Twitter" />
           </a>
-          <a id="donate-link-button" href="https://code4.ro/ro/doneaza/" target="_blank">DONEAZĂ</a>
+          <a id="donate-link-button" href="https://code4.ro/ro/doneaza/" target="_blank" rel="noopener noreferrer" >DONEAZĂ</a>
         </Col>
       </Row>
       <Container className="text-white footer">
@@ -50,12 +50,12 @@ export function Footer() {
               </a>
             </div>
             <div>
-              <a className="link-item" target="_blank" href="https://code4.ro/ro/codul-de-conduita/">
+              <a className="link-item" target="_blank" rel="noopener noreferrer"  href="https://code4.ro/ro/codul-de-conduita/">
                 Codul de conduita
               </a>
             </div>
             <div>
-              <a className="link-item" target="_blank" href="https://code4.ro/ro/">
+              <a className="link-item" target="_blank" rel="noopener noreferrer"  href="https://code4.ro/ro/">
                 Code for Romania
               </a>
             </div>
@@ -69,7 +69,7 @@ export function Footer() {
             xs="12"
             sm="6"
           >
-            <div className="text-sm-right mb-2"><a href="http://bit.ly/2q06tSu" target="_blank">Abonează-te la newsletter</a></div>
+            <div className="text-sm-right mb-2"><a href="http://bit.ly/2q06tSu" target="_blank" rel="noopener noreferrer" >Abonează-te la newsletter</a></div>
             <div className="logo-container">
               <Media src={code4Ro} />
             </div>

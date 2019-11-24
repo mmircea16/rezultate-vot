@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using ElectionResults.Core.Infrastructure;
 using ElectionResults.Core.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -35,9 +36,9 @@ namespace ElectionResults.WebApi.Controllers
         }
 
         [HttpPut("elections-config")]
-        public async Task<ActionResult> UpdateSettings([FromBody] ElectionsConfig electionsConfig)
+        public async Task<ActionResult> UpdateSettings([FromBody] List<Election> elections)
         {
-            await _electionConfigurationSource.UpdateElectionConfig(electionsConfig);
+            await _electionConfigurationSource.UpdateElectionConfig(elections);
             return Ok();
         }
     }

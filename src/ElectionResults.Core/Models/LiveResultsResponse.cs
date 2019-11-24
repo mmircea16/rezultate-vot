@@ -8,8 +8,8 @@ namespace ElectionResults.Core.Models
 
         public List<County> Counties { get; set; }
 
-        public decimal PercentageCounted { get; set; }
+        public double PercentageCounted { get; set; }
 
-        public decimal VoterTurnout { get; set; }
+        public decimal TotalCountedVotes { get; set; }
     }
 }

@@ -29,8 +29,6 @@ namespace ElectionResults.Core.Storage
         {
             try
             {
-                Log.LogInformation($"Inserting results");
-
                 Dictionary<string, AttributeValue> item = new Dictionary<string, AttributeValue>();
                 item["id"] = new AttributeValue { S = electionStatistics.Id };
                 item["fileType"] = new AttributeValue { S = electionStatistics.Type };

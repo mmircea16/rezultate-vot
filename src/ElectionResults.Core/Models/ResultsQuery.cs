@@ -4,6 +4,10 @@ namespace ElectionResults.Core.Models
 {
     public class ResultsQuery
     {
+        public ResultsQuery()
+        {
+            
+        }
 
         public ResultsQuery(FileType fileType, string source, string county, string electionId)
         {
@@ -15,11 +19,11 @@ namespace ElectionResults.Core.Models
 
         public string County { get; set; }
 
-        public FileType FileType { get; }
+        public FileType FileType { get; set; }
 
-        public string Source { get; }
+        public string Source { get; set; }
 
-        public string ElectionId { get; }
+        public string ElectionId { get; set; }
 
         public override string ToString()
         {

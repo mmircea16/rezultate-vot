@@ -3,6 +3,7 @@ import { Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink, Co
 import { Link } from 'react-router-dom';
 import votLogo from '../../images/rezultateVot.png';
 import './NavMenu.css';
+import ElectionPicker from '../../services/electionPicker';
 
 export class NavMenu extends Component {
   static displayName = NavMenu.name;
@@ -22,6 +23,12 @@ export class NavMenu extends Component {
     });
   }
 
+  loadElectionRound(event) {
+      ElectionPicker.changeSelection(event.target.value);
+      if (event.target.value == 'prezidentiale24112019')
+          window.location.href = '?electionId=prezidentiale24112019';
+  }
+
   render() {
     return (
       <header>
@@ -32,13 +39,19 @@ export class NavMenu extends Component {
             </NavbarBrand>
             <NavbarToggler className="mr-2 menu-toggle" onClick={this.toggleNavbar} />
             <Collapse isOpen={!this.state.collapsed} navbar>
-              <Nav className="ml-auto" navbar>
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/web/despre-proiect">DESPRE PROIECT</NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/web/despre-noi">DESPRE NOI</NavLink>
-                </NavItem>
+                <Nav className="ml-auto" navbar>
+                    <NavItem>
+                        <select className="header-select" onChange={this.loadElectionRound}>
+                            <option value="prezidentiale24112019">TURUL 2</option>
+                            <option value="prezidentiale10112019">TURUL 1</option>
+                        </select>
+                    </NavItem>
+                    <NavItem>
+                      <NavLink tag={Link} className="text-dark" to="/web/despre-proiect">DESPRE PROIECT</NavLink>
+                    </NavItem>
+                    <NavItem>
+                      <NavLink tag={Link} className="text-dark" to="/web/despre-noi">DESPRE NOI</NavLink>
+                    </NavItem>
               </Nav>
             </Collapse>
           </Container>
