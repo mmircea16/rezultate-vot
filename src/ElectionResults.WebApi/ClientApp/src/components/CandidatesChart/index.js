@@ -16,19 +16,12 @@ export const ChartContainer = () => {
     const [displayQuestion, setDisplayQuestion] = React.useState(true);
     React.useEffect(() => {
 
-        console.log("Loading results component for " + ElectionPicker.getSelection());
         const fetchServerData = async () => {
             try {
-                if (ElectionPicker.getSelection() == 'prezidentiale24112019') {
-                    setDisplayQuestion(true);
-                    return;
-                } else {
-                    setDisplayQuestion(false);
-                }
+                console.log("Loading results component for " + ElectionPicker.getSelection());
                 fetch(`/api/results?electionId=${ElectionPicker.getSelection()}`)
                     .then(data => data.json())
                     .then(data => {
-                        console.log(data);
                         setCandidates(data.candidates);
                         if (data.candidates.length <= 5) {
                             toggleShowAll(true);
@@ -48,10 +41,13 @@ export const ChartContainer = () => {
             }
         };
         const onIdle = () => {
+            console.log('results component is idle');
             clearInterval(timer);
             timer = null;
         }
         const onActive = () => {
+            console.log('results component is active');
+            fetchServerData();
             timer = setInterval(() => fetchServerData(), 1000 * 30);
         }
         const onSelectedElectionsChanged = () => {

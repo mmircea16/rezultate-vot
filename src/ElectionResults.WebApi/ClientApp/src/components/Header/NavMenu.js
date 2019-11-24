@@ -25,8 +25,6 @@ export class NavMenu extends Component {
 
   loadElectionRound(event) {
       ElectionPicker.changeSelection(event.target.value);
-      if (event.target.value == 'prezidentiale24112019')
-          window.location.href = '?electionId=prezidentiale24112019';
   }
 
   render() {
