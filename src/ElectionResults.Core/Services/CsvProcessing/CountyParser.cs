@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using CsvHelper;
+using ElectionResults.Core.Infrastructure;
 using ElectionResults.Core.Infrastructure.CsvModels;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Storage;
@@ -16,10 +17,12 @@ namespace ElectionResults.Core.Services.CsvProcessing
     public class CountyParser : ICsvParser
     {
         private readonly IOptions<AppConfig> _config;
+        private readonly IElectionConfigurationSource _electionConfigurationSource;
 
-        public CountyParser(IOptions<AppConfig> config)
+        public CountyParser(IOptions<AppConfig> config, IElectionConfigurationSource electionConfigurationSource)
         {
             _config = config;
+            _electionConfigurationSource = electionConfigurationSource;
         }
 
         public async Task<Result<ElectionResultsData>> Parse(ElectionResultsData electionResultsData, string csvContent,
@@ -29,8 +32,8 @@ namespace ElectionResults.Core.Services.CsvProcessing
             {
                 if (electionResultsData == null)
                     electionResultsData = new ElectionResultsData();
-                var electionsConfig = DeserializeElectionsConfig();
-
+                var electionsConfigResponse = _electionConfigurationSource.GetElectionById(file.ElectionId);
+                var electionsConfig = electionsConfigResponse.Value;
                 var pollingStations = await CalculateVotesByCounty(csvContent, electionsConfig, file);
                 var sumOfVotes = electionResultsData.Candidates.Sum(c => c.Votes);
                 electionResultsData.Candidates = StatisticsAggregator.CalculatePercentagesForCandidates(electionResultsData.Candidates, sumOfVotes);

@@ -7,7 +7,7 @@ import ElectionPicker from '../../services/electionPicker';
 let currentSelection = '';
 let totalCountedVotes = 0;
 let percentageCounted = 0;
-
+let queryUrl = '';
 export const ChartContainer = () => {
     const [showAll, toggleShowAll] = React.useState(false);
     const [candidates, setCandidates] = React.useState(null);
@@ -18,20 +18,32 @@ export const ChartContainer = () => {
 
         const fetchServerData = async () => {
             try {
+                if (!queryUrl) {
+                    queryUrl = `/api/results?electionId=${ElectionPicker.getSelection()}`;
+                }
                 console.log("Loading results component for " + ElectionPicker.getSelection());
-                fetch(`/api/results?electionId=${ElectionPicker.getSelection()}`)
+                fetch(queryUrl)
                     .then(data => data.json())
                     .then(data => {
-                        setCandidates(data.candidates);
+                        if (!data.candidates) {
+                            return;
+                        }
                         if (data.candidates.length <= 5) {
                             toggleShowAll(true);
                         }
                         data.candidates.forEach((c) => {
                             c.displayPercentage = c.percentage * 0.8 - 5;
+                            if (c.percentage > 90) {
+                                c.displayPercentage = c.percentage * 0.6;
+                            }
                         });
+                        setCandidates(data.candidates);
                         totalCountedVotes = data.totalCountedVotes;
                         percentageCounted = data.percentageCounted;
                         setVoterTurnout(data);
+                        if (currentSelection) {
+                            return;
+                        }
                         const total = { label: "Total", id: "" };
                         const national = { label: "National", id: "national" };
                         const diaspora = { label: "Diaspora", id: "diaspora" };
@@ -55,6 +67,7 @@ export const ChartContainer = () => {
         }
         const onSelectedElectionsChanged = () => {
             toggleShowAll(false);
+            queryUrl = `/api/results?electionId=${ElectionPicker.getSelection()}`;
             fetchServerData();
         }
         window.addEventListener("selectedElectionsChanged", onSelectedElectionsChanged);
@@ -73,17 +86,22 @@ export const ChartContainer = () => {
 
     const selectionChanged = value => {
         currentSelection = value.id;
-        fetch(`/api/results/?electionId=${ElectionPicker.getSelection()}&source=${value.id}&county=${value.countyName || ''}`)
+        queryUrl = `/api/results/?electionId=${ElectionPicker.getSelection()}&source=${value.id}&county=${value.countyName || ''}`;
+        fetch(queryUrl)
             .then(data => data.json())
             .then(data => {
                 console.log(data);
-                setCandidates(data.candidates);
+
+                if (!data.candidates) {
+                    return;
+                }
                 if (data.candidates.length <= 5) {
                     toggleShowAll(true);
                 }
                 data.candidates.forEach((c) => {
                     c.displayPercentage = c.percentage * 0.8 - 5;
                 });
+                setCandidates(data.candidates);
                 totalCountedVotes = data.totalCountedVotes;
                 percentageCounted = data.percentageCounted;
                 setVoterTurnout(data);

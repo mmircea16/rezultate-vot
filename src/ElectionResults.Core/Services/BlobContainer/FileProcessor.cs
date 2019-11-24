@@ -25,7 +25,7 @@ namespace ElectionResults.Core.Services.BlobContainer
             _statisticsAggregator.CsvParsers = new List<ICsvParser>
             {
                 new CandidatesResultsParser(config, electionConfigurationSource),
-                new CountyParser(config)
+                new CountyParser(config, electionConfigurationSource)
             };
         }
 
