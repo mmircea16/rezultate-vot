@@ -21,7 +21,7 @@ namespace ElectionResults.WebApi.Scheduler
         {
             _electionConfigurationSource = electionConfigurationSource;
             _intervalInSeconds = config.Value.IntervalInSeconds;
-            _nextRun = DateTime.Now.AddSeconds(_intervalInSeconds);
+            _nextRun = DateTime.Now.AddSeconds(5);
             Log.LogInformation($"Next run will be at {_nextRun:F}");
         }
 
