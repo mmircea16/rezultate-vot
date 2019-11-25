@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using ElectionResults.Core.Infrastructure;
 using ElectionResults.Core.Models;
+using ElectionResults.Core.Services.CsvDownload;
 using ElectionResults.Core.Services.CsvProcessing;
 using ElectionResults.Core.Storage;
 using Newtonsoft.Json;
@@ -104,6 +105,47 @@ namespace ElectionResults.Core.Services
             return Result.Ok(new LiveResultsResponse());
         }
 
+        public async Task<Result<VoteCountStats>> GetVoteCountStatistics(string electionId)
+        {
+            var election = _electionConfigurationSource.GetElectionById(electionId).Value;
+            if (election.ElectionId == Consts.FirstElectionRound)
+            {
+                var stats = new VoteCountStats
+                {
+                    Percentage = 100,
+                    TotalCountedVotes = 9216515
+                };
+                return Result.Ok(stats);
+            }
+            var result = await GetElectionResults(new ResultsQuery
+            {
+                ElectionId = election.ElectionId
+            });
+            if (!result.IsSuccess) return Result.Failure<VoteCountStats>(result.Error);
+
+            var voteCountStats = new VoteCountStats();
+            voteCountStats.TotalCountedVotes = result.Value.Candidates.Sum(c => c.Votes);
+            var voterTurnout = await GetVoterTurnout(election.ElectionId);
+            if (voterTurnout.IsFailure)
+            {
+                Log.LogWarning($"Failed to retrieve voter turnout when gathering statistics: {voterTurnout.Error}");
+                return Result.Failure<VoteCountStats>(voterTurnout.Error);
+            }
+
+            double allCountedVotes = voteCountStats.TotalCountedVotes + result.Value.CanceledVotes;
+            voteCountStats.Percentage = Math.Round(allCountedVotes / voterTurnout.Value.TotalNationalVotes * 100, 2);
+            if (voteCountStats.TotalCountedVotes == 0)
+            {
+                Log.LogWarning($"Total counted votes is 0");
+                Log.LogWarning($"Percentage: {voteCountStats.Percentage}");
+                return Result.Failure<VoteCountStats>("Vote turnout is 0");
+            }
+
+            return Result.Ok(voteCountStats);
+
+        }
+
+
         private async Task<ElectionResultsData> CombineAllSources(ResultsQuery resultsQuery)
         {
             var electionGetResult = _electionConfigurationSource.GetElectionById(resultsQuery.ElectionId);
@@ -165,7 +207,8 @@ namespace ElectionResults.Core.Services
             var liveResultsResponse = new LiveResultsResponse
             {
                 Candidates = candidates,
-                Counties = counties ?? new List<County>()
+                Counties = counties ?? new List<County>(),
+                CanceledVotes = electionResultsData.CanceledVotes
             };
             return liveResultsResponse;
         }

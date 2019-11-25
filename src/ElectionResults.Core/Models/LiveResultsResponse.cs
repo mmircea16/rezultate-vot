@@ -11,5 +11,6 @@ namespace ElectionResults.Core.Models
         public double PercentageCounted { get; set; }
 
         public decimal TotalCountedVotes { get; set; }
+        public int CanceledVotes { get; set; }
     }
 }

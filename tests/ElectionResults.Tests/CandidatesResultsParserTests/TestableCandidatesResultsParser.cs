@@ -15,7 +15,7 @@ namespace ElectionResults.Tests.CandidatesResultsParserTests
 
         }
 
-        protected override Task PopulateCandidatesListWithVotes(string csvContent, List<CandidateConfig> candidates, ElectionResultsFile file)
+        protected override Task PopulateCandidatesListWithVotes(string csvContent, ElectionResultsData electionResultsData, ElectionResultsFile file)
         {
             return Task.CompletedTask;
         }

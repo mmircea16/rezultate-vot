@@ -10,7 +10,6 @@ using ElectionResults.Core.Infrastructure.CsvModels;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Storage;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 
 namespace ElectionResults.Core.Services.CsvProcessing
 {
@@ -44,7 +43,7 @@ namespace ElectionResults.Core.Services.CsvProcessing
                 Name = c.Name
             }).ToList();
             
-            await PopulateCandidatesListWithVotes(csvContent, electionResultsData.Candidates, file);
+            await PopulateCandidatesListWithVotes(csvContent, electionResultsData, file);
             var sumOfVotes = electionResultsData.Candidates.Sum(c => c.Votes);
             electionResultsData.Candidates = StatisticsAggregator.CalculatePercentagesForCandidates(electionResultsData.Candidates, sumOfVotes);
 
@@ -53,23 +52,37 @@ namespace ElectionResults.Core.Services.CsvProcessing
 
 
         protected virtual async Task PopulateCandidatesListWithVotes(string csvContent,
-            List<CandidateConfig> candidates, ElectionResultsFile file)
+            ElectionResultsData electionResultsData, ElectionResultsFile file)
         {
             try
             {
                 var csvParser = new CsvParser(new StringReader(csvContent));
                 var headers = (await csvParser.ReadAsync()).ToList();
+                var totalCanceledVotes = 0;
                 do
                 {
                     var rowValues = await csvParser.ReadAsync();
                     if (rowValues == null)
                         break;
-                    foreach (var candidate in candidates)
+                    var canceledVotesColumn = "d";
+                    if (file.ResultsSource == "mail")
+                    {
+                        canceledVotesColumn = "d2";
+                    }
+                    foreach (var candidate in electionResultsData.Candidates)
                     {
                         var votes = int.Parse(rowValues[headers.IndexOf(file.Prefix + candidate.Id)]);
                         candidate.Votes += votes;
                     }
+                    var canceledVotes = int.Parse(rowValues[headers.IndexOf(canceledVotesColumn)]);
+                    totalCanceledVotes += canceledVotes;
                 } while (true);
+
+                if (file.ElectionId == Consts.SecondElectionRound)
+                {
+                    Console.WriteLine($"Canceled votes for {file.URL} is {totalCanceledVotes}");
+                }
+                electionResultsData.CanceledVotes = totalCanceledVotes;
             }
             catch (Exception e)
             {

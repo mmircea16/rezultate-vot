@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using ElectionResults.Core.Models;
+using ElectionResults.Core.Services.CsvDownload;
 
 namespace ElectionResults.Core.Services
 {
@@ -11,5 +12,7 @@ namespace ElectionResults.Core.Services
         Task<Result<VoterTurnout>> GetVoterTurnout(string electionId);
         
         Task<Result<LiveResultsResponse>> GetElectionResults(ResultsQuery resultsQuery);
+
+        Task<Result<VoteCountStats>> GetVoteCountStatistics(string electionId);
     }
 }
