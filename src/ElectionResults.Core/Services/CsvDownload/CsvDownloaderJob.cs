@@ -60,51 +60,11 @@ namespace ElectionResults.Core.Services.CsvDownload
                     await DownloadCsvFiles(files, timestamp);
                     await AddVoterTurnout(files, timestamp);
                     await AddVoteMonitoringStats(files, timestamp);
-                    await AddVoteCountStatistics(election);
                 }
             }
             catch (Exception e)
             {
                 Log.LogError(e, "Failed to download files");
-            }
-        }
-
-        private async Task AddVoteCountStatistics(Election election)
-        {
-            if (election.ElectionId == Consts.FirstElectionRound)
-            {
-                _appCache.Add(Consts.RESULTS_COUNT_KEY + election.ElectionId, new VoteCountStats
-                {
-                    Percentage = 100,
-                    TotalCountedVotes = 9216515
-                });
-                return;
-            }
-            var result = await _resultsAggregator.GetElectionResults(new ResultsQuery
-            {
-                ElectionId = election.ElectionId
-            });
-            if (result.IsSuccess)
-            {
-                var voteCountStats = new VoteCountStats();
-                voteCountStats.TotalCountedVotes = result.Value.Candidates.Sum(c => c.Votes);
-                var voterTurnout = await _resultsAggregator.GetVoterTurnout(election.ElectionId);
-                if (voterTurnout.IsFailure)
-                {
-                    Log.LogWarning($"Failed to retrieve voter turnout when gathering statistics: {voterTurnout.Error}");
-                    return;
-                }
-                voteCountStats.Percentage = Math.Round(voteCountStats.TotalCountedVotes / (double)voterTurnout.Value.TotalNationalVotes * 100, 2);
-                if (voteCountStats.TotalCountedVotes == 0)
-                {
-                    Log.LogWarning($"Total counted votes is 0");
-                    Log.LogWarning($"Percentage: {voteCountStats.Percentage}");
-                    return;
-                }
-                _appCache.Add(Consts.RESULTS_COUNT_KEY + election.ElectionId, voteCountStats, new MemoryCacheEntryOptions
-                {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1)
-                });
             }
         }
 

@@ -8,5 +8,6 @@ namespace ElectionResults.Core.Models
         public List<CandidateConfig> Candidates { get; set; }
 
         public static ElectionResultsData Default => new ElectionResultsData { Candidates = new List<CandidateConfig>() };
+        public int CanceledVotes { get; set; }
     }
 }

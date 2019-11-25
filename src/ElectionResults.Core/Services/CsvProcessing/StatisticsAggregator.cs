@@ -76,7 +76,11 @@ namespace ElectionResults.Core.Services.CsvProcessing
 
             candidates = CalculatePercentagesForCandidates(candidates, candidates.Sum(c => c.Votes));
 
-            return new ElectionResultsData{Candidates = candidates};
+            return new ElectionResultsData
+            {
+                Candidates = candidates,
+                CanceledVotes = firstResultsSet.CanceledVotes + secondResultsSet.CanceledVotes
+            };
         }
 
     }

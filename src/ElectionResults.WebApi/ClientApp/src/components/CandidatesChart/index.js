@@ -7,6 +7,7 @@ import ElectionPicker from '../../services/electionPicker';
 let currentSelection = '';
 let totalCountedVotes = 0;
 let percentageCounted = 0;
+let canceledVotes = 0;
 let queryUrl = '';
 export const ChartContainer = () => {
     const [showAll, toggleShowAll] = React.useState(false);
@@ -32,14 +33,18 @@ export const ChartContainer = () => {
                             toggleShowAll(true);
                         }
                         data.candidates.forEach((c) => {
-                            c.displayPercentage = c.percentage * 0.8 - 5;
+                            if (data.candidates.length <= 2)
+                                c.displayPercentage = c.percentage * 0.8 - 5;
+                            else
+                                c.displayPercentage = c.percentage * 0.8;
                             if (c.percentage > 90) {
                                 c.displayPercentage = c.percentage * 0.6;
                             }
                         });
                         setCandidates(data.candidates);
-                        totalCountedVotes = data.totalCountedVotes;
+                        totalCountedVotes = data.totalCountedVotes + data.canceledVotes;
                         percentageCounted = data.percentageCounted;
+                        canceledVotes = data.canceledVotes;
                         setVoterTurnout(data);
                         if (currentSelection) {
                             return;
@@ -99,11 +104,18 @@ export const ChartContainer = () => {
                     toggleShowAll(true);
                 }
                 data.candidates.forEach((c) => {
-                    c.displayPercentage = c.percentage * 0.8 - 5;
+                    if (data.candidates.length <= 2)
+                        c.displayPercentage = c.percentage * 0.8 - 5;
+                    else
+                        c.displayPercentage = c.percentage * 0.8;
+                    if (c.percentage > 90) {
+                        c.displayPercentage = c.percentage * 0.6;
+                    }
                 });
                 setCandidates(data.candidates);
-                totalCountedVotes = data.totalCountedVotes;
+                totalCountedVotes = data.totalCountedVotes + data.canceledVotes;
                 percentageCounted = data.percentageCounted;
+                canceledVotes = data.canceledVotes;
                 setVoterTurnout(data);
             })};
 
@@ -130,7 +142,14 @@ export const ChartContainer = () => {
                                 </p>
                             </div>
                         </div>
+                                    <p className={"votes-text"} style={{ marginBottom: '0px', textAlign: 'center' }}>
+                            {" "}
+                            din care {canceledVotes.toLocaleString(undefined, {
+                                maximumFractionDigits: 2
+                            })} voturi anulate
+    </p>
                     </div>
+                                   
                     <FormGroup row>
                         <Col sm={3}>
                             <CountiesSelect counties={counties} onSelect={selectionChanged} />

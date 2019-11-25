@@ -43,11 +43,13 @@ namespace ElectionResults.WebApi.Controllers
                     Log.LogWarning(result.Error);
                     return BadRequest(result.Error);
                 }
-                var resultsCount = _appCache.Get<VoteCountStats>(Consts.RESULTS_COUNT_KEY + electionId);
-                if (resultsCount != null)
+                var voteCountStatisticsResult = await _appCache.GetOrAddAsync(
+                    Consts.RESULTS_COUNT_KEY + electionId, () => _resultsAggregator.GetVoteCountStatistics(electionId), 
+                    DateTimeOffset.Now.AddSeconds(_config.Value.IntervalInSeconds));
+                if (voteCountStatisticsResult.IsSuccess)
                 {
-                    result.Value.TotalCountedVotes = resultsCount.TotalCountedVotes;
-                    result.Value.PercentageCounted = resultsCount.Percentage;
+                    result.Value.TotalCountedVotes = voteCountStatisticsResult.Value.TotalCountedVotes;
+                    result.Value.PercentageCounted = voteCountStatisticsResult.Value.Percentage;
                 }
                 return result.Value;
             }
