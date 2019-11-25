@@ -42,7 +42,7 @@ export const ChartContainer = () => {
                             }
                         });
                         setCandidates(data.candidates);
-                        totalCountedVotes = data.totalCountedVotes;
+                        totalCountedVotes = data.totalCountedVotes + data.canceledVotes;
                         percentageCounted = data.percentageCounted;
                         canceledVotes = data.canceledVotes;
                         setVoterTurnout(data);
@@ -113,7 +113,7 @@ export const ChartContainer = () => {
                     }
                 });
                 setCandidates(data.candidates);
-                totalCountedVotes = data.totalCountedVotes;
+                totalCountedVotes = data.totalCountedVotes + data.canceledVotes;
                 percentageCounted = data.percentageCounted;
                 canceledVotes = data.canceledVotes;
                 setVoterTurnout(data);
@@ -144,7 +144,7 @@ export const ChartContainer = () => {
                         </div>
                                     <p className={"votes-text"} style={{ marginBottom: '0px', textAlign: 'center' }}>
                             {" "}
-                            *{canceledVotes.toLocaleString(undefined, {
+                            din care {canceledVotes.toLocaleString(undefined, {
                                 maximumFractionDigits: 2
                             })} voturi anulate
     </p>
