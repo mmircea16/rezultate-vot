@@ -28,7 +28,7 @@ namespace ElectionResults.WebApi.Controllers
         }
 
         [HttpGet("")]
-        public async Task<ActionResult<LiveResultsResponse>> GetResults([FromQuery] string electionId,  string source = null, string county = null, FileType fileType = FileType.Results)
+        public async Task<ActionResult<LiveResultsResponse>> GetResults([FromQuery] string electionId, string source = null, string county = null, FileType fileType = FileType.Results)
         {
             try
             {
@@ -44,12 +44,23 @@ namespace ElectionResults.WebApi.Controllers
                     return BadRequest(result.Error);
                 }
                 var voteCountStatisticsResult = await _appCache.GetOrAddAsync(
-                    Consts.RESULTS_COUNT_KEY + electionId, () => _resultsAggregator.GetVoteCountStatistics(electionId), 
+                    Consts.RESULTS_COUNT_KEY + electionId, () => _resultsAggregator.GetVoteCountStatistics(electionId),
                     DateTimeOffset.Now.AddSeconds(_config.Value.IntervalInSeconds));
                 if (voteCountStatisticsResult.IsSuccess)
                 {
                     result.Value.TotalCountedVotes = voteCountStatisticsResult.Value.TotalCountedVotes;
                     result.Value.PercentageCounted = voteCountStatisticsResult.Value.Percentage;
+                }
+
+                if (electionId == Consts.SecondElectionRound && string.IsNullOrWhiteSpace(source) && string.IsNullOrWhiteSpace(county))
+                {
+                    result.Value.TotalCountedVotes = 10031762 - 182648;
+                    result.Value.PercentageCounted = 100;
+                    result.Value.CanceledVotes = 182648;
+                    result.Value.Candidates[0].Votes = 6509135;
+                    result.Value.Candidates[0].Percentage = (decimal)66.09;
+                    result.Value.Candidates[1].Votes = 3339922;
+                    result.Value.Candidates[1].Percentage = (decimal)33.91;
                 }
                 return result.Value;
             }
