@@ -117,6 +117,15 @@ namespace ElectionResults.Core.Services
                 };
                 return Result.Ok(stats);
             }
+            else
+            {
+                var stats = new VoteCountStats
+                {
+                    Percentage = 100,
+                    TotalCountedVotes = 10031762
+                };
+                return Result.Ok(stats);
+            }
             var result = await GetElectionResults(new ResultsQuery
             {
                 ElectionId = election.ElectionId
