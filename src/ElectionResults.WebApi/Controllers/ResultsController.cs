@@ -54,9 +54,9 @@ namespace ElectionResults.WebApi.Controllers
 
                 if (electionId == Consts.SecondElectionRound && string.IsNullOrWhiteSpace(source) && string.IsNullOrWhiteSpace(county))
                 {
-                    result.Value.TotalCountedVotes = 10031762 - 182648;
                     result.Value.PercentageCounted = 100;
                     result.Value.CanceledVotes = 182648;
+                    result.Value.TotalCountedVotes = voteCountStatisticsResult.Value.TotalCountedVotes - result.Value.CanceledVotes;
                     result.Value.Candidates[0].Votes = 6509135;
                     result.Value.Candidates[0].Percentage = (decimal)66.09;
                     result.Value.Candidates[1].Votes = 3339922;
