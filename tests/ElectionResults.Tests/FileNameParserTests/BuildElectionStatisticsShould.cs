@@ -34,7 +34,7 @@ namespace ElectionResults.Tests.FileNameParserTests
             electionStatistics.Id.Should().StartWith($"{DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks:D19}".Substring(0, 10));
             electionStatistics.Timestamp.Should().Be(1561818562);
             electionStatistics.StatisticsJson.Should().NotBeNullOrEmpty();
-            electionStatistics.Type.Should().Be("FINAL");
+            electionStatistics.Type.Should().Be(FileType.Results.ConvertEnumToString());
         }
     }
 }
