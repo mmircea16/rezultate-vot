@@ -48,7 +48,21 @@ namespace ElectionResults.WebApi
             services.AddTransient<IBucketRepository, BucketRepository>();
             services.AddTransient<IFileRepository, FileRepository>();
             services.AddTransient<IVoterTurnoutAggregator, VoterTurnoutAggregator>();
-            services.AddAWSService<IAmazonDynamoDB>();
+            var dynamoDbConfig = Configuration.GetSection("DynamoDb");
+            var runLocalDynamoDb = dynamoDbConfig.GetValue<bool>("LocalMode");
+
+            if (runLocalDynamoDb)
+            {
+                services.AddSingleton<IAmazonDynamoDB>(sp =>
+                {
+                    var clientConfig = new AmazonDynamoDBConfig { ServiceURL = dynamoDbConfig.GetValue<string>("http://localhost:8000"), RegionEndpoint = RegionEndpoint.EUCentral1};
+                    return new AmazonDynamoDBClient(clientConfig);
+                });
+            }
+            else
+            {
+                services.AddAWSService<IAmazonDynamoDB>();
+            }
             services.AddAWSService<Amazon.S3.IAmazonS3>(new AWSOptions
             {
                 Profile = "default",
@@ -88,7 +102,7 @@ namespace ElectionResults.WebApi
         {
             app.UseHsts();
             Log.SetLogger(loggerFactory.CreateLogger<Startup>());
-            
+
             app.UseCors("origins");
             app.UseExceptionHandler(errorApp =>
             {

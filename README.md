@@ -4,7 +4,7 @@
 
 The project aims to be an aggregator for election information in Romania. The project will contain historic information for elections in Romania, will contain real time results for each election, as it will parse results published by BEC (Biroul Electoral Central) and it will also contain information about the budgets spent during the electoral campaign.
 
-[See the project live](insert_link_here)
+[See the project live](https://rezultatevot.ro)
 
 The partial results published by BEC (Biroul Electoral Central) are often raw results that are not easily interpreted and give no meaningful information to regular users. The aim of the project is to aggregate the raw data and provide timely updates on the progression of voting results in Romanian elections.
 
@@ -57,18 +57,32 @@ TBD
 - `dotnet run`
 
 
+##### Running Dynamo DB on your local machine
+- You will need Docker for this. First download the image using the following command
+    - **docker pull amazon/dynamodb-local**
+- Run the docker image
+    - **docker run -p 8000:8000 amazon/dynamodb-local**
+- Open appsettings.Development.json and go to the DynamoDb section
+- Make sure that LocalMode is set to true
+- Make sure that LocalServiceUrl has the same port as in the one exposed by the docker container(8000 is the default in our case)
+
 #### Configuration
 
-The settings are stored in appsettings.json.
+The settings are stored in appsettings.{environment}.json.
 In this file you'll find the following settings:
-
+##### Settings section
 - **interval**: 30
   - runs the CSV downloader job every 30 seconds
 - **bucketName**: "code4-presidential-2019"
   - the name of the bucket where CSV files are downloaded
 - **tableName**: "electionresults"
   - the name of the DynamoDB Table where the JSON statistics are stored
-  
+##### DynamoDb section
+- **LocalMode**: true/false
+  - runs dynamo db in a docker container, recommended for development environment
+- **LocalServiceUrl**: "http://localhost:8000"
+  - the url for DynamoDb when it is used locally
+
 ## CSV URLs and mappings
 - PUT request on /api/settings/election-config with a JSON representation of ElectionsConfig.cs. This will overwrite the json from AWS Parameter Store.
 - The ElectionsConfig object has:
