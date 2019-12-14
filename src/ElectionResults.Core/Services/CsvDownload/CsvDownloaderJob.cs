@@ -8,7 +8,6 @@ using ElectionResults.Core.Repositories;
 using ElectionResults.Core.Services.BlobContainer;
 using ElectionResults.Core.Storage;
 using LazyCache;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 

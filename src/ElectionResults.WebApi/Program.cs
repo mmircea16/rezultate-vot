@@ -23,7 +23,14 @@ namespace ElectionResults.WebApi
                         .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
                     if (env.EnvironmentName == "Development")
                     {
-                        builder.AddSystemsManager($"/{Consts.PARAMETER_STORE_NAME}-dev", new AWSOptions(), TimeSpan.FromSeconds(30));
+                        builder.AddSystemsManager($"/{Consts.PARAMETER_STORE_NAME}-dev", new AWSOptions
+                        {
+                            DefaultClientConfig =
+                            {
+                                ServiceURL = "http://localhost:4583",
+                                UseHttp = true
+                            }
+                        }, TimeSpan.FromSeconds(5));
                     }
                     else
                         builder.AddSystemsManager($"/{Consts.PARAMETER_STORE_NAME}", new AWSOptions(), TimeSpan.FromSeconds(30));
