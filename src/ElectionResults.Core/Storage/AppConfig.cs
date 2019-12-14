@@ -11,7 +11,5 @@
         public int IntervalInSeconds { get; set; }
         
         public int TurnoutCacheIntervalInSeconds { get; set; }
-
-        public int ResultsCacheIntervalInSeconds { get; set; }
     }
 }

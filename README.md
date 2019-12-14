@@ -44,50 +44,39 @@ TBD
 #### Requirements
 
 ##### Prerequisites
-* install and configure AWS (if it's not already done)
-  * `aws configure`
-  * in order to configure AWS, you need to create an AWS account
-* Install node dependencies for `ClientApp` by following instructions from  `src\ElectionResults.WebApi\ClientAp\README.md` 
-* Update configurations `src\ElectionResults.WebApi\appsettings.json` as necessary for your local environment
-  * update `bucketName` as it has to be a unique id in Amazon, e.g. `code4-presidential-2019-your-name`
+* .NET Core 2.1 (backend)
+* NodeJS (frontend)
+* Docker (for running localstack on local machine)
 
 ##### Run the project
 
+- `cd localstack`
+- `.\setup.cmd`
+  - this will use the docker-compose file to pull and run the localstack image
+  - after that it will add two settings called `electionsConfig` which is the list of elections and `intervalInSeconds` which is the background task run interval
 - `cd src\ElectionResults.WebApi`
 - `dotnet run`
 
-
-##### Running Dynamo DB on your local machine
-- You will need Docker for this. First download the image using the following command
-    - **docker pull amazon/dynamodb-local**
-- Run the docker image
-    - **docker run -p 8000:8000 amazon/dynamodb-local**
-- Open appsettings.Development.json and go to the DynamoDb section
-- Make sure that LocalMode is set to true
-- Make sure that LocalServiceUrl has the same port as in the one exposed by the docker container(8000 is the default in our case)
-
 #### Configuration
 
-The settings are stored in appsettings.{environment}.json.
-In this file you'll find the following settings:
+In appsettings.\{environment\}.json you'll find the following settings:
 ##### Settings section
-- **interval**: 30
-  - runs the CSV downloader job every 30 seconds
 - **bucketName**: "code4-presidential-2019"
   - the name of the bucket where CSV files are downloaded
 - **tableName**: "electionresults"
   - the name of the DynamoDB Table where the JSON statistics are stored
-##### DynamoDb section
-- **LocalMode**: true/false
-  - runs dynamo db in a docker container, recommended for development environment
-- **LocalServiceUrl**: "http://localhost:8000"
-  - the url for DynamoDb when it is used locally
+##### AWS.Logging section
+- specifies how much information should appear in the AWS logs
+
+##### config.json
+If you run the project on your local machine, you can also modify the file `localstack\config.json` before running `localstack\setup.cmd`
 
 ## CSV URLs and mappings
-- PUT request on /api/settings/election-config with a JSON representation of ElectionsConfig.cs. This will overwrite the json from AWS Parameter Store.
-- The ElectionsConfig object has:
-  - a list of candidates where information about them can be provided(candidates picture, names, CSV column id, etc.)
+- PUT request on /api/settings/election-config with a JSON representation of a list of Election objects. This will overwrite the json from AWS Parameter Store.
+- Each Election object has:
+  - a list of candidates where information about them can be provided(candidate picture, name, CSV column id, etc.)
   - a list of BEC URLs, each file has the type of results(provisional, partial or final), location(Romania or Diaspora), URL
+- An initial configuration is provided in the file `localstack\config.json`
 
 #### Run unit tests
 - `cd tests\ElectionResults.Tests`
