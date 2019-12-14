@@ -27,29 +27,22 @@ namespace ElectionResults.WebApi.Scheduler
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            try
+            do
             {
-                do
+                var now = DateTime.Now;
+                var config = await _electionConfigurationSource.GetInterval();
+                if (config.IsSuccess)
                 {
-                    var now = DateTime.Now;
-                    var config = await _electionConfigurationSource.GetInterval();
-                    if (config.IsSuccess)
-                    {
-                        _intervalInSeconds = config.Value;
-                    }
-                    if (now > _nextRun)
-                    {
-                        await Process();
-                        _nextRun = DateTime.Now.AddSeconds(_intervalInSeconds);
-                        Log.LogInformation($"Next run will be at {_nextRun:F}");
-                    }
+                    _intervalInSeconds = config.Value;
                 }
-                while (!stoppingToken.IsCancellationRequested);
+                if (now > _nextRun)
+                {
+                    await Process();
+                    _nextRun = DateTime.Now.AddSeconds(_intervalInSeconds);
+                    Log.LogInformation($"Next run will be at {_nextRun:F}");
+                }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+            while (!stoppingToken.IsCancellationRequested);
         }
     }
 }

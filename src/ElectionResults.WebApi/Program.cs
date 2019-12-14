@@ -30,7 +30,7 @@ namespace ElectionResults.WebApi
                                 ServiceURL = "http://localhost:4583",
                                 UseHttp = true
                             }
-                        }, TimeSpan.FromSeconds(5));
+                        }, TimeSpan.FromSeconds(30));
                     }
                     else
                         builder.AddSystemsManager($"/{Consts.ParameterStoreName}", new AWSOptions(), TimeSpan.FromSeconds(30));

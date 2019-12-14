@@ -44,7 +44,7 @@ TBD
 #### Requirements
 
 ##### Prerequisites
-* .NET Core 2.1 (backend)
+* .NET Core 2.2 (backend)
 * NodeJS (frontend)
 * Docker (for running localstack on local machine)
 

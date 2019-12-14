@@ -7,7 +7,6 @@ using ElectionResults.Core.Models;
 using ElectionResults.Core.Repositories;
 using ElectionResults.Core.Services.BlobContainer;
 using ElectionResults.Core.Storage;
-using LazyCache;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
@@ -20,8 +19,6 @@ namespace ElectionResults.Core.Services.CsvDownload
         private readonly IResultsRepository _resultsRepository;
         private readonly IBucketRepository _bucketRepository;
         private readonly IVoterTurnoutAggregator _voterTurnoutAggregator;
-        private readonly IResultsAggregator _resultsAggregator;
-        private readonly IAppCache _appCache;
         private readonly AppConfig _config;
 
         public CsvDownloaderJob(IBucketUploader bucketUploader,
@@ -29,8 +26,6 @@ namespace ElectionResults.Core.Services.CsvDownload
             IResultsRepository resultsRepository,
             IBucketRepository bucketRepository,
             IVoterTurnoutAggregator voterTurnoutAggregator,
-            IResultsAggregator resultsAggregator,
-            IAppCache appCache,
             IOptions<AppConfig> config)
         {
             _bucketUploader = bucketUploader;
@@ -38,8 +33,6 @@ namespace ElectionResults.Core.Services.CsvDownload
             _resultsRepository = resultsRepository;
             _bucketRepository = bucketRepository;
             _voterTurnoutAggregator = voterTurnoutAggregator;
-            _resultsAggregator = resultsAggregator;
-            _appCache = appCache;
             _config = config.Value;
             Log.LogInformation($"Interval is set to: {_config.IntervalInSeconds} seconds");
         }
@@ -142,12 +135,5 @@ namespace ElectionResults.Core.Services.CsvDownload
                 Log.LogError(e, $"Failed to create bucket {_config.BucketName}");
             }
         }
-    }
-
-    public class VoteCountStats
-    {
-        public int TotalCountedVotes { get; set; }
-
-        public double Percentage { get; set; }
     }
 }
