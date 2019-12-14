@@ -44,7 +44,7 @@ namespace ElectionResults.WebApi.Controllers
                     return BadRequest(result.Error);
                 }
                 var voteCountStatisticsResult = await _appCache.GetOrAddAsync(
-                    Consts.RESULTS_COUNT_KEY + electionId, () => _resultsAggregator.GetVoteCountStatistics(electionId),
+                    Consts.ResultsCountKey + electionId, () => _resultsAggregator.GetVoteCountStatistics(electionId),
                     DateTimeOffset.Now.AddSeconds(_config.Value.IntervalInSeconds));
                 if (voteCountStatisticsResult.IsSuccess)
                 {
@@ -78,7 +78,7 @@ namespace ElectionResults.WebApi.Controllers
             {
                 if (string.IsNullOrWhiteSpace(electionId))
                     electionId = Consts.FirstElectionRound;
-                var key = Consts.VOTE_TURNOUT_KEY + electionId;
+                var key = Consts.VoteTurnoutKey + electionId;
                 var result = await _appCache.GetOrAddAsync(
                     key, () => _resultsAggregator.GetVoterTurnout(electionId),
                     DateTimeOffset.Now.AddSeconds(_config.Value.TurnoutCacheIntervalInSeconds));
@@ -104,7 +104,7 @@ namespace ElectionResults.WebApi.Controllers
             {
                 if (string.IsNullOrWhiteSpace(electionId))
                     electionId = Consts.FirstElectionRound;
-                var key = Consts.VOTE_MONITORING_KEY + electionId;
+                var key = Consts.VoteMonitoringKey + electionId;
                 var result = await _appCache.GetOrAddAsync(
                     key, () => _resultsAggregator.GetVoteMonitoringStats(electionId),
                     DateTimeOffset.Now.AddMinutes(5));

@@ -53,14 +53,12 @@ namespace ElectionResults.WebApi
             services.AddTransient<IBucketRepository, BucketRepository>();
             services.AddTransient<IFileRepository, FileRepository>();
             services.AddTransient<IVoterTurnoutAggregator, VoterTurnoutAggregator>();
-            var dynamoDbConfig = Configuration.GetSection("DynamoDb");
-            var runLocalDynamoDb = dynamoDbConfig.GetValue<bool>("LocalMode");
 
-            if (runLocalDynamoDb)
+            if (_environment.IsDevelopment())
             {
                 services.AddSingleton<IAmazonDynamoDB>(sp =>
                 {
-                    var clientConfig = new AmazonDynamoDBConfig { ServiceURL = dynamoDbConfig.GetValue<string>("http://localhost:8000"), RegionEndpoint = RegionEndpoint.EUCentral1};
+                    var clientConfig = new AmazonDynamoDBConfig { ServiceURL = Consts.DynamoDbServiceUrl, UseHttp = true };
                     return new AmazonDynamoDBClient(clientConfig);
                 });
             }
@@ -73,7 +71,7 @@ namespace ElectionResults.WebApi
             {
                 var amazonS3 = new AmazonS3Client(new AmazonS3Config
                 {
-                    ServiceURL = "http://localhost:4572",
+                    ServiceURL = Consts.S3ServiceUrl,
                     ForcePathStyle = true,
                     UseHttp = true
                 });

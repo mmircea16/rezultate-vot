@@ -23,12 +23,12 @@ namespace ElectionResults.Core.Infrastructure
         {
             _config = config.Value;
             _amazonSettingsClient = new AmazonSimpleSystemsManagementClient();
-            _parameterStoreName = Consts.PARAMETER_STORE_NAME;
+            _parameterStoreName = Consts.ParameterStoreName;
             if (hostingEnvironment.IsDevelopment())
             {
                 var systemsManagementConfig = new AmazonSimpleSystemsManagementConfig
                 {
-                    ServiceURL = "http://localhost:4583",
+                    ServiceURL = Consts.SSMServiceUrl,
                     UseHttp = true
                 };
                 _amazonSettingsClient = new AmazonSimpleSystemsManagementClient(systemsManagementConfig);

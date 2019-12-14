@@ -73,7 +73,7 @@ namespace ElectionResults.Core.Storage
             {
                 Id = $"{DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks:D19}",
                 Type = FileType.VoterTurnout.ConvertEnumToString(),
-                Source = Consts.VOTE_TURNOUT_KEY,
+                Source = Consts.VoteTurnoutKey,
                 Timestamp = voterTurnout.Timestamp,
                 ElectionId = voterTurnout.ElectionId,
                 StatisticsJson = JsonConvert.SerializeObject(voterTurnout)
@@ -87,7 +87,7 @@ namespace ElectionResults.Core.Storage
             {
                 Id = $"{DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks:D19}",
                 Type = FileType.VoteMonitoring.ConvertEnumToString(),
-                Source = Consts.VOTE_MONITORING_KEY,
+                Source = Consts.VoteMonitoringKey,
                 Timestamp = voteMonitoringInfo.Timestamp,
                 ElectionId = voteMonitoringInfo.ElectionId,
                 StatisticsJson = JsonConvert.SerializeObject(voteMonitoringInfo)

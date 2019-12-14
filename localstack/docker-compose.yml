@@ -6,7 +6,7 @@ services:
     image: localstack/localstack:latest
     container_name: localstack-s3
     environment:
-     - SERVICES=s3:4572,ssm:4583
+     - SERVICES=s3:4572,ssm:4583,dynamodb:4569
      - DATA_DIR=/tmp/localstack/data
     ports:
      - "4563-4599:4563-4599"
