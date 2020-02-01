@@ -162,7 +162,7 @@
 }, {
 	"ElectionId": "prezidentiale24112019",
 	"Files": [{
-		"URL": "https://code4-presidential-2019.s3.eu-central-1.amazonaws.com/ro.csv",
+		"URL": "https://prezenta.bec.ro/prezidentiale24112019/data/pv/csv/pv_RO_PRSD_PART.csv",
 		"Active": true,
 		"Name": "national",
 		"ElectionId": "prezidentiale24112019",
@@ -171,7 +171,7 @@
 		"Timestamp": 0,
 		"Prefix": "g"
 	}, {
-		"URL": "https://code4-presidential-2019.s3.eu-central-1.amazonaws.com/diaspora.csv",
+		"URL": "https://prezenta.bec.ro/prezidentiale24112019/data/pv/csv/pv_SR_PRSD_PART.csv",
 		"Active": true,
 		"Name": "diaspora",
 		"ElectionId": "prezidentiale24112019",
@@ -180,7 +180,7 @@
 		"Timestamp": 0,
 		"Prefix": "g"
 	}, {
-		"URL": "https://code4-presidential-2019.s3.eu-central-1.amazonaws.com/mail.csv",
+		"URL": "https://prezidentiale2019.roaep.ro/csv2/pv_SR_PRSD-C_INFO.csv",
 		"Active": true,
 		"Name": "mail",
 		"ElectionId": "prezidentiale24112019",
@@ -216,7 +216,7 @@
 		"Votes": 0,
 		"Percentage": 0.0
 	}, {
-		"CsvId": "5",
+		"CsvId": "2",
 		"Counties": {},
 		"Id": null,
 		"Name": "VASILICA-VIORICA DĂNCILĂ",

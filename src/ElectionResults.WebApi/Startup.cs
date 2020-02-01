@@ -58,8 +58,12 @@ namespace ElectionResults.WebApi
             {
                 services.AddSingleton<IAmazonDynamoDB>(sp =>
                 {
-                    var clientConfig = new AmazonDynamoDBConfig { ServiceURL = Consts.DynamoDbServiceUrl, UseHttp = true };
-                    return new AmazonDynamoDBClient(clientConfig);
+                    var clientConfig = new AmazonDynamoDBConfig
+                    {
+                        ServiceURL = Consts.DynamoDbServiceUrl,
+                        UseHttp = true
+                    };
+                    return new AmazonDynamoDBClient(new BasicAWSCredentials("abc", "def"), clientConfig);
                 });
             }
             else
@@ -69,7 +73,7 @@ namespace ElectionResults.WebApi
 
             if (_environment.IsDevelopment())
             {
-                var amazonS3 = new AmazonS3Client(new AmazonS3Config
+                var amazonS3 = new AmazonS3Client(new BasicAWSCredentials("abc", "def"), new AmazonS3Config
                 {
                     ServiceURL = Consts.S3ServiceUrl,
                     ForcePathStyle = true,
@@ -153,7 +157,14 @@ namespace ElectionResults.WebApi
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
+                    try
+                    {
+                        spa.UseReactDevelopmentServer(npmScript: "start");
+                    }
+                    catch
+                    {
+                        //this will crash when running in Docker due to a react/npm bug, so it's safe to ignore
+                    }
                 }
             });
         }

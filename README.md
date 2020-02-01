@@ -24,7 +24,7 @@ C# 7
 
 ### Platforms
 
-.NET Core 2.1
+.NET Core 2.2
 
 ### Package managers
 
@@ -45,8 +45,9 @@ TBD
 
 ##### Prerequisites
 * .NET Core 2.2 (backend)
+* AWS CLI
 * NodeJS (frontend)
-* Docker (for running localstack on local machine)
+* Docker (for running localstack or the API on local machine)
 
 ##### Run the project
 
@@ -55,7 +56,13 @@ TBD
   - this will use the docker-compose file to pull and run the localstack image
   - after that it will add two settings called `electionsConfig` which is the list of elections and `intervalInSeconds` which is the background task run interval
 - `cd src\ElectionResults.WebApi`
-- `dotnet run`
+Besides Visual Studio or VS Code, you can use the command line or Docker to start the project
+- Using the dotnet CLI
+  - `dotnet run`
+- Running the Docker image
+  - `docker build --rm -f "src\Dockerfile" -t rezultatevot:latest "src" --build-arg asp_env=Development`
+  - `docker run --rm -it -p 443:443/tcp -p 80:80/tcp rezultatevot:latest`
+
 
 #### Configuration
 

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Amazon.Runtime;
 using Amazon.SimpleSystemsManagement;
 using Amazon.SimpleSystemsManagement.Model;
 using CSharpFunctionalExtensions;
@@ -22,7 +23,6 @@ namespace ElectionResults.Core.Infrastructure
         public ElectionConfigurationSource(IOptions<AppConfig> config, IHostingEnvironment hostingEnvironment)
         {
             _config = config.Value;
-            _amazonSettingsClient = new AmazonSimpleSystemsManagementClient();
             _parameterStoreName = Consts.ParameterStoreName;
             if (hostingEnvironment.IsDevelopment())
             {
@@ -31,7 +31,7 @@ namespace ElectionResults.Core.Infrastructure
                     ServiceURL = Consts.SSMServiceUrl,
                     UseHttp = true
                 };
-                _amazonSettingsClient = new AmazonSimpleSystemsManagementClient(systemsManagementConfig);
+                _amazonSettingsClient = new AmazonSimpleSystemsManagementClient(new BasicAWSCredentials("abc", "def"), systemsManagementConfig);
                 _parameterStoreName += "-dev";
             }
             if (hostingEnvironment.IsStaging())

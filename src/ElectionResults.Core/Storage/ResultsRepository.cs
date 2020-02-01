@@ -8,7 +8,6 @@ using CSharpFunctionalExtensions;
 using ElectionResults.Core.Infrastructure;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Services;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
@@ -19,7 +18,7 @@ namespace ElectionResults.Core.Storage
         private readonly IAmazonDynamoDB _dynamoDb;
         private readonly AppConfig _config;
 
-        public ResultsRepository(IOptions<AppConfig> config, IAmazonDynamoDB dynamoDb, IMemoryCache memoryCache)
+        public ResultsRepository(IOptions<AppConfig> config, IAmazonDynamoDB dynamoDb)
         {
             _dynamoDb = dynamoDb;
             _config = config.Value;

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using ElectionResults.Core.Infrastructure;
 using ElectionResults.Core.Models;
-using ElectionResults.Core.Services.CsvDownload;
 using ElectionResults.Core.Services.CsvProcessing;
 using ElectionResults.Core.Storage;
 using Newtonsoft.Json;

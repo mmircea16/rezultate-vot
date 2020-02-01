@@ -8,8 +8,8 @@ namespace ElectionResults.Core.Storage
         public const string ParameterStoreName = "vote-results";
         public const string VoteMonitoringKey = "MONITORING";
         public const string VoteTurnoutKey = "TURNOUT";
-        public const string SSMServiceUrl = "http://localhost:4583";
-        public const string S3ServiceUrl = "http://localhost:4572";
-        public const string DynamoDbServiceUrl = "http://localhost:4569";
+        public const string SSMServiceUrl = "http://host.docker.internal:4583";
+        public const string S3ServiceUrl = "http://host.docker.internal:4572";
+        public const string DynamoDbServiceUrl = "http://host.docker.internal:4569";
     }
 }
