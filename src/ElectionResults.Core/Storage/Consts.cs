@@ -4,9 +4,12 @@ namespace ElectionResults.Core.Storage
     {
         public const string FirstElectionRound = "prezidentiale10112019";
         public const string SecondElectionRound = "prezidentiale24112019";
-        public const string RESULTS_COUNT_KEY = "results-count";
-        public const string PARAMETER_STORE_NAME = "vote-results";
-        public const string VOTE_MONITORING_KEY = "MONITORING";
-        public const string VOTE_TURNOUT_KEY = "TURNOUT";
+        public const string ResultsCountKey = "results-count";
+        public const string ParameterStoreName = "vote-results";
+        public const string VoteMonitoringKey = "MONITORING";
+        public const string VoteTurnoutKey = "TURNOUT";
+        public const string SSMServiceUrl = "http://host.docker.internal:4583";
+        public const string S3ServiceUrl = "http://host.docker.internal:4572";
+        public const string DynamoDbServiceUrl = "http://host.docker.internal:4569";
     }
 }

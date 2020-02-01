@@ -8,7 +8,6 @@ using CSharpFunctionalExtensions;
 using ElectionResults.Core.Infrastructure;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Services;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
@@ -19,7 +18,7 @@ namespace ElectionResults.Core.Storage
         private readonly IAmazonDynamoDB _dynamoDb;
         private readonly AppConfig _config;
 
-        public ResultsRepository(IOptions<AppConfig> config, IAmazonDynamoDB dynamoDb, IMemoryCache memoryCache)
+        public ResultsRepository(IOptions<AppConfig> config, IAmazonDynamoDB dynamoDb)
         {
             _dynamoDb = dynamoDb;
             _config = config.Value;
@@ -73,7 +72,7 @@ namespace ElectionResults.Core.Storage
             {
                 Id = $"{DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks:D19}",
                 Type = FileType.VoterTurnout.ConvertEnumToString(),
-                Source = Consts.VOTE_TURNOUT_KEY,
+                Source = Consts.VoteTurnoutKey,
                 Timestamp = voterTurnout.Timestamp,
                 ElectionId = voterTurnout.ElectionId,
                 StatisticsJson = JsonConvert.SerializeObject(voterTurnout)
@@ -87,7 +86,7 @@ namespace ElectionResults.Core.Storage
             {
                 Id = $"{DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks:D19}",
                 Type = FileType.VoteMonitoring.ConvertEnumToString(),
-                Source = Consts.VOTE_MONITORING_KEY,
+                Source = Consts.VoteMonitoringKey,
                 Timestamp = voteMonitoringInfo.Timestamp,
                 ElectionId = voteMonitoringInfo.ElectionId,
                 StatisticsJson = JsonConvert.SerializeObject(voteMonitoringInfo)

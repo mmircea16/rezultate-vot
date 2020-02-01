@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CSharpFunctionalExtensions;
+using ElectionResults.Core.Infrastructure;
 using ElectionResults.Core.Infrastructure.CsvModels;
 using ElectionResults.Core.Models;
 using ElectionResults.Core.Services.CsvProcessing;
 using FluentAssertions;
+using NSubstitute;
 using Xunit;
 
 namespace ElectionResults.Tests.CandidatesResultsParserTests
@@ -14,10 +17,15 @@ namespace ElectionResults.Tests.CandidatesResultsParserTests
         [Fact]
         public async Task not_return_null_list_of_candidates()
         {
-            var candidatesResultsParser = new TestableCandidatesResultsParser(null);
+            var source = Substitute.For<IElectionConfigurationSource>();
+            source.GetElectionById("").ReturnsForAnyArgs(e => Result.Ok(new Election
+            {
+                Candidates = new List<CandidateConfig>()
+            }));
+            var candidatesResultsParser = new TestableCandidatesResultsParser(null, source);
             candidatesResultsParser.ParsedCandidates = new List<CandidateConfig>();
 
-            var result = await candidatesResultsParser.Parse(null, "", new ElectionResultsFile());
+            var result = await candidatesResultsParser.Parse(ElectionResultsData.Default, "", new ElectionResultsFile());
 
             result.Value.Candidates.Should().NotBeNull();
         }

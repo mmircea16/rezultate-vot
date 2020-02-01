@@ -14,13 +14,11 @@ namespace ElectionResults.Tests.BlobProcessorTests
     {
         private readonly IStatisticsAggregator _statisticsAggregator;
         private readonly IResultsRepository _resultsRepository;
-        private readonly string _fileName;
 
         public ProcessStreamShould()
         {
             _statisticsAggregator = Substitute.For<IStatisticsAggregator>();
             _resultsRepository = Substitute.For<IResultsRepository>();
-            _fileName = "a_b_1";
         }
 
         [Fact]

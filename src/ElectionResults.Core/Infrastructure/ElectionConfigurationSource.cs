@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Amazon.Runtime;
 using Amazon.SimpleSystemsManagement;
 using Amazon.SimpleSystemsManagement.Model;
 using CSharpFunctionalExtensions;
@@ -15,19 +16,24 @@ namespace ElectionResults.Core.Infrastructure
 {
     public class ElectionConfigurationSource : IElectionConfigurationSource
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly AppConfig _config;
         private readonly AmazonSimpleSystemsManagementClient _amazonSettingsClient;
-        private string _parameterStoreName;
+        private readonly string _parameterStoreName;
 
         public ElectionConfigurationSource(IOptions<AppConfig> config, IHostingEnvironment hostingEnvironment)
         {
-            _hostingEnvironment = hostingEnvironment;
             _config = config.Value;
-            _amazonSettingsClient = new AmazonSimpleSystemsManagementClient();
-            _parameterStoreName = Consts.PARAMETER_STORE_NAME;
+            _parameterStoreName = Consts.ParameterStoreName;
             if (hostingEnvironment.IsDevelopment())
+            {
+                var systemsManagementConfig = new AmazonSimpleSystemsManagementConfig
+                {
+                    ServiceURL = Consts.SSMServiceUrl,
+                    UseHttp = true
+                };
+                _amazonSettingsClient = new AmazonSimpleSystemsManagementClient(new BasicAWSCredentials("abc", "def"), systemsManagementConfig);
                 _parameterStoreName += "-dev";
+            }
             if (hostingEnvironment.IsStaging())
                 _parameterStoreName += "-stag";
         }

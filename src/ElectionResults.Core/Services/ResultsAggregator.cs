@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using ElectionResults.Core.Infrastructure;
 using ElectionResults.Core.Models;
-using ElectionResults.Core.Services.CsvDownload;
 using ElectionResults.Core.Services.CsvProcessing;
 using ElectionResults.Core.Storage;
 using Newtonsoft.Json;
@@ -48,7 +47,7 @@ namespace ElectionResults.Core.Services
 
         public async Task<Result<VoteMonitoringStats>> GetVoteMonitoringStats(string electionId)
         {
-            var result = await _resultsRepository.Get(electionId, Consts.VOTE_MONITORING_KEY, FileType.VoteMonitoring.ConvertEnumToString());
+            var result = await _resultsRepository.Get(electionId, Consts.VoteMonitoringKey, FileType.VoteMonitoring.ConvertEnumToString());
             if (result.IsSuccess)
             {
                 var voteMonitoringStats = JsonConvert.DeserializeObject<VoteMonitoringStats>(result.Value.StatisticsJson);
@@ -59,7 +58,7 @@ namespace ElectionResults.Core.Services
 
         public async Task<Result<VoterTurnout>> GetVoterTurnout(string electionId)
         {
-            var result = await _resultsRepository.Get(electionId, Consts.VOTE_TURNOUT_KEY, FileType.VoterTurnout.ConvertEnumToString());
+            var result = await _resultsRepository.Get(electionId, Consts.VoteTurnoutKey, FileType.VoterTurnout.ConvertEnumToString());
             if (result.IsSuccess)
             {
                 var voterTurnout = JsonConvert.DeserializeObject<VoterTurnout>(result.Value.StatisticsJson);

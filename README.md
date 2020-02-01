@@ -4,7 +4,7 @@
 
 The project aims to be an aggregator for election information in Romania. The project will contain historic information for elections in Romania, will contain real time results for each election, as it will parse results published by BEC (Biroul Electoral Central) and it will also contain information about the budgets spent during the electoral campaign.
 
-[See the project live](insert_link_here)
+[See the project live](https://rezultatevot.ro)
 
 The partial results published by BEC (Biroul Electoral Central) are often raw results that are not easily interpreted and give no meaningful information to regular users. The aim of the project is to aggregate the raw data and provide timely updates on the progression of voting results in Romanian elections.
 
@@ -24,7 +24,7 @@ C# 7
 
 ### Platforms
 
-.NET Core 2.1
+.NET Core 2.2
 
 ### Package managers
 
@@ -44,36 +44,46 @@ TBD
 #### Requirements
 
 ##### Prerequisites
-* install and configure AWS (if it's not already done)
-  * `aws configure`
-  * in order to configure AWS, you need to create an AWS account
-* Install node dependencies for `ClientApp` by following instructions from  `src\ElectionResults.WebApi\ClientAp\README.md` 
-* Update configurations `src\ElectionResults.WebApi\appsettings.json` as necessary for your local environment
-  * update `bucketName` as it has to be a unique id in Amazon, e.g. `code4-presidential-2019-your-name`
+* .NET Core 2.2 (backend)
+* AWS CLI
+* NodeJS (frontend)
+* Docker (for running localstack or the API on local machine)
 
 ##### Run the project
 
+- `cd localstack`
+- `.\setup.cmd`
+  - this will use the docker-compose file to pull and run the localstack image
+  - after that it will add two settings called `electionsConfig` which is the list of elections and `intervalInSeconds` which is the background task run interval
 - `cd src\ElectionResults.WebApi`
-- `dotnet run`
+Besides Visual Studio or VS Code, you can use the command line or Docker to start the project
+- Using the dotnet CLI
+  - `dotnet run`
+- Running the Docker image
+  - `docker build --rm -f "src\Dockerfile" -t rezultatevot:latest "src" --build-arg asp_env=Development`
+  - `docker run --rm -it -p 443:443/tcp -p 80:80/tcp rezultatevot:latest`
 
 
 #### Configuration
 
-The settings are stored in appsettings.json.
-In this file you'll find the following settings:
-
-- **interval**: 30
-  - runs the CSV downloader job every 30 seconds
+In appsettings.\{environment\}.json you'll find the following settings:
+##### Settings section
 - **bucketName**: "code4-presidential-2019"
   - the name of the bucket where CSV files are downloaded
 - **tableName**: "electionresults"
   - the name of the DynamoDB Table where the JSON statistics are stored
-  
+##### AWS.Logging section
+- specifies how much information should appear in the AWS logs
+
+##### config.json
+If you run the project on your local machine, you can also modify the file `localstack\config.json` before running `localstack\setup.cmd`
+
 ## CSV URLs and mappings
-- PUT request on /api/settings/election-config with a JSON representation of ElectionsConfig.cs. This will overwrite the json from AWS Parameter Store.
-- The ElectionsConfig object has:
-  - a list of candidates where information about them can be provided(candidates picture, names, CSV column id, etc.)
+- PUT request on /api/settings/election-config with a JSON representation of a list of Election objects. This will overwrite the json from AWS Parameter Store.
+- Each Election object has:
+  - a list of candidates where information about them can be provided(candidate picture, name, CSV column id, etc.)
   - a list of BEC URLs, each file has the type of results(provisional, partial or final), location(Romania or Diaspora), URL
+- An initial configuration is provided in the file `localstack\config.json`
 
 #### Run unit tests
 - `cd tests\ElectionResults.Tests`

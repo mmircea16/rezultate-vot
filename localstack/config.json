@@ -1,0 +1,227 @@
+[{
+	"ElectionId": "prezidentiale10112019",
+	"Files": [{
+		"URL": "https://prezenta.bec.ro/prezidentiale10112019/data/pv/csv/pv_RO_PRSD_PART.csv",
+		"Active": true,
+		"Name": "national",
+		"ElectionId": "prezidentiale10112019",
+		"FileType": 0,
+		"ResultsSource": "national",
+		"Timestamp": 0,
+		"Prefix": "g"
+	}, {
+		"URL": "https://prezenta.bec.ro/prezidentiale10112019/data/pv/csv/pv_SR_PRSD_PART.csv",
+		"Active": true,
+		"Name": "diaspora",
+		"ElectionId": "prezidentiale10112019",
+		"FileType": 0,
+		"ResultsSource": "diaspora",
+		"Timestamp": 0,
+		"Prefix": "g"
+	}, {
+		"URL": "https://prezidentiale2019.roaep.ro/csv/pv_SR_PRSD-C_INFO.csv",
+		"Active": true,
+		"Name": "mail",
+		"ElectionId": "prezidentiale10112019",
+		"FileType": 0,
+		"ResultsSource": "mail",
+		"Timestamp": 0,
+		"Prefix": "e"
+	}, {
+		"URL": "https://prezenta.bec.ro/prezidentiale10112019/data/presence/json/presence_SR_now.json",
+		"Active": true,
+		"Name": "TURNOUT",
+		"ElectionId": "prezidentiale10112019",
+		"FileType": 1,
+		"ResultsSource": "TURNOUT",
+		"Timestamp": 0,
+		"Prefix": null
+	}, {
+		"URL": "https://mv-mobile-test.azurewebsites.net/api/v1/statistics/mini/all",
+		"Active": true,
+		"Name": "MONITORING",
+		"ElectionId": "prezidentiale10112019",
+		"FileType": 2,
+		"ResultsSource": "MONITORING",
+		"Timestamp": 0,
+		"Prefix": null
+	}],
+	"Candidates": [{
+		"CsvId": "1",
+		"Counties": {},
+		"Id": null,
+		"Name": "KLAUS-WERNER IOHANNIS",
+		"ImageUrl": "https://code4-elections-ro-2019.s3.eu-central-1.amazonaws.com/candidates/Klaus+Iohannis.png",
+		"Votes": 0,
+		"Percentage": 0.0
+	}, {
+		"CsvId": "2",
+		"Counties": {},
+		"Id": null,
+		"Name": "THEODOR PALEOLOGU",
+		"ImageUrl": "https://code4-elections-ro-2019.s3.eu-central-1.amazonaws.com/candidates/Theodor+Paleologu.png",
+		"Votes": 0,
+		"Percentage": 0.0
+	}, {
+		"CsvId": "3",
+		"Counties": {},
+		"Id": null,
+		"Name": "ILIE-DAN BARNA",
+		"ImageUrl": "https://code4-elections-ro-2019.s3.eu-central-1.amazonaws.com/candidates/Dan+Barna.png",
+		"Votes": 0,
+		"Percentage": 0.0
+	}, {
+		"CsvId": "4",
+		"Counties": {},
+		"Id": null,
+		"Name": "HUNOR KELEMEN",
+		"ImageUrl": "https://code4-elections-ro-2019.s3.eu-central-1.amazonaws.com/candidates/Kelemen+Hunor.png",
+		"Votes": 0,
+		"Percentage": 0.0
+	}, {
+		"CsvId": "5",
+		"Counties": {},
+		"Id": null,
+		"Name": "VASILICA-VIORICA DĂNCILĂ",
+		"ImageUrl": "https://code4-elections-ro-2019.s3.eu-central-1.amazonaws.com/candidates/Viorica+Dancila.png",
+		"Votes": 0,
+		"Percentage": 0.0
+	}, {
+		"CsvId": "6",
+		"Counties": {},
+		"Id": null,
+		"Name": "CĂTĂLIN-SORIN IVAN",
+		"ImageUrl": "https://code4-elections-ro-2019.s3.eu-central-1.amazonaws.com/candidates/Catalin+Ivan.png",
+		"Votes": 0,
+		"Percentage": 0.0
+	}, {
+		"CsvId": "7",
+		"Counties": {},
+		"Id": null,
+		"Name": "NINEL PEIA",
+		"ImageUrl": "https://code4-elections-ro-2019.s3.eu-central-1.amazonaws.com/candidates/Ninel+Peia.png",
+		"Votes": 0,
+		"Percentage": 0.0
+	}, {
+		"CsvId": "8",
+		"Counties": {},
+		"Id": null,
+		"Name": "SEBASTIAN-CONSTANTIN POPESCU",
+		"ImageUrl": "https://code4-elections-ro-2019.s3.eu-central-1.amazonaws.com/candidates/sebastian-popescu.png",
+		"Votes": 0,
+		"Percentage": 0.0
+	}, {
+		"CsvId": "9",
+		"Counties": {},
+		"Id": null,
+		"Name": "JOHN-ION BANU",
+		"ImageUrl": "https://code4-elections-ro-2019.s3.eu-central-1.amazonaws.com/candidates/John-banu.png",
+		"Votes": 0,
+		"Percentage": 0.0
+	}, {
+		"CsvId": "10",
+		"Counties": {},
+		"Id": null,
+		"Name": "MIRCEA DIACONU",
+		"ImageUrl": "https://code4-elections-ro-2019.s3.eu-central-1.amazonaws.com/candidates/Mircea+Diaconu.png",
+		"Votes": 0,
+		"Percentage": 0.0
+	}, {
+		"CsvId": "11",
+		"Counties": {},
+		"Id": null,
+		"Name": "BOGDAN-DRAGOȘ-AURELIU MARIAN-STANOEVICI",
+		"ImageUrl": "https://code4-elections-ro-2019.s3.eu-central-1.amazonaws.com/candidates/Bogdan+Stanoevici.png",
+		"Votes": 0,
+		"Percentage": 0.0
+	}, {
+		"CsvId": "12",
+		"Counties": {},
+		"Id": null,
+		"Name": "RAMONA-IOANA BRUYNSEELS",
+		"ImageUrl": "https://code4-elections-ro-2019.s3.eu-central-1.amazonaws.com/candidates/BRUYNSEELS+RAMONA-IOANA.png",
+		"Votes": 0,
+		"Percentage": 0.0
+	}, {
+		"CsvId": "13",
+		"Counties": {},
+		"Id": null,
+		"Name": "VIOREL CATARAMĂ",
+		"ImageUrl": "https://code4-elections-ro-2019.s3.eu-central-1.amazonaws.com/candidates/Viorel+Catarama.png",
+		"Votes": 0,
+		"Percentage": 0.0
+	}, {
+		"CsvId": "14",
+		"Counties": {},
+		"Id": null,
+		"Name": "ALEXANDRU CUMPĂNAȘU",
+		"ImageUrl": "https://code4-elections-ro-2019.s3.eu-central-1.amazonaws.com/candidates/alexandru+cumpanasu.jpg",
+		"Votes": 0,
+		"Percentage": 0.0
+	}]
+}, {
+	"ElectionId": "prezidentiale24112019",
+	"Files": [{
+		"URL": "https://prezenta.bec.ro/prezidentiale24112019/data/pv/csv/pv_RO_PRSD_PART.csv",
+		"Active": true,
+		"Name": "national",
+		"ElectionId": "prezidentiale24112019",
+		"FileType": 0,
+		"ResultsSource": "national",
+		"Timestamp": 0,
+		"Prefix": "g"
+	}, {
+		"URL": "https://prezenta.bec.ro/prezidentiale24112019/data/pv/csv/pv_SR_PRSD_PART.csv",
+		"Active": true,
+		"Name": "diaspora",
+		"ElectionId": "prezidentiale24112019",
+		"FileType": 0,
+		"ResultsSource": "diaspora",
+		"Timestamp": 0,
+		"Prefix": "g"
+	}, {
+		"URL": "https://prezidentiale2019.roaep.ro/csv2/pv_SR_PRSD-C_INFO.csv",
+		"Active": true,
+		"Name": "mail",
+		"ElectionId": "prezidentiale24112019",
+		"FileType": 0,
+		"ResultsSource": "mail",
+		"Timestamp": 0,
+		"Prefix": "e"
+	}, {
+		"URL": "https://prezenta.bec.ro/prezidentiale24112019/data/presence/json/presence_SR_now.json",
+		"Active": true,
+		"Name": "TURNOUT",
+		"ElectionId": "prezidentiale24112019",
+		"FileType": 1,
+		"ResultsSource": "TURNOUT",
+		"Timestamp": 0,
+		"Prefix": null
+	}, {
+		"URL": "https://mv-mobile-test.azurewebsites.net/api/v1/statistics/mini/all",
+		"Active": true,
+		"Name": "MONITORING",
+		"ElectionId": "prezidentiale24112019",
+		"FileType": 2,
+		"ResultsSource": "MONITORING",
+		"Timestamp": 0,
+		"Prefix": null
+	}],
+	"Candidates": [{
+		"CsvId": "1",
+		"Counties": {},
+		"Id": null,
+		"Name": "KLAUS-WERNER IOHANNIS",
+		"ImageUrl": "https://code4-elections-ro-2019.s3.eu-central-1.amazonaws.com/candidates/Klaus+Iohannis.png",
+		"Votes": 0,
+		"Percentage": 0.0
+	}, {
+		"CsvId": "2",
+		"Counties": {},
+		"Id": null,
+		"Name": "VASILICA-VIORICA DĂNCILĂ",
+		"ImageUrl": "https://code4-elections-ro-2019.s3.eu-central-1.amazonaws.com/candidates/Viorica+Dancila.png",
+		"Votes": 0,
+		"Percentage": 0.0
+	}]
+}]

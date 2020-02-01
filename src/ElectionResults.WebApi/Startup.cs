@@ -1,6 +1,8 @@
 using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.Extensions.NETCore.Setup;
+using Amazon.Runtime;
+using Amazon.S3;
 using ElectionResults.Core.Infrastructure;
 using ElectionResults.Core.Repositories;
 using ElectionResults.Core.Services;
@@ -26,8 +28,11 @@ namespace ElectionResults.WebApi
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IHostingEnvironment _environment;
+
+        public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
+            _environment = environment;
             Configuration = configuration;
         }
 
@@ -48,16 +53,47 @@ namespace ElectionResults.WebApi
             services.AddTransient<IBucketRepository, BucketRepository>();
             services.AddTransient<IFileRepository, FileRepository>();
             services.AddTransient<IVoterTurnoutAggregator, VoterTurnoutAggregator>();
-            services.AddAWSService<IAmazonDynamoDB>();
-            services.AddAWSService<Amazon.S3.IAmazonS3>(new AWSOptions
+
+            if (_environment.IsDevelopment())
             {
-                Profile = "default",
-                Region = RegionEndpoint.EUCentral1
-            });
-            services.AddDefaultAWSOptions(new AWSOptions
+                services.AddSingleton<IAmazonDynamoDB>(sp =>
+                {
+                    var clientConfig = new AmazonDynamoDBConfig
+                    {
+                        ServiceURL = Consts.DynamoDbServiceUrl,
+                        UseHttp = true
+                    };
+                    return new AmazonDynamoDBClient(new BasicAWSCredentials("abc", "def"), clientConfig);
+                });
+            }
+            else
             {
-                Region = RegionEndpoint.EUCentral1
-            });
+                services.AddAWSService<IAmazonDynamoDB>();
+            }
+
+            if (_environment.IsDevelopment())
+            {
+                var amazonS3 = new AmazonS3Client(new BasicAWSCredentials("abc", "def"), new AmazonS3Config
+                {
+                    ServiceURL = Consts.S3ServiceUrl,
+                    ForcePathStyle = true,
+                    UseHttp = true
+                });
+
+                services.AddTransient(typeof(IAmazonS3), provider => amazonS3);
+            }
+            else
+            {
+                services.AddAWSService<IAmazonS3>(new AWSOptions
+                {
+                    Profile = "default",
+                    Region = RegionEndpoint.EUCentral1
+                });
+                services.AddDefaultAWSOptions(new AWSOptions
+                {
+                    Region = RegionEndpoint.EUCentral1
+                });
+            }
             services.AddLazyCache();
             services.AddSingleton<IHostedService, ScheduleTask>();
             services.AddSpaStaticFiles(configuration =>
@@ -88,7 +124,7 @@ namespace ElectionResults.WebApi
         {
             app.UseHsts();
             Log.SetLogger(loggerFactory.CreateLogger<Startup>());
-            
+
             app.UseCors("origins");
             app.UseExceptionHandler(errorApp =>
             {
@@ -121,7 +157,14 @@ namespace ElectionResults.WebApi
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
+                    try
+                    {
+                        spa.UseReactDevelopmentServer(npmScript: "start");
+                    }
+                    catch
+                    {
+                        //this will crash when running in Docker due to a react/npm bug, so it's safe to ignore
+                    }
                 }
             });
         }
