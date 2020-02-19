@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ElectionResults.WebApi.Controllers
 {
     [Route("api/settings")]
+    [ApiExplorerSettings(IgnoreApi = true)]
     [ApiController]
     public class AdminController : ControllerBase
     {

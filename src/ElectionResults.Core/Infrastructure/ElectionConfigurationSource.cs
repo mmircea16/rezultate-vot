@@ -94,6 +94,10 @@ namespace ElectionResults.Core.Infrastructure
 
         public Result<Election> GetElectionById(string electionId)
         {
+            if (string.IsNullOrEmpty(_config?.ElectionsConfig))
+            {
+                return Result.Failure<Election>($"Could not find election with id {electionId}");
+            }
             var electionsConfig = JsonConvert.DeserializeObject<List<Election>>(_config.ElectionsConfig);
             var foundElection = electionsConfig.SingleOrDefault(e => e.ElectionId == electionId);
             if (foundElection == null)

@@ -28,7 +28,7 @@ namespace ElectionResults.WebApi.Controllers
         }
 
         [HttpGet("")]
-        public async Task<ActionResult<LiveResultsResponse>> GetResults([FromQuery] string electionId, string source = null, string county = null, FileType fileType = FileType.Results)
+        public async Task<ActionResult<LiveResultsResponse>> GetResults([FromQuery] string electionId = Consts.FirstElectionRound, string source = null, string county = null, FileType fileType = FileType.Results)
         {
             try
             {

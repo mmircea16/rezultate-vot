@@ -22,6 +22,7 @@ using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 
 namespace ElectionResults.WebApi
@@ -53,7 +54,10 @@ namespace ElectionResults.WebApi
             services.AddTransient<IBucketRepository, BucketRepository>();
             services.AddTransient<IFileRepository, FileRepository>();
             services.AddTransient<IVoterTurnoutAggregator, VoterTurnoutAggregator>();
-
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Rezultate Vot API", Version = "v1" });
+            });
             if (_environment.IsDevelopment())
             {
                 services.AddSingleton<IAmazonDynamoDB>(sp =>
@@ -124,7 +128,12 @@ namespace ElectionResults.WebApi
         {
             app.UseHsts();
             Log.SetLogger(loggerFactory.CreateLogger<Startup>());
+            app.UseSwagger();
 
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Rezultate Vot API V1");
+            });
             app.UseCors("origins");
             app.UseExceptionHandler(errorApp =>
             {
