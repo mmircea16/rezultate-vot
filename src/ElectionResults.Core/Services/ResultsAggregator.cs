@@ -106,7 +106,12 @@ namespace ElectionResults.Core.Services
 
         public async Task<Result<VoteCountStats>> GetVoteCountStatistics(string electionId)
         {
-            var election = _electionConfigurationSource.GetElectionById(electionId).Value;
+            var electionReport = _electionConfigurationSource.GetElectionById(electionId);
+            if (electionReport.IsFailure)
+            {
+                return Result.Failure<VoteCountStats>(electionReport.Error);
+            }
+            var election = electionReport.Value;
             if (election.ElectionId == Consts.FirstElectionRound)
             {
                 var stats = new VoteCountStats

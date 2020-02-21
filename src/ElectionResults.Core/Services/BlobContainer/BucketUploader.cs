@@ -23,7 +23,9 @@ namespace ElectionResults.Core.Services.BlobContainer
         {
             _fileRepository = fileRepository;
             _fileProcessor = fileProcessor;
-            _httpClient = new HttpClient();
+            var httpClientHandler = new HttpClientHandler();
+            httpClientHandler.ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) => true;
+            _httpClient = new HttpClient(httpClientHandler);
             _config = config.Value;
         }
 
