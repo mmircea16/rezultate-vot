@@ -1,0 +1,115 @@
+.newsFeedCard {
+  margin: 10px 0;
+  box-shadow: 0px 15px 10px -15px #111;
+}
+.card-header {
+  background-color: rgba(12, 8, 8, 0.03);
+  background: blue;
+  height: 0.2rem;
+  padding: 0;
+  border-radius: none;
+}
+.card-header:first-child {
+  border-radius: none;
+}
+.card-body {
+  padding-bottom: 2px;
+}
+.card-footer {
+  background-color: transparent;
+  border-top: none;
+}
+.text-bold {
+  font-weight: bold;
+}
+.text-time {
+  font-size: 0.8em;
+}
+.text-caption {
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+.newsFeedBody {
+  display: flex;
+  flex-direction: row;
+}
+.newsFeedProfileImg {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.newsFeedSocialHandles {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.content-header {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.content-header div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.content-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.content-body {
+  margin: 15px 0;
+}
+.left-half {
+  display: none;
+}
+.img-ribbon {
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+  justify-content: center;
+  align-items: center;
+}
+.img-ribbon img {
+  width: 100%;
+  height: 30vh;
+  margin-bottom: 10px;
+}
+.btn-plus {
+  height: fit-content;
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .btn-plus {
+    height: 30vh;
+    width: fit-content;
+  }
+  .left-half,
+  .right-half {
+    flex-basis: 0;
+    flex-grow: 1;
+  }
+  .right-half {
+    flex-grow: 3;
+  }
+  .left-half {
+    display: flex;
+    flex-direction: column;
+  }
+  .img-ribbon {
+    flex-direction: row;
+  }
+  .img-ribbon img {
+    width: 40vh;
+    margin-right: 10px;
+    margin-bottom: 0;
+  }
+  .text-time {
+    display: none;
+  }
+}
