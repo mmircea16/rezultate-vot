@@ -1,3 +1,4 @@
+using System;
 using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.Extensions.NETCore.Setup;
@@ -124,6 +125,8 @@ namespace ElectionResults.WebApi
             });
         }
 
+        private bool InDocker { get { return Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true"; } }
+
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseHsts();
@@ -163,12 +166,12 @@ namespace ElectionResults.WebApi
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
-
-                if (env.IsDevelopment())
+                if (env.IsDevelopment()) // this should be used only in Development mode
                 {
                     try
                     {
-                        spa.UseReactDevelopmentServer(npmScript: "start");
+                        if (!InDocker) // and only when started from the dotnet CLI or Visual Studio
+                            spa.UseReactDevelopmentServer(npmScript: "start");
                     }
                     catch
                     {

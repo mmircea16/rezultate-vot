@@ -1,0 +1,13 @@
+﻿version: '3.4'
+
+services:
+  rezultatevot.api:
+    image: rezultatevot
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_URLS=http://+:5000
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - 5000:5000

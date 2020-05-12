@@ -4,11 +4,11 @@
   "private": true,
   "dependencies": {
     "@aspnet/signalr": "^1.1.4",
-    "@atlaskit/button": "^13.3.5",
+    "@atlaskit/button": "^13.3.11",
     "bootstrap": "^4.4.1",
-    "jquery": "3.4.1",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
+    "jquery": "3.5.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "react-ga": "^2.7.0",
     "react-google-charts": "^3.0.15",
     "react-idle-timer": "^4.2.12",
@@ -18,11 +18,11 @@
     "react-select": "^3.0.8",
     "reactstrap": "^8.4.1",
     "rimraf": "^3.0.1",
-    "styled-components": "^4.4.1"
+    "styled-components": "^5.1.0"
   },
   "devDependencies": {
     "ajv": "^6.11.0",
-    "babel-eslint": "^10.0.3",
+    "babel-eslint": "^10.1.0",
     "cross-env": "^6.0.3",
     "eslint": "^6.8.0",
     "eslint-config-react-app": "^5.2.0",
