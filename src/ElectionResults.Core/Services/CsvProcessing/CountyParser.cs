@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -72,7 +73,8 @@ namespace ElectionResults.Core.Services.CsvProcessing
         protected virtual async Task<List<PollingStation>> CalculateVotesByCounty(string csvContent,
             Election election, ElectionResultsFile file)
         {
-            var csvParser = new CsvParser(new StringReader(csvContent));
+            TextReader sr = new StringReader(csvContent);
+            var csvParser = new CsvParser(sr, CultureInfo.CurrentCulture);
             var pollingStations = new List<PollingStation>();
             var headers = (await csvParser.ReadAsync()).ToList();
             do

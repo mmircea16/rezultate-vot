@@ -1,6 +1,4 @@
 using System;
-using System.Net.Http;
-using Amazon;
 using Amazon.Extensions.NETCore.Setup;
 using Amazon.Runtime;
 using ElectionResults.Core.Storage;

@@ -56,7 +56,8 @@ namespace ElectionResults.WebApi.Controllers
                 {
                     result.Value.PercentageCounted = 100;
                     result.Value.CanceledVotes = 182648;
-                    result.Value.TotalCountedVotes = voteCountStatisticsResult.Value.TotalCountedVotes - result.Value.CanceledVotes;
+                    if (voteCountStatisticsResult.IsSuccess)
+                        result.Value.TotalCountedVotes = voteCountStatisticsResult.Value.TotalCountedVotes - result.Value.CanceledVotes;
                     result.Value.Candidates[0].Votes = 6509135;
                     result.Value.Candidates[0].Percentage = (decimal)66.09;
                     result.Value.Candidates[1].Votes = 3339922;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -56,7 +57,8 @@ namespace ElectionResults.Core.Services.CsvProcessing
         {
             try
             {
-                var csvParser = new CsvParser(new StringReader(csvContent));
+                TextReader sr = new StringReader(csvContent);
+                var csvParser = new CsvParser(sr, CultureInfo.CurrentCulture);
                 var headers = (await csvParser.ReadAsync()).ToList();
                 var totalCanceledVotes = 0;
                 do
