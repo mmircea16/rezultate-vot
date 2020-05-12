@@ -53,7 +53,7 @@ TBD
 
 - `cd localstack`
 - Run the localstack image with docker-compose
-- `docker-compose -d`
+- `docker-compose up -d`
 - Add the required configuration settings. Use setup.cmd for Windows or setup.sh for Mac/Linux(remember to install the AWS CLI before this)
 - `.\setup.cmd`
   - this will add two settings called `electionsConfig` which is the list of elections and `intervalInSeconds` which is the background task run interval
@@ -63,7 +63,7 @@ TBD
 - `dotnet run`
 - Or, you can run the Docker image using docker-compose
 - `cd src`
-- `docker-compose -d`
+- `docker-compose up -d`
 
 
 #### Configuration
