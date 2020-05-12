@@ -52,16 +52,18 @@ TBD
 ##### Run the project
 
 - `cd localstack`
+- Run the localstack image with docker-compose
+- `docker-compose -d`
+- Add the required configuration settings. Use setup.cmd for Windows or setup.sh for Mac/Linux(remember to install the AWS CLI before this)
 - `.\setup.cmd`
-  - this will use the docker-compose file to pull and run the localstack image
-  - after that it will add two settings called `electionsConfig` which is the list of elections and `intervalInSeconds` which is the background task run interval
+  - this will add two settings called `electionsConfig` which is the list of elections and `intervalInSeconds` which is the background task run interval
+- use Visual Studio/Code to start the project, or use the following alternatives
+- using the dotnet CLI
 - `cd src\ElectionResults.WebApi`
-Besides Visual Studio or VS Code, you can use the command line or Docker to start the project
-- Using the dotnet CLI
-  - `dotnet run`
-- Running the Docker image
-  - `docker build --rm -f "src\Dockerfile" -t rezultatevot:latest "src" --build-arg asp_env=Development`
-  - `docker run --rm -it -p 443:443/tcp -p 80:80/tcp rezultatevot:latest`
+- `dotnet run`
+- Or, you can run the Docker image using docker-compose
+- `cd src`
+- `docker-compose -d`
 
 
 #### Configuration

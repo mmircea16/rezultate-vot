@@ -7,7 +7,7 @@ EXPOSE 443
 
 #build
 FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build
-RUN curl -sL https://deb.nodesource.com/setup_13.x |  bash -
+RUN curl -sL https://deb.nodesource.com/setup_14.x |  bash -
 RUN apt-get install -y nodejs
 WORKDIR /src
 COPY ["ElectionResults.WebApi/ElectionResults.WebApi.csproj", "ElectionResults.WebApi/"]
