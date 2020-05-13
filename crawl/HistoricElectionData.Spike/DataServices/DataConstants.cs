@@ -15,8 +15,8 @@
         public const string SenateTopicKey = "5";
         public const string DeputiesTopicKey = "6";
 
-        public const string FuckedUpSenateTopicKey = "S";
-        public const string FuckedUpDeputiesTopicKey = "D";
+        public const string SenateTopicKey2016 = "S";
+        public const string DeputiesTopicKey2016 = "D";
 
         public const string SenateSummaryKey = "S";
         public const string DeputiesSummaryKey = "CD";

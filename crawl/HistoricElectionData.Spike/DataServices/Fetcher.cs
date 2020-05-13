@@ -69,10 +69,9 @@ namespace HistoricElectionData.Spike.DataServices
                     fetcher = new LocaleFetcher(election);
                     break;
                 case Category.Parlamentare:
-                    // they fucked up their numbering, so...
                     if ((election.Id == 248) && election.Name.Contains("2016"))
                     {
-                        fetcher = new FuckedUpParlamentareFetcher(election);
+                        fetcher = new ParlamentareFetcher2016(election);
                     }
                     else
                     {

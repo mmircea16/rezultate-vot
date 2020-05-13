@@ -9,9 +9,9 @@ using HistoricElectionData.Spike.JsonSerializationEntities.Summaries;
 
 namespace HistoricElectionData.Spike.DataServices.Fetchers
 {
-    public class FuckedUpParlamentareFetcher : ElectionFetcher
+    public class ParlamentareFetcher2016 : ElectionFetcher
     {
-        public FuckedUpParlamentareFetcher(Election election) : base(election) { }
+        public ParlamentareFetcher2016(Election election) : base(election) { }
 
         protected override void AddElectionData()
         {
@@ -23,19 +23,19 @@ namespace HistoricElectionData.Spike.DataServices.Fetchers
         protected override void PopulateTopics()
         {
             Election.Topics.Add(
-                DataConstants.FuckedUpSenateTopicKey,
+                DataConstants.SenateTopicKey2016,
                 new Topic
                 {
-                    Id = DataConstants.FuckedUpSenateTopicKey,
+                    Id = DataConstants.SenateTopicKey2016,
                     Name = $"{Election.Name} - {DataConstants.SenateTopicName}"
                 }
             );
 
             Election.Topics.Add(
-                DataConstants.FuckedUpDeputiesTopicKey,
+                DataConstants.DeputiesTopicKey2016,
                 new Topic
                 {
-                    Id = DataConstants.FuckedUpDeputiesTopicKey,
+                    Id = DataConstants.DeputiesTopicKey2016,
                     Name = $"{Election.Name} - {DataConstants.DeputiesTopicName}"
                 }
             );
@@ -101,7 +101,7 @@ namespace HistoricElectionData.Spike.DataServices.Fetchers
         protected override void GetCounties()
         {
             var countiesTask = HttpClient.GetStringAsync(
-                $"http://213.177.15.7:8080/siap-wp/rest/aep_data.jsp?name=v1_parl_Judet_Lista&parameter={Election.Id}&parameter={DataConstants.FuckedUpSenateTopicKey}"
+                $"http://213.177.15.7:8080/siap-wp/rest/aep_data.jsp?name=v1_parl_Judet_Lista&parameter={Election.Id}&parameter={DataConstants.SenateTopicKey2016}"
             );
 
             var countiesData = DeserializeJson<List<CountyData>>(countiesTask.Result);
@@ -124,7 +124,7 @@ namespace HistoricElectionData.Spike.DataServices.Fetchers
 
         protected override void PopulateCounties()
         {
-            var counties = Election.Topics[DataConstants.FuckedUpSenateTopicKey].Rounds[0].Counties;
+            var counties = Election.Topics[DataConstants.SenateTopicKey2016].Rounds[0].Counties;
             foreach (var idCounty in counties.Keys)
             {
                 PopulateCountySummary(idCounty);
@@ -317,7 +317,7 @@ namespace HistoricElectionData.Spike.DataServices.Fetchers
         {
             foreach (var (idTopic, topic) in Election.Topics)
             {
-                var summaryKey = topic.Id.Equals(DataConstants.FuckedUpSenateTopicKey) ? DataConstants.SenateSummaryKey : DataConstants.DeputiesSummaryKey;
+                var summaryKey = topic.Id.Equals(DataConstants.SenateTopicKey2016) ? DataConstants.SenateSummaryKey : DataConstants.DeputiesSummaryKey;
 
                 var pollingSectionsTask = HttpClient.GetStringAsync(
                     $"http://213.177.15.7:8080/siap-wp/rest/aep_data.jsp?name=v1_parl_Sectie_Sumar&parameter={Election.Id}&parameter={idCounty}&parameter={idPollingSection}&parameter={idTopic}&parameter={summaryKey}"

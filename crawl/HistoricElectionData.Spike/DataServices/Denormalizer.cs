@@ -291,10 +291,10 @@ namespace HistoricElectionData.Spike.DataServices
                 case DataConstants.CountyCouncilTopicKey:
                     return DataConstants.CountyCouncilTopicName;
                 case DataConstants.SenateTopicKey:
-                case DataConstants.FuckedUpSenateTopicKey:
+                case DataConstants.SenateTopicKey2016:
                     return DataConstants.SenateTopicName;
                 case DataConstants.DeputiesTopicKey:
-                case DataConstants.FuckedUpDeputiesTopicKey:
+                case DataConstants.DeputiesTopicKey2016:
                     return DataConstants.DeputiesTopicName;
                 //case DataConstants.DefaultTopicKey:
                 default:
