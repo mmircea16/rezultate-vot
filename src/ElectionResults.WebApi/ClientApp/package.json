@@ -5,6 +5,8 @@
   "dependencies": {
     "@aspnet/signalr": "^1.1.4",
     "@atlaskit/button": "^13.3.11",
+    "@storybook/addon-knobs": "^5.3.18",
+    "@storybook/addon-storysource": "^5.3.18",
     "bootstrap": "^4.4.1",
     "d3-scale": "^3.2.1",
     "d3-selection": "^1.4.1",

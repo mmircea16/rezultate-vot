@@ -1,4 +1,4 @@
-class PoliticalParty {
+export class PoliticalParty {
     name;
     color;
     emblem;
