@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Label, Input } from 'reactstrap';
+import { getElectionConfigUrl } from '../services/apiService';
+
 
 const AdminPanel = () => {
-  const API_URL = '/api/settings/election-config';
+  // const API_URL = '/api/settings/election-config';
   const [config, setConfig] = useState({ Files: [], Candidates: [] });
 
   useEffect(() => {
-    fetch(API_URL)
+    fetch(getElectionConfigUrl())
       .then(data => data.json())
       .then(data => setConfig(data));
   }, []);
 
   const save = () => {
-    fetch(API_URL, {
+    fetch(getElectionConfigUrl(), {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'

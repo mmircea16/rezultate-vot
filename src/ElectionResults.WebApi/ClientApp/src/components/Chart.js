@@ -5,6 +5,7 @@ import { Button, Media, Label, Container } from 'reactstrap';
 import code4RoGrey from '../images/code4RoGrey.svg';
 import code4RoTransp from '../images/code4RoTransp.svg';
 import ElectionPicker from '../services/electionPicker';
+import { getVoterTurnoutUrl } from '../services/apiService';
 
 const Line = ({ percent }) => (
     <div className="chart-line" style={{ top: `calc(100% - ${percent}%)` }}>
@@ -60,7 +61,7 @@ export function ElectionChart() {
         const fetchServerData = async () => {
             try {
                 console.log("voter turnout component for " + ElectionPicker.getSelection());
-                fetch(`/api/results/voter-turnout?electionId=${ElectionPicker.getSelection()}`)
+                fetch(getVoterTurnoutUrl(ElectionPicker.getSelection()))
                     .then(result => result.json())
                     .then(result => {
                         setData(result);

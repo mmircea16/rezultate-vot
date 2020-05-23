@@ -1,6 +1,7 @@
 import React from "react";
 import "./style.css";
 import ElectionPicker from '../../services/electionPicker';
+import { getVoteMonitoringUrl } from '../../services/apiService';
 
 const NumberArea = ({ bigNumber, text }) => (
     <div className={"vote-monitoring-area"}>
@@ -15,7 +16,7 @@ export const VoteMonitoring = () => {
         const fetchServerData = async () => {
             try {
                 console.log("Loaded vote monitoring for " + ElectionPicker.getSelection());
-                fetch(`/api/results/monitoring?electionId=${ElectionPicker.getSelection()}`)
+                fetch(getVoteMonitoringUrl(ElectionPicker.getSelection()))
                     .then(data => data.json())
                     .then(data => setVoteMonitoringData(data.statistics));
             } catch (e) {

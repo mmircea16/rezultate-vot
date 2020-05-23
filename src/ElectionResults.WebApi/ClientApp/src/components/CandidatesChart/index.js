@@ -4,6 +4,8 @@ import CountiesSelect from "./CountiesSelect";
 import { FormGroup, Col, Button, Media, Label, Container } from "reactstrap";
 import code4RoGrey from '../../images/code4RoGrey.svg';
 import ElectionPicker from '../../services/electionPicker';
+import { getElectionResultsUrl } from '../../services/apiService';
+
 let currentSelection = '';
 let totalCountedVotes = 0;
 let percentageCounted = 0;
@@ -20,7 +22,7 @@ export const ChartContainer = () => {
         const fetchServerData = async () => {
             try {
                 if (!queryUrl) {
-                    queryUrl = `/api/results?electionId=${ElectionPicker.getSelection()}`;
+                    queryUrl = getElectionResultsUrl(ElectionPicker.getSelection());
                 }
                 console.log("Loading results component for " + ElectionPicker.getSelection());
                 fetch(queryUrl)
@@ -72,7 +74,7 @@ export const ChartContainer = () => {
         }
         const onSelectedElectionsChanged = () => {
             toggleShowAll(false);
-            queryUrl = `/api/results?electionId=${ElectionPicker.getSelection()}`;
+            queryUrl = getElectionResultsUrl(ElectionPicker.getSelection());
             fetchServerData();
         }
         window.addEventListener("selectedElectionsChanged", onSelectedElectionsChanged);
@@ -91,7 +93,7 @@ export const ChartContainer = () => {
 
     const selectionChanged = value => {
         currentSelection = value.id;
-        queryUrl = `/api/results/?electionId=${ElectionPicker.getSelection()}&source=${value.id}&county=${value.countyName || ''}`;
+        queryUrl = getElectionResultsUrl(ElectionPicker.getSelection(), value.id, value.countyName);
         fetch(queryUrl)
             .then(data => data.json())
             .then(data => {
@@ -117,7 +119,8 @@ export const ChartContainer = () => {
                 percentageCounted = data.percentageCounted;
                 canceledVotes = data.canceledVotes;
                 setVoterTurnout(data);
-            })};
+            })
+    };
 
     return (
         <div>
@@ -142,14 +145,14 @@ export const ChartContainer = () => {
                                 </p>
                             </div>
                         </div>
-                                    <p className={"votes-text"} style={{ marginBottom: '0px', textAlign: 'center' }}>
+                        <p className={"votes-text"} style={{ marginBottom: '0px', textAlign: 'center' }}>
                             {" "}
                             din care {canceledVotes.toLocaleString(undefined, {
                                 maximumFractionDigits: 2
                             })} voturi anulate
     </p>
                     </div>
-                                   
+
                     <FormGroup row>
                         <Col sm={3}>
                             <CountiesSelect counties={counties} onSelect={selectionChanged} />
