@@ -1,12 +1,11 @@
-class Result {
+export class Result {
     entity;
     votes;
-    turnout;
+    percentage;
 
-
-    constructor(entity, votes, turnout) {
+    constructor(entity, votes, percentage) {
         this.entity = entity;
         this.votes = votes;
-        this.turnout = turnout;
+        this.percentage = percentage;
     }
 }
