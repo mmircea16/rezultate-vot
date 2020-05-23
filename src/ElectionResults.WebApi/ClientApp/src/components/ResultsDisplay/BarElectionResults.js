@@ -6,7 +6,7 @@ import {HorizontalStackedBar} from "../Charts/HorizontalStackedBar";
 export const BarElectionResults = ({electionResults}) => {
     return <div>
         <div>Prezenta vot: {electionResults.turnout}</div>
-        <HorizontalStackedBar results={electionResults.results}/>
+        <HorizontalStackedBar results={electionResults.results} orderType={"ALTERNATE"} width={700} height={100}/>
     </div>
 };
 

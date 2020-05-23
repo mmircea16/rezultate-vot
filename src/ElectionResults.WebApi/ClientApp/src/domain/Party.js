@@ -11,11 +11,11 @@ class PoliticalParty {
 }
 
 export const Party = {
-    PSD: new PoliticalParty("PSD", "red", ""),
-    PNL: new PoliticalParty("PNL", "blue", ""),
-    USR: new PoliticalParty("USR", "light blue", ""),
-    UDMR: new PoliticalParty("UDMR", "green", ""),
-    PMP: new PoliticalParty("PMP", "red", ""),
-    PRORO: new PoliticalParty("PRORO", "light green", ""),
-    ALDE: new PoliticalParty("ALDE", "yellow", ""),
+    PSD: new PoliticalParty("PSD", "#ff0000", ""),
+    PNL: new PoliticalParty("PNL", "#0000ff", ""),
+    USR: new PoliticalParty("USR", "#00f0ff", ""),
+    UDMR: new PoliticalParty("UDMR", "#00ff00", ""),
+    PMP: new PoliticalParty("PMP", "#0060aa", ""),
+    PRORO: new PoliticalParty("PRORO", "#00a000", ""),
+    ALDE: new PoliticalParty("ALDE", "#ffff00", ""),
 };
