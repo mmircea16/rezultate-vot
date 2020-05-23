@@ -6,7 +6,7 @@ import {Result} from "../../domain/Result";
 import  "./HorizontalStackedBar.css"
 
 
-export const HorizontalStackedBar =  ({results, width, height, orderType}) => {
+export const HorizontalStackedBar =  ({results}) => {
 
     useEffect(() => {
         drawBar();
@@ -14,8 +14,8 @@ export const HorizontalStackedBar =  ({results, width, height, orderType}) => {
 
     const marginBottom = 10;
 
-    const chartWidth = width;
-    const chartHeight = height;
+    const chartWidth = 1000;
+    const chartHeight = 80;
     const barHeight = chartHeight - 2*marginBottom;
     const halfBarHeight = barHeight / 2;
 
@@ -49,13 +49,12 @@ export const HorizontalStackedBar =  ({results, width, height, orderType}) => {
     };
 
     const drawBar = () => {
-        const svg = d3Select.select(".mychart")
+        const svg = d3Select.select(".horizontal-stacked-bar")
             .append("svg")
-            .attr("width", chartWidth)
-            .attr("height", chartHeight)
-            .style("margin-left", 100);
+            .attr("viewBox", `0 0 ${chartWidth} ${chartHeight}`)
+            .attr("preserveAspectRatio", "xMidYMid meet");
 
-        const {stackedBarData, total} = stackResults(results, ORDER_TYPES[orderType]);
+        const {stackedBarData, total} = stackResults(results);
 
         const xScale = d3Scale.scaleLinear()
             .domain([0, total])
@@ -78,42 +77,19 @@ export const HorizontalStackedBar =  ({results, width, height, orderType}) => {
     };
 
 
-    return <div className={"mychart"}>Horizontal stacked bar</div>
-};
-
-const sortAsc = function (results) {
-    return results.sort((a, b) => a.votes - b.votes);
-};
-
-const alternate = function(results) {
-    let rearrangedResults = results
-        .sort((a, b) => b.votes - a.votes)
-        .map((result, index) => ({...result, votes: index % 2 ? result.votes : (-1)*result.votes}));
-
-    console.log(rearrangedResults);
-    return rearrangedResults
-        .sort((a, b) => a.votes - b.votes)
-        .map(result => ({...result, votes: Math.abs(result.votes)}));
+    return <div className={"horizontal-stacked-bar"}/>
 };
 
 const stackResults = (results, shuffleFunc) => {
-    const sortedResults = shuffleFunc(results);
-
-    return sortedResults
+    return results
         .reduce(({stackedBarData, total}, result) => {
             stackedBarData.push({value: result.votes, cumulative: total, data: result});
             return {stackedBarData: stackedBarData, total: total + result.votes};
         }, {stackedBarData: [], total: 0});
 };
 
-const ORDER_TYPES = {
-    "ASC": sortAsc,
-    "ALTERNATE": alternate,
-};
-
 HorizontalStackedBar.propTypes = {
     results: PropTypes.arrayOf(PropTypes.instanceOf(Result)).isRequired,
     height: PropTypes.number.isRequired,
-    width: PropTypes.number.isRequired,
-    orderType: PropTypes.oneOf(ORDER_TYPES.keys)
+    width: PropTypes.number.isRequired
 };

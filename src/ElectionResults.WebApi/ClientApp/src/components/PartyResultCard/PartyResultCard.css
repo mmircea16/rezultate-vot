@@ -1,0 +1,14 @@
+.percentage {
+    font-size: 2em;
+}
+
+.color-marker {
+    height: 0.5em;
+    width: 0.5em;
+    margin: 0.25em;
+    float: left;
+}
+
+.party-name {
+    font-size: 1em;
+}
