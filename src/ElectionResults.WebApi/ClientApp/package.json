@@ -24,6 +24,11 @@
     "styled-components": "^5.1.0"
   },
   "devDependencies": {
+    "@storybook/addon-actions": "^5.3.18",
+    "@storybook/addon-links": "^5.3.18",
+    "@storybook/addons": "^5.3.18",
+    "@storybook/preset-create-react-app": "^3.0.0",
+    "@storybook/react": "^5.3.18",
     "ajv": "^6.11.0",
     "babel-eslint": "^10.1.0",
     "cross-env": "^6.0.3",
@@ -42,7 +47,9 @@
     "build": "react-scripts build",
     "test": "cross-env CI=true react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "lint": "eslint ./src/"
+    "lint": "eslint ./src/",
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public"
   },
   "browserslist": {
     "production": [
