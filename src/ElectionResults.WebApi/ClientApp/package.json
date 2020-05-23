@@ -18,7 +18,8 @@
     "react-select": "^3.0.8",
     "reactstrap": "^8.4.1",
     "rimraf": "^3.0.1",
-    "styled-components": "^5.1.0"
+    "styled-components": "^5.1.0",
+    "prop-types": "latest"
   },
   "devDependencies": {
     "ajv": "^6.11.0",
