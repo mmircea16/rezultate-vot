@@ -10,7 +10,7 @@ export const HorizontalStackedBar =  ({results}) => {
 
     useEffect(() => {
         drawBar();
-    }, []);
+    }, [results]);
 
     const marginBottom = 10;
 
@@ -49,6 +49,7 @@ export const HorizontalStackedBar =  ({results}) => {
     };
 
     const drawBar = () => {
+        d3Select.select(".horizontal-stacked-bar svg").remove();
         const svg = d3Select.select(".horizontal-stacked-bar")
             .append("svg")
             .attr("viewBox", `0 0 ${chartWidth} ${chartHeight}`)
@@ -89,7 +90,5 @@ const stackResults = (results, shuffleFunc) => {
 };
 
 HorizontalStackedBar.propTypes = {
-    results: PropTypes.arrayOf(PropTypes.instanceOf(Result)).isRequired,
-    height: PropTypes.number.isRequired,
-    width: PropTypes.number.isRequired
+    results: PropTypes.arrayOf(PropTypes.instanceOf(Result)).isRequired
 };

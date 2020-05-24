@@ -4,12 +4,13 @@ import {Election} from "../../domain/Election"
 import {HorizontalStackedBar} from "../Charts/HorizontalStackedBar";
 import PartyResultCard from "../PartyResultCard/PartyResultCard";
 import "./BarElectionResults.css"
+import {Result} from "../../domain/Result";
 
 export const BarElectionResults = ({electionResults}) => {
     const orderedResults = alternate(electionResults.results);
     return <div>
         <div className={"result-card-container"}>
-            {orderedResults.map(result => <PartyResultCard result={result}/>)}
+            {orderedResults.map(result => <PartyResultCard key={result.entity.name} result={result}/>)}
         </div>
         <HorizontalStackedBar results={orderedResults}/>
     </div>
@@ -22,7 +23,7 @@ const alternate = function(results) {
 
     return rearrangedResults
         .sort((a, b) => a.votes - b.votes)
-        .map(result => ({...result, votes: Math.abs(result.votes)}));
+        .map(result => new Result(result.entity, Math.abs(result.votes), result.percentage));
 };
 
 BarElectionResults.propTypes = {
