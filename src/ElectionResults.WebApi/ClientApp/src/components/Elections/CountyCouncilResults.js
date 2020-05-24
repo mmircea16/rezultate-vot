@@ -1,5 +1,5 @@
 import React from "react";
-import {BarElectionResults} from "../ResultsDisplay/BarElectionResults";
+import {BarElectionResults} from "../ResultsDisplay/BarElectionResults/BarElectionResults";
 import {HistoricResultsService} from "../../services/HistoricResultsService";
 
 export const CountyCouncilResults = () => {

@@ -1,10 +1,10 @@
 import React from "react"
 import PropTypes from 'prop-types';
-import {Election} from "../../domain/Election"
-import {HorizontalStackedBar} from "../Charts/HorizontalStackedBar";
-import PartyResultCard from "../PartyResultCard/PartyResultCard";
+import {Election} from "../../../domain/Election"
+import {HorizontalStackedBar} from "../../Charts/HorizontalStackedBar";
+import PartyResultCard from "../../PartyResultCard/PartyResultCard";
 import "./BarElectionResults.css"
-import {Result} from "../../domain/Result";
+import {Result} from "../../../domain/Result";
 
 export const BarElectionResults = ({electionResults}) => {
     const orderedResults = alternate(electionResults.results);

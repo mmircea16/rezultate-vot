@@ -1,9 +1,9 @@
 import React from "react";
 import {BarElectionResults} from "./BarElectionResults";
 import {number, withKnobs} from "@storybook/addon-knobs";
-import {Result} from "../../domain/Result";
-import {Party} from "../../domain/Party";
-import {Election} from "../../domain/Election";
+import {Result} from "../../../domain/Result";
+import {Party} from "../../../domain/Party";
+import {Election} from "../../../domain/Election";
 
 export default {
     title: "Bar Election Results",

@@ -38,10 +38,10 @@ export const HorizontalStackedBar =  ({results}) => {
             .text(rightLabel)
     };
 
-    const drawLineInTheMiddle = function (svg, middle) {
+    const drawVerticalLine = function (svg, xCoord) {
         svg.append('line')
-            .attr("x1", middle)
-            .attr("x2", middle)
+            .attr("x1", xCoord)
+            .attr("x2", xCoord)
             .attr("y1", 0)
             .attr("y2", chartHeight)
             .style("stroke-width", 2)
@@ -49,7 +49,9 @@ export const HorizontalStackedBar =  ({results}) => {
     };
 
     const drawBar = () => {
+        //this is to remove the previous svg (if exists) - useful in case of re-renders
         d3Select.select(".horizontal-stacked-bar svg").remove();
+
         const svg = d3Select.select(".horizontal-stacked-bar")
             .append("svg")
             .attr("viewBox", `0 0 ${chartWidth} ${chartHeight}`)
@@ -71,7 +73,7 @@ export const HorizontalStackedBar =  ({results}) => {
             .attr('width', d => xScale(d.value))
             .style('fill', d => d.data.entity.color);
 
-        drawLineInTheMiddle(svg, xScale(total / 2));
+        drawVerticalLine(svg, xScale(total / 2));
 
         const len = stackedBarData.length;
         putLabels(svg, stackedBarData[0].value, stackedBarData[len-1].value);
@@ -81,7 +83,7 @@ export const HorizontalStackedBar =  ({results}) => {
     return <div className={"horizontal-stacked-bar"}/>
 };
 
-const stackResults = (results, shuffleFunc) => {
+const stackResults = (results) => {
     return results
         .reduce(({stackedBarData, total}, result) => {
             stackedBarData.push({value: result.votes, cumulative: total, data: result});
