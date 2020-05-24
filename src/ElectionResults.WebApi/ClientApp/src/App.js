@@ -9,7 +9,6 @@ import {HomePage} from "./components/HomePage";
 import {VoteMonitoring} from "./components/VoteMonitoring";
 import {ChartContainer} from "./components/CandidatesChart";
 import {ElectionChart} from "./components/Chart";
-import {CountyCouncilResults} from "./components/Elections/CountyCouncilResults";
 
 export default class App extends Component {
     static displayName = App.name;
@@ -31,7 +30,6 @@ export default class App extends Component {
                         <Route path={`${baseNonWidgetPath}/monitorizare-vot`} component={VoteMonitoring}/>
                         <Route path={`${baseNonWidgetPath}/grafice-alegeri`} component={ChartContainer}/>
                         <Route path={`${baseNonWidgetPath}/rezultate-alegeri`} component={ElectionChart}/>
-                        <Route path={`${baseNonWidgetPath}/istoric/consiliu-judetean`} component={CountyCouncilResults}/>
                     </Layout>
                 </Route>
                 <Route path={baseWidgetPath}>

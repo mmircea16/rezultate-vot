@@ -153,7 +153,7 @@ namespace ElectionResults.WebApi
                 });
             });
 
-//            app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseMvc(routes =>
