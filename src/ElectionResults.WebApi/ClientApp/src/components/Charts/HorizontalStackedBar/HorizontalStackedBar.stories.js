@@ -1,8 +1,8 @@
 import React from "react";
 import {HorizontalStackedBar} from "./HorizontalStackedBar";
 import {number, withKnobs} from "@storybook/addon-knobs";
-import {Result} from "../../domain/Result";
-import {Party} from "../../domain/Party";
+import {Result} from "../../../domain/Result";
+import {Party} from "../../../domain/Party";
 
 export default {
     title: "Horizontal Stacked Bar",

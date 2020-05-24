@@ -4,7 +4,7 @@ import {BarElectionResults} from "./BarElectionResults";
 import {Result} from "../../../domain/Result";
 import {Party} from "../../../domain/Party";
 import {Election} from "../../../domain/Election";
-import {HorizontalStackedBar} from "../../Charts/HorizontalStackedBar";
+import {HorizontalStackedBar} from "../../Charts/HorizontalStackedBar/HorizontalStackedBar";
 
 describe(BarElectionResults, () => {
    it("should sort the results alternatively", () => {

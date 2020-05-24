@@ -2,8 +2,8 @@ import React, {useEffect} from "react"
 import PropTypes from "prop-types"
 import * as d3Select from "d3-selection";
 import * as d3Scale from "d3-scale";
-import {Result} from "../../domain/Result";
-import  "./HorizontalStackedBar.css"
+import {Result} from "../../../domain/Result";
+import "./HorizontalStackedBar.css"
 
 
 export const HorizontalStackedBar =  ({results}) => {
