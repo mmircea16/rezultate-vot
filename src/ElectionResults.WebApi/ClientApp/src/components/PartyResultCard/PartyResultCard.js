@@ -2,11 +2,12 @@ import React from "react";
 import PropTypes from "prop-types"
 import {Result} from "../../domain/Result";
 import "./PartyResultCard.css"
+import NameWithColor from "../NameWithColor/NameWithColor";
 
 const PartyResultCard = ({result}) => {
     const party = result.entity;
     return <div className={"party-result-card"}>
-        <div className={"party-name"}><div className={"color-marker"} style={{backgroundColor: party.color}}/>{party.name}</div>
+        <NameWithColor color={party.color} text={party.name}/>
         <div className={"percentage"}>{result.percentage}%</div>
     </div>
 };
