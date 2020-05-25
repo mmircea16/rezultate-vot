@@ -1,4 +1,13 @@
-.result-card-container {
+.inline-results {
     display: flex;
     justify-content: space-between;
+}
+
+.turnout {
+    font-size: 1.3em;
+    text-decoration: underline;
+}
+
+.results-inline-container {
+    margin-top: 1em;
 }

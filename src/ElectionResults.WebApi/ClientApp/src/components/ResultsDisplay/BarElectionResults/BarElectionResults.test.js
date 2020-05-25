@@ -27,7 +27,7 @@ describe(BarElectionResults, () => {
       ];
 
       const election = new Election("council", results, 5000, 10000);
-      const wrapper = shallow(<BarElectionResults electionResults={election}/> );
+      const wrapper = shallow(<BarElectionResults election={election}/> );
 
       expect(wrapper.find(HorizontalStackedBar).props().results).toEqual(expectedOrderResults);
    })

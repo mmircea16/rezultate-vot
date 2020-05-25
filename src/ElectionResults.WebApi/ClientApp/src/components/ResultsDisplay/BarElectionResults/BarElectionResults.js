@@ -5,14 +5,23 @@ import {HorizontalStackedBar} from "../../Charts/HorizontalStackedBar/Horizontal
 import PartyResultCard from "../../PartyResultCard/PartyResultCard";
 import "./BarElectionResults.css"
 import {Result} from "../../../domain/Result";
+import PartyResultInline from "../../PartyResultInline/PartyResultInline";
+import Calc from "../../../utils/Calc";
 
-export const BarElectionResults = ({electionResults}) => {
-    const orderedResults = alternate(electionResults.results);
+export const BarElectionResults = ({election}) => {
+    const orderedResults = alternate(election.results);
+    const descSortedResults = election.results.sort((a, b) => b.votes - a.votes);
+    const turnoutPercentage = Calc.percentageTo2Decimals(election.turnout, election.total);
+
     return <div>
-        <div className={"result-card-container"}>
+        <div className={"results-card-container inline-results"}>
             {orderedResults.map(result => <PartyResultCard key={result.entity.name} result={result}/>)}
         </div>
         <HorizontalStackedBar results={orderedResults}/>
+        <div className={"turnout"}>Din {turnoutPercentage}% ({election.turnout}) voturi</div>
+        <div className={"results-inline-container inline-results"}>
+            {descSortedResults.map(result => <PartyResultInline key={result.entity.name} result={result}/> )}
+        </div>
     </div>
 };
 
@@ -27,5 +36,5 @@ const alternate = function(results) {
 };
 
 BarElectionResults.propTypes = {
-    electionResults: PropTypes.instanceOf(Election)
+    election: PropTypes.instanceOf(Election)
 };

@@ -4,6 +4,7 @@ import {number, withKnobs} from "@storybook/addon-knobs";
 import {Result} from "../../../domain/Result";
 import {Party} from "../../../domain/Party";
 import {Election} from "../../../domain/Election";
+import Calc from "../../../utils/Calc";
 
 export default {
     title: "Bar Election Results",
@@ -21,7 +22,7 @@ export const SimpleExample = () => {
 
     const turnout = pnlVotes + pmpVotes + psdVotes + udmrVotes + usrVotes;
 
-    const percentage = votes => Math.floor((votes/turnout)*10000) / 100
+    const percentage = votes => Calc.percentageTo2Decimals(votes, turnout);
 
     const results = [
         new Result(Party.PNL, pnlVotes, percentage(pnlVotes)),
@@ -31,7 +32,7 @@ export const SimpleExample = () => {
         new Result(Party.USR, usrVotes, percentage(usrVotes)),
     ];
 
-    const election = new Election("council", results, turnout, 200000);
+    const election = new Election("council", results, turnout, 15000);
 
-    return <BarElectionResults electionResults={election}/>
+    return <BarElectionResults election={election}/>
 };
