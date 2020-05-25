@@ -18,4 +18,5 @@ export const Party = {
     PMP: new PoliticalParty("PMP", "#0060aa", ""),
     PRORO: new PoliticalParty("PRORO", "#00a000", ""),
     ALDE: new PoliticalParty("ALDE", "#ffff00", ""),
+    OTHERS: new PoliticalParty("Altii", "grey")
 };
