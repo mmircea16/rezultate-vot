@@ -1,0 +1,53 @@
+.election-name {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.mini-bar {
+    height: 0.5em;
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+}
+
+thead th {
+    font-weight: normal;
+    color: darkgrey;
+}
+
+table {
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+thead {
+    text-align: left;
+}
+
+thead, tr {
+    border-bottom: solid lightgrey 1px;
+}
+
+td {
+    width: 120px;
+    height: 30px;
+}
+
+td.shrink-to-size {
+    width: fit-content;
+}
+
+tr:last-child {
+    border-bottom: none;
+}
+
+.table-results {
+    width: fit-content;
+    border-style: solid;
+    border-width: 1px;
+    border-color: darkgrey;
+    padding: 10px;
+}
+
+.table-results .percentage{
+    width: fit-content;
+}
