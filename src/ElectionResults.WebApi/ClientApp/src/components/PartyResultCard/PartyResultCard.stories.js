@@ -3,7 +3,7 @@ import PartyResultCard from "./PartyResultCard";
 import {Result} from "../../domain/Result";
 import {PoliticalParty} from "../../domain/Party";
 
-import {number, text, withKnobs} from "@storybook/addon-knobs";
+import {number, text, boolean, withKnobs} from "@storybook/addon-knobs";
 
 export default {
     title: 'Party Result Card',
@@ -14,8 +14,9 @@ export default {
 export const SimpleCard = () => {
     const party = new PoliticalParty(text("Party Name", "PNL"), "#0000ff");
     const result = new Result(party, 1000, number("Percentage", 32));
+    const rightAligned = boolean("rightAligned", false);
 
-    return <PartyResultCard result={result}/>;
+    return <PartyResultCard result={result} rightAligned={rightAligned}/>;
 };
 
 SimpleCard.story = {

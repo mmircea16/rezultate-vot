@@ -1,3 +1,8 @@
 .percentage {
     font-size: 2em;
 }
+
+.party-result-card {
+    display: flex;
+    flex-direction: column;
+}

@@ -27,10 +27,11 @@ export const BarElectionResults = ({election, showFirst}) => {
     const orderedResults = alternate(results);
     const descSortedResults = sortDesc(results);
     const turnoutPercentage = Calc.percentageTo2Decimals(election.turnout, election.total);
+    const half = Math.floor(results.length / 2);
 
     return <div>
         <div className={"results-card-container inline-results"}>
-            {orderedResults.map(result => <PartyResultCard key={result.entity.name} result={result}/>)}
+            {orderedResults.map((result, index) => <PartyResultCard key={result.entity.name} result={result} rightAligned={index > half}/>)}
         </div>
         <HorizontalStackedBar results={orderedResults}/>
         <div className={"turnout"}>Din {turnoutPercentage}% ({election.turnout}) voturi</div>

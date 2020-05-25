@@ -4,10 +4,10 @@ import {Result} from "../../domain/Result";
 import "./PartyResultCard.css"
 import NameWithColor from "../NameWithColor/NameWithColor";
 
-const PartyResultCard = ({result}) => {
+const PartyResultCard = ({result, rightAligned}) => {
     const party = result.entity;
-    return <div className={"party-result-card"}>
-        <NameWithColor color={party.color} text={party.name}/>
+    return <div className={"party-result-card"} style={{alignItems: rightAligned ? "flex-end": "flex-start"}}>
+        <NameWithColor color={party.color} text={party.name} rightAligned={rightAligned}/>
         <div className={"percentage"}>{result.percentage}%</div>
     </div>
 };
