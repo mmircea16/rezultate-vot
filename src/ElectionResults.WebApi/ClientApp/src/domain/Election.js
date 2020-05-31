@@ -1,3 +1,5 @@
+import Calc from "../utils/Calc";
+
 export class Election {
     total;
     type;
@@ -11,5 +13,9 @@ export class Election {
         this.turnout = turnout;
         this.total = total;
         this.name = name;
+    }
+
+    getTurnoutPercentage() {
+        return Calc.percentageTo2Decimals(this.turnout, this.total);
     }
 }
