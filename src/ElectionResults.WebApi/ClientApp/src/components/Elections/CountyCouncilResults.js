@@ -2,17 +2,40 @@ import React, {useState} from "react";
 import {BarElectionResults} from "../ResultsDisplay/BarElectionResults/BarElectionResults";
 import {HistoricResultsService} from "../../services/HistoricResultsService";
 import TableResults from "../ResultsDisplay/TableResults/TableResults";
+import TurnoutBar from "../ResultsDisplay/TurnoutBar/TurnoutBar";
+import "./CountyCouncilResults.css"
 
 export const CountyCouncilResults = () => {
     const [county, setCounty] = useState();
     const [election, setElection] = useState();
+    const [showResults, setShowResults] = useState(true);
 
     const getElectionResults = (county) => HistoricResultsService.getResults("Consiliu Judetean", "Nov-19", county);
-    const displayResults = function () {
+
+    const results = () => {
         return <div>
-            {select()}
             <BarElectionResults election={election} showFirst={5}/>
             <TableResults election={election}/>
+        </div>
+    };
+
+    const turnout = () => {
+        return <div>
+            <TurnoutBar election={election}/>
+        </div>
+    };
+
+    const displayResults = function () {
+        return <div className={"results"}>
+            {select()}
+            <div className={"tabs"}>
+                <div onClick={() => setShowResults(false)} className={showResults ? "":"selected"}>Prezenta Vot</div>
+                <div onClick={() => setShowResults(true)} className={showResults ? "selected":""}>Rezultate Vot</div>
+            </div>
+            <div className={"container"}>
+                {showResults && results()}
+                {!showResults && turnout()}
+            </div>
         </div>;
     };
 

@@ -1,3 +1,7 @@
 .turnout-bar .title{
     font-size: 1.6em;
 }
+
+.turnout-bar {
+    padding-top: 20px;
+}

@@ -12,6 +12,10 @@
     margin-top: 1em;
 }
 
+.bar-election-results {
+    padding-top: 20px;
+}
+
 .bar-election-results .title {
     font-size: 1.8em;
     font-weight: bold;

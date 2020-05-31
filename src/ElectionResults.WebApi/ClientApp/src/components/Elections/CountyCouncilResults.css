@@ -1,0 +1,24 @@
+.results .tabs {
+    display: flex;
+    padding-top: 20px;
+    margin-top: 10px;
+    border-top: 1px solid lightgrey;
+}
+
+.results .container {
+    border: 1px solid lightgrey;
+}
+
+.results .tabs div {
+    cursor: pointer;
+    font-size: 1.2em;
+    padding: 5px 30px 5px 30px;
+}
+
+.results .tabs div.selected{
+    font-weight: bold;
+    border-bottom: 3px solid #ffc539;
+    border-top: 1px solid lightgrey;
+    border-right: 1px solid lightgrey;
+    border-left: 1px solid lightgrey;
+}
