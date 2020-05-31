@@ -4,10 +4,16 @@
 }
 
 .turnout {
-    font-size: 1.3em;
+    font-size: 1.1em;
     text-decoration: underline;
 }
 
 .results-inline-container {
     margin-top: 1em;
+}
+
+.bar-election-results .title {
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-bottom: 20px;
 }

@@ -6,7 +6,6 @@ import PartyResultCard from "../../PartyResultCard/PartyResultCard";
 import "./BarElectionResults.css"
 import {Result} from "../../../domain/Result";
 import PartyResultInline from "../../PartyResultInline/PartyResultInline";
-import Calc from "../../../utils/Calc";
 import {Party} from "../../../domain/Party";
 
 export const BarElectionResults = ({election, showFirst}) => {
@@ -26,10 +25,11 @@ export const BarElectionResults = ({election, showFirst}) => {
 
     const orderedResults = alternate(results);
     const descSortedResults = sortDesc(results);
-    const turnoutPercentage = Calc.percentageTo2Decimals(election.turnout, election.total);
+    const turnoutPercentage = election.getTurnoutPercentage();
     const half = Math.floor(results.length / 2);
 
-    return <div>
+    return <div className={"bar-election-results"}>
+        <div className={"title"}>Rezultate Vot</div>
         <div className={"results-card-container inline-results"}>
             {orderedResults.map((result, index) => <PartyResultCard key={result.entity.name} result={result} rightAligned={index > half}/>)}
         </div>
