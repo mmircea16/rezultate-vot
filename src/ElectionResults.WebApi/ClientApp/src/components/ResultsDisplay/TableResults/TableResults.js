@@ -12,12 +12,15 @@ const TableResults = ({election}) => {
         <div className={"election-name"}>{election.name}</div>
         <table>
             <thead>
-            <th>Partid</th>
-            <th>Nr. voturi</th>
-            <th>%</th>
+            <tr>
+                <th>Partid</th>
+                <th>Nr. voturi</th>
+                <th>%</th>
+            </tr>
             </thead>
+            <tbody>
             {results.map(result => (
-                <tr>
+                <tr key={result.entity.name}>
                     <td><NameWithColor text={result.entity.name} color={result.entity.color}/></td>
                     <td>{result.votes}</td>
                     <td className={"shrink-to-size"}>{result.percentage}</td>
@@ -30,6 +33,7 @@ const TableResults = ({election}) => {
                     </td>
                 </tr>
             ))}
+            </tbody>
         </table>
     </div>
 };

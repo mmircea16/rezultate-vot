@@ -27,7 +27,8 @@ export const CountyCouncilResults = () => {
     const select = function () {
         return <div>
             <select onChange={countySelected} value={county}>
-                {counties.map(county => <option value={county}>{county}</option> )}
+                <option disabled={!!county}>Alege judetul...</option>
+                {counties.map(county => <option key={county} value={county}>{county}</option> )}
             </select>
         </div>;
     };
